@@ -9,4 +9,9 @@ export class userRepository extends RepositoryStarter<User> {
   constructor(@InjectDataSource() datasource: DataSource) {
     super(datasource.getRepository(User));
   }
+
+  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM users WHERE us_nom = 'Berthelot') AS result;
+  async findByNom(us_nom: string) {
+    return await this.model.exist({ where: { us_nom } });
+  }
 }

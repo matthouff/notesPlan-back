@@ -2,8 +2,8 @@ import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "type
 
 export interface IEntityStarter {
 	readonly id: string;
-	readonly createdAt: Date;
-	updatedAt?: Date;
+	readonly createdat: Date;
+	updatedat?: Date;
 }
 
 export class EntityStarter implements IEntityStarter {
@@ -11,16 +11,16 @@ export class EntityStarter implements IEntityStarter {
 	readonly id: string;
 
 	@CreateDateColumn()
-	readonly createdAt: Date;
+	readonly createdat: Date;
 
 	@UpdateDateColumn()
-	updatedAt?: Date;
+	updatedat?: Date;
 
 	get starterValues(): IEntityStarter {
 		return {
 			id: this.id,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
+			createdat: this.createdat,
+			updatedat: this.updatedat,
 		};
 	}
 }

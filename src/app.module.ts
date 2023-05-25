@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
+import { GroupesModule } from './modules/groupes/groupes.module';
+import { RepertoireGroupesModule } from './modules/repertoires/repertoires-groupes/repertoires-groupes.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forRoot({
@@ -14,7 +16,7 @@ import { UsersModule } from './modules/users/users.module';
     database: 'souviensToi',
     autoLoadEntities: true,
     synchronize: true,
-  })],
+  }), RepertoireGroupesModule, GroupesModule],
   controllers: [AppController],
   providers: [AppService],
 })
