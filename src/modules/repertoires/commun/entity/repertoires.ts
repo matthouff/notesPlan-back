@@ -1,15 +1,20 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Entity, Column } from 'typeorm';
+import { User } from 'src/modules/users/entity/users';
+import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
 import { IRepertoire, IRepertoireEditor, IRepertoireEditorMandatory } from './repertoires.interface';
 
 @Entity({ name: "repertoires" })
-export abstract class Repertoire extends EntityStarter implements IRepertoire {
+export class Repertoire extends EntityStarter implements IRepertoire {
 
-  @Column({ length: 50 })
+  @Column({ length: 100 })
   re_libelle: string;
 
-  @Column({ length: 50 })
+  @Column({ type: 'uuid' })
   id_user: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'id_user' })
+  user: User;
 
 
   // fonction qui ne renvoie rien (void)
