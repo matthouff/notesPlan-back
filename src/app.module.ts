@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { GroupesModule } from './modules/groupes/groupes.module';
 import { RepertoireGroupesModule } from './modules/repertoires/repertoires-groupes/repertoires-groupes.module';
+import { RepertoireNotesModule } from './modules/repertoires/repertoires-notes/repertoires-notes.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forRoot({
@@ -16,7 +17,7 @@ import { RepertoireGroupesModule } from './modules/repertoires/repertoires-group
     database: 'souviensToi',
     autoLoadEntities: true,
     synchronize: true,
-  }), RepertoireGroupesModule, GroupesModule],
+  }), RepertoireGroupesModule, RepertoireNotesModule, GroupesModule],
   controllers: [AppController],
   providers: [AppService],
 })

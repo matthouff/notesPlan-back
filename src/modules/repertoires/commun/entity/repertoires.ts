@@ -1,14 +1,15 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Entity, Column } from 'typeorm';
 import { IRepertoire, IRepertoireEditor, IRepertoireEditorMandatory } from './repertoires.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ name: "repertoires" })
 export abstract class Repertoire extends EntityStarter implements IRepertoire {
 
-  @Column({ length: 50 })
+  @Column({ length: 100 })
   re_libelle: string;
 
-  @Column({ length: 50 })
+  @Column({ default: uuidv4() })
   id_user: string;
 
 
