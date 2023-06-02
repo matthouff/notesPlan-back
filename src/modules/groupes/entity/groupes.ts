@@ -1,7 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm';
 import { IGroupe, IGroupeEditor, IGroupeEditorMandatory } from './groupes.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
+import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
+import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 
 @Entity('groupes')
 export class Groupe extends EntityStarter implements IGroupe {
@@ -14,6 +16,9 @@ export class Groupe extends EntityStarter implements IGroupe {
   @Column({ default: uuidv4() })
   id_repertoire: string;
 
+  @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id)
+  @JoinColumn({ name: 'id_repertoire' })
+  repertoire: RepertoireGroupe;
 
 
   // fonction qui ne renvoie rien (void)

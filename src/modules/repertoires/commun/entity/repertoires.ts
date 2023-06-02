@@ -1,7 +1,8 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { IRepertoire, IRepertoireEditor, IRepertoireEditorMandatory } from './repertoires.interface';
 import { v4 as uuidv4 } from 'uuid';
+import { User } from 'src/modules/users/entity/users';
 
 @Entity({ name: "repertoires" })
 export abstract class Repertoire extends EntityStarter implements IRepertoire {
@@ -11,6 +12,9 @@ export abstract class Repertoire extends EntityStarter implements IRepertoire {
 
   @Column({ default: uuidv4() })
   id_user: string;
+
+  @ManyToOne(() => User, user => user.id)
+  user: User;
 
 
   // fonction qui ne renvoie rien (void)
