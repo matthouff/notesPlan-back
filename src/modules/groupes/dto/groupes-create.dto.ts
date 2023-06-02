@@ -1,35 +1,18 @@
-import { IsString, IsEmail, Length, IsOptional, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, Length, IsOptional, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateGroupeDto {
   @Length(2, 50, {
-    message: "Le nom doit être compris entre 2 et 50 caractères.",
+    message: "Le libelle doit être compris entre 2 et 50 caractères.",
   })
+  @IsNotEmpty()
+  @IsString()
+  gr_libelle: string;
+
   @IsOptional()
   @IsString()
-  us_nom?: string | null;
-
-  @Length(2, 50, {
-    message: "Le prénom doit être compris entre 2 et 50 caractères.",
-  })
-  @IsNotEmpty()
-  @IsString()
-  us_prenom: string;
+  gr_couleur?: string | null;
 
   @IsNotEmpty()
-  @IsEmail()
-  us_email: string;
-
-  @Length(8, 25, {
-    message: "Le prénom doit être compris entre 2 et 50 caractères.",
-  })
-  @IsNotEmpty()
-  @IsString()
-  us_login: string;
-
-  @Length(8, 25, {
-    message: "Le prénom doit être compris entre 2 et 50 caractères.",
-  })
-  @IsNotEmpty()
-  @IsString()
-  us_password: string;
+  @IsUUID()
+  id_repertoire: string;
 }

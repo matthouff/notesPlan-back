@@ -5,8 +5,13 @@ import { DataSource } from "typeorm";
 import { Groupe } from "./entity/groupes";
 
 @Injectable()
-export class userRepository extends RepositoryStarter<Groupe> {
+export class GroupesRepository extends RepositoryStarter<Groupe> {
   constructor(@InjectDataSource() datasource: DataSource) {
     super(datasource.getRepository(Groupe));
+  }
+
+  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
+  async findByNom(gr_libelle: string) {
+    return await this.model.exist({ where: { gr_libelle } });
   }
 }
