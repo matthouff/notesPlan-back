@@ -7,6 +7,7 @@ import { RepertoireGroupesModule } from './modules/repertoires/repertoires-group
 import { RepertoireNotesModule } from './modules/repertoires/repertoires-notes/repertoires-notes.module';
 import { GroupeModule } from './modules/groupes/groupes.module';
 import { TacheModule } from './modules/taches/taches.module';
+import { LabelModule } from './modules/labels/labels.module';
 
 @Module({
   imports: [UsersModule, TypeOrmModule.forRoot({
@@ -18,7 +19,7 @@ import { TacheModule } from './modules/taches/taches.module';
     database: 'souviensToi',
     autoLoadEntities: true,
     synchronize: true,
-  }), RepertoireGroupesModule, RepertoireNotesModule, GroupeModule, TacheModule],
+  }), RepertoireGroupesModule, RepertoireNotesModule, GroupeModule, TacheModule, LabelModule],
   controllers: [AppController],
   providers: [AppService],
 })

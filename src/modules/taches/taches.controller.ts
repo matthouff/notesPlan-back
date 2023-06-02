@@ -2,14 +2,14 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { EditTacheDto } from './dto/taches-edit.dto';
 import { Tache } from './entity/taches';
 import { ITache } from './entity/taches.interface';
-import { tacheService } from './taches.service';
+import { TacheService } from './taches.service';
 
 
 // http://localhost:3000
 @Controller('taches')
 export class TacheController {
 
-  constructor(readonly tachesService: tacheService) { }
+  constructor(readonly tachesService: TacheService) { }
 
   @Get()
   findAll(): Promise<ITache[]> {

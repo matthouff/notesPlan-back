@@ -5,7 +5,7 @@ import { ITache } from "./entity/taches.interface";
 import { TacheRepository } from "./taches.repository";
 
 @Injectable()
-export class tacheService {
+export class TacheService {
 
   constructor(readonly tachesRepository: TacheRepository) { }
 

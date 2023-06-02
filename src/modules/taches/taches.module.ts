@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tache } from './entity/taches';
 import { TacheController } from './taches.controller';
 import { TacheRepository } from './taches.repository';
-import { tacheService } from './taches.service';
+import { TacheService } from './taches.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Tache])],
   exports: [TypeOrmModule],
   controllers: [TacheController],
-  providers: [tacheService, TacheRepository]
+  providers: [TacheService, TacheRepository]
 })
 export class TacheModule { }
