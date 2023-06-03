@@ -2,16 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { RepositoryStarter } from "src/modules/repository-starter.class";
 import { DataSource } from "typeorm";
-import { Groupe } from "./entity/groupes";
+import { RepertoireNote } from "./entity/repertoires-notes";
 
 @Injectable()
-export class GroupesRepository extends RepositoryStarter<Groupe> {
+export class RepertoiresNotesRepository extends RepositoryStarter<RepertoireNote> {
   constructor(@InjectDataSource() datasource: DataSource) {
-    super(datasource.getRepository(Groupe));
+    super(datasource.getRepository(RepertoireNote));
   }
 
   // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(gr_libelle: string) {
-    return await this.model.exist({ where: { gr_libelle } });
+  async findByNom(re_libelle: string) {
+    return await this.model.exist({ where: { re_libelle } });
   }
 }

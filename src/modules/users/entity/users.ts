@@ -1,5 +1,6 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IUser, IUserEditor, IUserEditorMandatory, IUserEditorOptional } from './users.interface';
 
 @Entity({ name: "users" })

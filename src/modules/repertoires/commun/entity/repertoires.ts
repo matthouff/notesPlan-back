@@ -1,7 +1,8 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { User } from 'src/modules/users/entity/users';
-import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { IRepertoire, IRepertoireEditor, IRepertoireEditorMandatory } from './repertoires.interface';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from 'src/modules/users/entity/users';
 
 @Entity({ name: "repertoires" })
 export class Repertoire extends EntityStarter implements IRepertoire {
@@ -9,11 +10,10 @@ export class Repertoire extends EntityStarter implements IRepertoire {
   @Column({ length: 100 })
   re_libelle: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ default: uuidv4() })
   id_user: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'id_user' })
+  @ManyToOne(() => User, user => user.id)
   user: User;
 
 
