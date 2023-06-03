@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from 'src/modules/users/entity/users';
 
 @Entity({ name: "repertoires" })
-export class Repertoire extends EntityStarter implements IRepertoire {
+export abstract class Repertoire extends EntityStarter implements IRepertoire {
 
   @Column({ length: 100 })
   re_libelle: string;
