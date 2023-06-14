@@ -14,4 +14,15 @@ export class NoteRepository extends RepositoryStarter<Note> {
   async findByNom(no_libelle: string) {
     return await this.model.exist({ where: { no_libelle } });
   }
+
+  async findByRepertoireId(id_repertoire: string) {
+    try {
+      const notes = await this.model.find({ where: { id_repertoire: id_repertoire } });
+      return notes;
+    } catch (error) {
+      // Gérer les erreurs
+      console.error(error);
+      throw new Error("Erreur lors de la récupération des notes.");
+    }
+  }
 }

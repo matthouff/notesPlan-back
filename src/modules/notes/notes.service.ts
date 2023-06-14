@@ -13,6 +13,10 @@ export class NoteService {
     return await this.notesRepository.getAll();
   }
 
+  async findAllByRepertoireId(id_repertoire: string): Promise<INote[]> {
+    return await this.notesRepository.findByRepertoireId(id_repertoire);
+  }
+
   async create(data: Note): Promise<Note> {
     return await this.notesRepository.save(data);
   }

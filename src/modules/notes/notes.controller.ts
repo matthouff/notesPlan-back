@@ -11,29 +11,34 @@ export class NoteController {
 
   constructor(readonly notesService: NoteService) { }
 
+  @Get("/repertoire/:id")
+  findAllByRepertoireId(@Param('id') id_repertoire: string): Promise<INote[]> {
+    return this.notesService.findAllByRepertoireId(id_repertoire);
+  }
+
   @Get()
   findAll(): Promise<INote[]> {
     return this.notesService.findAll();
   }
 
   @Post()
-  create(@Body() repertoireDto: Note) {
-    return this.notesService.create(repertoireDto)
+  create(@Body() noteDto: Note) {
+    return this.notesService.create(noteDto)
   }
 
   @Get(":id")
-  findById(@Param() repertoire: INote) {
-    return this.notesService.findById(repertoire.id)
+  findById(@Param() note: INote) {
+    return this.notesService.findById(note.id)
   }
 
   @Delete(":id")
-  delete(@Param() repertoire: INote) {
-    return this.notesService.delete(repertoire.id)
+  delete(@Param() note: INote) {
+    return this.notesService.delete(note.id)
   }
 
   @Patch(":id")
-  update(@Body() repertoireDto: EditNoteDto, @Param() repertoire: INote) {
-    return this.notesService.update(repertoireDto, repertoire.id)
+  update(@Body() noteDto: EditNoteDto, @Param() note: INote) {
+    return this.notesService.update(noteDto, note.id)
   }
 
 }
