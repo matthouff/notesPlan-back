@@ -77,7 +77,6 @@ describe('RepertoiresNotesController (e2e)', () => {
 
     await request(app.getHttpServer()).patch(`/repertoires_notes/${createdRepertoireId}`).send(updatedRepertoire).expect(200);
 
-    // Verify that the repertoire is updated by checking its new name
     const retrievedRepertoire = await repertoiresService.findById(createdRepertoireId);
     expect(retrievedRepertoire.re_libelle).toBe(updatedRepertoire.re_libelle);
   });
