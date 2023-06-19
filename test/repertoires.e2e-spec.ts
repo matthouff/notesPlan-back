@@ -8,7 +8,6 @@ import { response } from 'express';
 
 describe('RepertoiresNotesController (e2e)', () => {
   let app: INestApplication;
-  let repertoiresService: RepertoiresNotesService;
   let createdRepertoireId: string;
 
   beforeAll(async () => {
@@ -23,8 +22,6 @@ describe('RepertoiresNotesController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    repertoiresService = moduleFixture.get<RepertoiresNotesService>(RepertoiresNotesService);
-
     await app.init();
   });
 
@@ -40,23 +37,27 @@ describe('RepertoiresNotesController (e2e)', () => {
 
   });
 
-  it('/repertoires_notes (POST) - should create a new repertoire', async () => {
-    const newRepertoire = { re_libelle: 'New Repertoire' }; // Provide the necessary data for a new repertoire
-    return await request(app.getHttpServer()).post('/repertoires_notes').send(newRepertoire).expect(201).expect((response) => {
-      const createdRepertoire = response.body;
-      expect(createdRepertoire.re_libelle).toBe(newRepertoire.re_libelle);
-      createdRepertoireId = createdRepertoire.id;
-    });
+  it('/repertoires_notes (POST) - should create a new repertoire', () => {
+    const newRepertoire = { re_libelle: 'New Repertoire' };
+    return request(app.getHttpServer())
+      .post('/repertoires_notes')
+      .send(newRepertoire)
+      .expect(201)
+      .expect((response) => {
+        const createdRepertoire = response.body;
+        expect(createdRepertoire.re_libelle).toBe(newRepertoire.re_libelle);
+        createdRepertoireId = createdRepertoire.id;
+      });
   });
 
-  it('/repertoires_notes/user/:userId (GET) - should return repertoires by user ID', async () => {
-    let userId: String;
+  it('/repertoires_notes/user/:id (GET) - should return repertoires by user ID', async () => {
+    let id_user: String;
     const test = await request(app.getHttpServer()) // Crécupération des user pour récupérer le premier id
       .get('/users');
 
-    userId = test.body[0].id
+    id_user = test.body[0].id
 
-    return await request(app.getHttpServer()).get(`/repertoires_notes/user/${userId}`).expect(200).expect((response) => {
+    return await request(app.getHttpServer()).get(`/repertoires_notes/user/${id_user}`).expect(200).expect((response) => {
       const repertoires = response.body;
       expect(Array.isArray(repertoires)).toBe(true);
     });
@@ -72,13 +73,18 @@ describe('RepertoiresNotesController (e2e)', () => {
       });
   });
 
-  it('/repertoires_notes/:id (PATCH) - should update a specific repertoire', async () => {
+  it('/repertoires_notes/:id (PATCH) - should update a specific repertoire', () => {
     const updatedRepertoire = { re_libelle: 'Nouveau répertoire' }; // Provide the necessary data for updating the repertoire
 
-    await request(app.getHttpServer()).patch(`/repertoires_notes/${createdRepertoireId}`).send(updatedRepertoire).expect(200);
-
-    const retrievedRepertoire = await repertoiresService.findById(createdRepertoireId);
-    expect(retrievedRepertoire.re_libelle).toBe(updatedRepertoire.re_libelle);
+    return request(app.getHttpServer())
+      .patch(`/repertoires_notes/${createdRepertoireId}`)
+      .send(updatedRepertoire)
+      .expect(200)
+      .expect((response) => {
+        const retrievedRepertoire = response.body;
+        expect(retrievedRepertoire.id).toBe(createdRepertoireId);
+        expect(retrievedRepertoire.re_libelle).toBe(updatedRepertoire.re_libelle);
+      });
   });
 
   it('/repertoires_notes/:id (DELETE) - should delete a specific repertoire', () => {

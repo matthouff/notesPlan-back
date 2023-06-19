@@ -13,8 +13,8 @@ export class RepertoiresNotesService {
     return await this.repertoiresRepository.getAll();
   }
 
-  async findAllByUserId(userId: string): Promise<IRepertoire[]> {
-    return await this.repertoiresRepository.findAllByUserId(userId);
+  async findAllByUserId(id_user: string): Promise<IRepertoire[]> {
+    return await this.repertoiresRepository.findAllByUserId(id_user);
   }
 
   async create(data: Repertoire): Promise<Repertoire> {

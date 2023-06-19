@@ -11,8 +11,8 @@ export default class RepertoiresNotesServiceMock {
     return this.repertoires;
   }
 
-  async findAllByUserId(userId: string): Promise<Repertoire[]> {
-    return this.repertoires.filter(repertoire => repertoire.id_user === userId);
+  async findAllById_User(id_user: string): Promise<Repertoire[]> {
+    return this.repertoires.filter(repertoire => repertoire.id_user === id_user);
   }
 
   async create(data: any): Promise<Repertoire> {

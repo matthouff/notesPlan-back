@@ -16,9 +16,9 @@ export class RepertoiresNotesController {
     return this.repertoiresService.findAll();
   }
 
-  @Get("user/:userId")
-  findAllByUserId(@Param('userId') userId: string): Promise<IRepertoire[]> {
-    return this.repertoiresService.findAllByUserId(userId);
+  @Get("user/:id_user")
+  findAllByUserId(@Param('id_user') id_user: string): Promise<IRepertoire[]> {
+    return this.repertoiresService.findAllByUserId(id_user);
   }
 
   @Post()

@@ -15,7 +15,7 @@ export class RepertoiresNotesRepository extends RepositoryStarter<RepertoireNote
     return await this.model.exist({ where: { re_libelle } });
   }
 
-  async findAllByUserId(userId: string) {
-    return await this.model.find({ where: { user: { id: userId } } });
+  async findAllByUserId(id_user: string) {
+    return await this.model.find({ where: { user: { id: id_user } } });
   }
 }
