@@ -11,17 +11,26 @@ import { LabelModule } from './modules/labels/labels.module';
 import { NoteModule } from './modules/notes/notes.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'root',
-    database: 'souviensToi',
-    autoLoadEntities: true,
-    synchronize: true,
-  }), RepertoireGroupesModule, RepertoireNotesModule, GroupeModule, TacheModule, LabelModule, NoteModule],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'root',
+      database: 'souviensToi',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    RepertoireGroupesModule,
+    RepertoireNotesModule,
+    GroupeModule,
+    TacheModule,
+    LabelModule,
+    NoteModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { } 
+export class AppModule {}
