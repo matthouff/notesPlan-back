@@ -17,7 +17,6 @@ export class Note extends EntityStarter implements INote {
   id_repertoire: string;
 
   @ManyToOne(() => RepertoireNote, repertoire => repertoire.id)
-  @JoinColumn({ name: 'id_repertoire' })
   repertoire: RepertoireNote;
 
 
