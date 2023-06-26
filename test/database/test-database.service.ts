@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
-import { StringCleanupSubscriber } from "src/database/subscriber/string-cleanup.subscriber";
 
 @Injectable()
 export class TestDatabaseService implements TypeOrmOptionsFactory {
@@ -21,7 +20,6 @@ export class TestDatabaseService implements TypeOrmOptionsFactory {
 			synchronize: true,
 			dropSchema: true,
 			retryAttempts: 0,
-			subscribers: [StringCleanupSubscriber],
 		};
 	}
 }

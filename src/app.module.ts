@@ -9,20 +9,12 @@ import { GroupeModule } from './modules/groupes/groupes.module';
 import { TacheModule } from './modules/taches/taches.module';
 import { LabelModule } from './modules/labels/labels.module';
 import { NoteModule } from './modules/notes/notes.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'souviensToi',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    DatabaseModule,
     RepertoireGroupesModule,
     RepertoireNotesModule,
     GroupeModule,
@@ -33,4 +25,4 @@ import { NoteModule } from './modules/notes/notes.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
