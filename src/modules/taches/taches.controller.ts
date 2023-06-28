@@ -16,6 +16,11 @@ export class TacheController {
     return this.tachesService.findAll();
   }
 
+  @Get("/tache/:id")
+  findAllByGroupeId(@Param('id') id_groupe: string): Promise<ITache[]> {
+    return this.tachesService.findAllByGroupeId(id_groupe);
+  }
+
   @Post()
   create(@Body() repertoireDto: Tache) {
     return this.tachesService.create(repertoireDto)

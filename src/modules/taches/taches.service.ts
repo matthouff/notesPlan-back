@@ -13,6 +13,10 @@ export class TacheService {
     return await this.tachesRepository.getAll();
   }
 
+  async findAllByGroupeId(id_groupe: string): Promise<ITache[]> {
+    return await this.tachesRepository.findByGroupeId(id_groupe);
+  }
+
   async create(data: Tache): Promise<Tache> {
     return await this.tachesRepository.save(data);
   }

@@ -22,7 +22,6 @@ export class Tache extends EntityStarter implements ITache {
   id_groupe: string;
 
   @ManyToOne(() => Groupe, groupe => groupe.id)
-  @JoinColumn({ name: 'id_groupe' })
   groupe: Groupe;
 
 

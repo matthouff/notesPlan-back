@@ -11,8 +11,7 @@ export class RepertoiresGroupesRepository extends RepositoryStarter<RepertoireGr
     super(datasource.getRepository(RepertoireGroupe));
   }
 
-  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(re_libelle: string) {
-    return await this.model.exist({ where: { re_libelle } });
+  async findAllByUserId(id_user: string) {
+    return await this.model.find({ where: { user: { id: id_user } } });
   }
 }

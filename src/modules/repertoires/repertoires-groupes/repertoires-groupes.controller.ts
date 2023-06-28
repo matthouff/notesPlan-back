@@ -16,6 +16,11 @@ export class RepertoiresGroupesController {
     return this.repertoiresService.findAll();
   }
 
+  @Get("user/:id_user")
+  findAllByUserId(@Param('id_user') id_user: string): Promise<IRepertoire[]> {
+    return this.repertoiresService.findAllByUserId(id_user);
+  }
+
   @Post()
   create(@Body() repertoireDto: Repertoire) {
     return this.repertoiresService.create(repertoireDto)

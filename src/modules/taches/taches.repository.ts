@@ -10,8 +10,13 @@ export class TacheRepository extends RepositoryStarter<Tache> {
     super(datasource.getRepository(Tache));
   }
 
-  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(ta_libelle: string) {
-    return await this.model.exist({ where: { ta_libelle } });
+  async findByGroupeId(id_groupe: string) {
+    try {
+      return await this.model.find({ where: { groupe: { id: id_groupe } } });
+    } catch (error) {
+      // Gérer les erreurs
+      console.error(error);
+      throw new Error("Erreur lors de la récupération des notes.");
+    }
   }
 }

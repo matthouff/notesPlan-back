@@ -4,7 +4,7 @@ import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
 import { IRepertoireCreator } from "src/modules/repertoires/commun/entity/repertoires.interface";
 import { v4 as uuidv4 } from 'uuid';
 
-export default class RepertoiresNotesServiceMock {
+export default class RepertoiresServiceMock {
   private repertoires: Repertoire[] = [];
 
   async findAll(): Promise<Repertoire[]> {

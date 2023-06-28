@@ -13,6 +13,10 @@ export class RepertoiresGroupesService {
     return await this.repertoiresRepository.getAll();
   }
 
+  async findAllByUserId(id_user: string): Promise<IRepertoire[]> {
+    return await this.repertoiresRepository.findAllByUserId(id_user);
+  }
+
   async create(data: Repertoire): Promise<Repertoire> {
     return await this.repertoiresRepository.save(data);
   }

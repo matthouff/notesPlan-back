@@ -18,7 +18,6 @@ export class Label extends EntityStarter implements ILabel {
   id_tache: string;
 
   @ManyToOne(() => Tache, tache => tache.id)
-  @JoinColumn({ name: 'id_tache' })
   tache: Tache;
 
 

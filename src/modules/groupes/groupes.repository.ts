@@ -10,8 +10,13 @@ export class GroupesRepository extends RepositoryStarter<Groupe> {
     super(datasource.getRepository(Groupe));
   }
 
-  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(gr_libelle: string) {
-    return await this.model.exist({ where: { gr_libelle } });
+  async findByRepertoireId(id_repertoire: string) {
+    try {
+      return await this.model.find({ where: { repertoire: { id: id_repertoire } } });
+    } catch (error) {
+      // Gérer les erreurs
+      console.error(error);
+      throw new Error("Erreur lors de la récupération des notes.");
+    }
   }
 }

@@ -2,14 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { RepertoiresNotesService } from 'src/modules/repertoires/repertoires-notes/repertoires-notes.service';
-import RepertoiresNotesServiceMock from './mock/repertoiresNotesServiceMock';
-import { response } from 'express';
 import { NoteService } from 'src/modules/notes/notes.service';
+import NotesServiceMock from './mock/noteServiceMock';
 
-describe('RepertoiresNotesController (e2e)', () => {
+describe('notesNotesController (e2e)', () => {
   let app: INestApplication;
-  let createdRepertoireId: string;
+  let createdNoteId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,7 +15,7 @@ describe('RepertoiresNotesController (e2e)', () => {
       providers: [
         {
           provide: NoteService,
-          useClass: RepertoiresNotesServiceMock, // Utilisez le mock du service des users
+          useClass: NotesServiceMock, // Utilisez le mock du service des Notes
         },
       ],
     }).compile();
@@ -30,67 +28,69 @@ describe('RepertoiresNotesController (e2e)', () => {
     await app.close();
   });
 
-  it('/repertoires_notes (GET) - should return all repertoires', async () => {
-    return await request(app.getHttpServer()).get('/repertoires_notes').expect(200).expect((response) => {
-      const repertoires = response.body;
-      expect(Array.isArray(repertoires)).toBe(true);
+  it('/notes (GET) - should return all notes', async () => {
+    return await request(app.getHttpServer()).get('/notes').expect(200).expect((response) => {
+      const notes = response.body;
+      expect(Array.isArray(notes)).toBe(true);
     });
 
   });
 
-  it('/repertoires_notes (POST) - should create a new repertoire', () => {
-    const newRepertoire = { re_libelle: 'New Repertoire' };
+  it('/notes (POST) - should create a new Note', () => {
+    const newNote = { no_libelle: 'New Note' };
     return request(app.getHttpServer())
-      .post('/repertoires_notes')
-      .send(newRepertoire)
+      .post('/notes')
+      .send(newNote)
       .expect(201)
       .expect((response) => {
-        const createdRepertoire = response.body;
-        expect(createdRepertoire.re_libelle).toBe(newRepertoire.re_libelle);
-        createdRepertoireId = createdRepertoire.id;
+        const createdNote = response.body;
+        expect(createdNote.no_libelle).toBe(newNote.no_libelle);
+        createdNoteId = createdNote.id;
       });
   });
 
-  it('/repertoires_notes/user/:id (GET) - should return repertoires by user ID', async () => {
-    let id_user: String;
-    const test = await request(app.getHttpServer()) // Crécupération des user pour récupérer le premier id
-      .get('/users');
-
-    id_user = test.body[0].id
-
-    return await request(app.getHttpServer()).get(`/repertoires_notes/user/${id_user}`).expect(200).expect((response) => {
+  // Récupération d'une note à partir de l'id du premier répertoire
+  it('/notes/repertoire/:id (GET) - should return notes by repertoire ID', async () => {
+    const repertoire = await request(app.getHttpServer()).get('/repertoires_notes').expect(200).expect((response) => {
       const repertoires = response.body;
       expect(Array.isArray(repertoires)).toBe(true);
     });
+
+    const id_repertoire = repertoire.body[0].id
+
+    return await request(app.getHttpServer()).get(`/notes/repertoire/${id_repertoire}`).expect(200).expect((response) => {
+      const notes = response.body;
+      expect(Array.isArray(notes)).toBe(true);
+    });
   });
 
-  it('/repertoires_notes/:id (GET) - should return a specific repertoire', async () => {
+  it('/notes/:id (GET) - should return a specific note', async () => {
     return await request(app.getHttpServer())
-      .get(`/repertoires_notes/${createdRepertoireId}`)
+      .get(`/notes/${createdNoteId}`)
       .expect(200)
       .expect((response) => {
-        const repertoire = response.body;
-        expect(repertoire.id).toBe(createdRepertoireId);
+        const note = response.body;
+        expect(note.id).toBe(createdNoteId);
       });
   });
 
-  it('/repertoires_notes/:id (PATCH) - should update a specific repertoire', () => {
-    const updatedRepertoire = { re_libelle: 'Nouveau répertoire' }; // Provide the necessary data for updating the repertoire
+  it('/notes/:id (PATCH) - should update a specific Note', () => {
+    const updatedNote = { no_libelle: 'Nouvelle note' }; // Provide the necessary data for updating the Note
 
     return request(app.getHttpServer())
-      .patch(`/repertoires_notes/${createdRepertoireId}`)
-      .send(updatedRepertoire)
+      .patch(`/notes/${createdNoteId}`)
+      .send(updatedNote)
       .expect(200)
       .expect((response) => {
-        const retrievedRepertoire = response.body;
-        expect(retrievedRepertoire.id).toBe(createdRepertoireId);
-        expect(retrievedRepertoire.re_libelle).toBe(updatedRepertoire.re_libelle);
+        const retrievedNote = response.body;
+        expect(retrievedNote.id).toBe(createdNoteId);
+        expect(retrievedNote.no_libelle).toBe(updatedNote.no_libelle);
       });
   });
 
-  it('/repertoires_notes/:id (DELETE) - should delete a specific repertoire', () => {
+  it('/notes/:id (DELETE) - should delete a specific Note', () => {
     return request(app.getHttpServer())
-      .delete(`/repertoires_notes/${createdRepertoireId}`)
+      .delete(`/notes/${createdNoteId}`)
       .expect(200);
   });
 });
