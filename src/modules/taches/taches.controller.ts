@@ -16,7 +16,7 @@ export class TacheController {
     return this.tachesService.findAll();
   }
 
-  @Get("/tache/:id")
+  @Get("/groupe/:id")
   findAllByGroupeId(@Param('id') id_groupe: string): Promise<ITache[]> {
     return this.tachesService.findAllByGroupeId(id_groupe);
   }
