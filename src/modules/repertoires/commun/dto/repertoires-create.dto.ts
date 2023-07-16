@@ -7,5 +7,5 @@ export class CreateRepertoireDto {
 
   @IsUUID()
   @IsNotEmpty()
-  id_user: string;
+  userId: string;
 }

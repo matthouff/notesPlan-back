@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { EditRepertoireDto } from "../commun/dto/repertoires-edit.dto";
 import { Repertoire } from "../commun/entity/repertoires";
 import { IRepertoire } from "../commun/entity/repertoires.interface";
+import { RepertoireGroupe } from "./entity/repertoires-groupes";
 import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
 
 @Injectable()
@@ -13,15 +14,15 @@ export class RepertoiresGroupesService {
     return await this.repertoiresRepository.getAll();
   }
 
-  async findAllByUserId(id_user: string): Promise<IRepertoire[]> {
-    return await this.repertoiresRepository.findAllByUserId(id_user);
+  async findAllByUserId(userId: string): Promise<IRepertoire[]> {
+    return await this.repertoiresRepository.findAllByUserId(userId);
   }
 
-  async create(data: Repertoire): Promise<Repertoire> {
+  async create(data: RepertoireGroupe): Promise<RepertoireGroupe> {
     return await this.repertoiresRepository.save(data);
   }
 
-  async findById(id: string): Promise<Repertoire> {
+  async findById(id: string): Promise<RepertoireGroupe> {
     return await this.repertoiresRepository.findByID(id);
   }
 

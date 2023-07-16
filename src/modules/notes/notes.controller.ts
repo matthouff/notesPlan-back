@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { RepertoireNote } from '../repertoires/repertoires-notes/entity/repertoires-notes';
 import { EditNoteDto } from './dto/notes-edit.dto';
 import { Note } from './entity/notes';
 import { INote } from './entity/notes.interface';
@@ -12,8 +13,8 @@ export class NoteController {
   constructor(readonly notesService: NoteService) { }
 
   @Get("/repertoire/:id")
-  findAllByRepertoireId(@Param('id') id_repertoire: string): Promise<INote[]> {
-    return this.notesService.findAllByRepertoireId(id_repertoire);
+  findAllByRepertoireId(@Param('id') repertoireId: string): Promise<INote[]> {
+    return this.notesService.findAllByRepertoireId(repertoireId);
   }
 
   @Get()

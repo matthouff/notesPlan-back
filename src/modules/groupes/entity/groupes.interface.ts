@@ -1,10 +1,11 @@
 import { IEntityStarter } from "src/modules/entity-starter.class";
+import { RepertoireGroupe } from "src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes";
 
 interface IFixedPart { }
 
 interface IMandatoryPart {
   libelle: string;
-  id_repertoire: string;
+  repertoireId: RepertoireGroupe;
 }
 
 interface IOptionalPart {

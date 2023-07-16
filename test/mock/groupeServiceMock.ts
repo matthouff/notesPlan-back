@@ -10,8 +10,8 @@ export default class GroupesServiceMock {
     return this.groupes;
   }
 
-  async findAllById_repertoire(id_repertoire: string): Promise<Groupe[]> {
-    return this.groupes.filter(groupe => groupe.id_repertoire === id_repertoire);
+  async findAllByrepertoireId(repertoireId: string): Promise<Groupe[]> {
+    return this.groupes.filter(groupe => groupe.repertoireId === repertoireId);
   }
 
   async create(data: any): Promise<Groupe> {
@@ -36,7 +36,7 @@ export default class GroupesServiceMock {
     if (groupe) {
       groupe.libelle = editgroupeDto.libelle;
       groupe.couleur = editgroupeDto.couleur;
-      groupe.id_repertoire = editgroupeDto.id_repertoire;
+      groupe.repertoireId = editgroupeDto.repertoireId;
     }
     return groupe;
   }

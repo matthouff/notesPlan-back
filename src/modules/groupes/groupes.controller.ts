@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { RepertoireGroupe } from '../repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { EditGroupeDto } from './dto/groupes-edit.dto';
 import { Groupe } from './entity/groupes';
 import { IGroupe } from './entity/groupes.interface';
@@ -32,7 +33,7 @@ export class GroupeController {
   }
 
   @Patch(":id")
-  update(@Body() repertoireDto: EditGroupeDto, @Param() repertoire: IGroupe) {
+  update(@Body() repertoireDto: RepertoireGroupe, @Param() repertoire: IGroupe) {
     return this.groupesService.update(repertoireDto, repertoire.id)
   }
 

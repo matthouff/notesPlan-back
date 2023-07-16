@@ -14,5 +14,5 @@ export class CreateNoteDto {
 
   @IsNotEmpty()
   @IsUUID()
-  id_repertoire: string;
+  repertoireId: string;
 }

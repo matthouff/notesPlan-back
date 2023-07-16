@@ -1,5 +1,6 @@
 import { Logger } from "@nestjs/common";
 import { Repertoire } from "../commun/entity/repertoires";
+import { RepertoireGroupe } from "./entity/repertoires-groupes";
 import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
 
 
@@ -46,7 +47,7 @@ export class RepertoiresActions {
 	// 	return deleted;
 	// }
 
-	async saverepertoiresToDatabase(repertoiresEntity: Repertoire): Promise<Repertoire> {
+	async saverepertoiresToDatabase(repertoiresEntity: RepertoireGroupe): Promise<RepertoireGroupe> {
 		const repertoires = await this.repertoiresRepository.save(repertoiresEntity);
 
 		this.logger.debug(`Le repertoires a été sauvegardé dans la base de données`);

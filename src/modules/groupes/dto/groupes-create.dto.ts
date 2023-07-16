@@ -14,5 +14,5 @@ export class CreateGroupeDto {
 
   @IsNotEmpty()
   @IsUUID()
-  id_repertoire: string;
+  repertoireId: string;
 }

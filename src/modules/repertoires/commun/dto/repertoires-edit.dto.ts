@@ -7,5 +7,5 @@ export class EditRepertoireDto {
 
   @IsUUID()
   @IsOptional()
-  id_user: string;
+  userId: string;
 }

@@ -8,7 +8,7 @@ import UsersServiceMock from './mock/usersServiceMock';
 
 describe('UsersControllerService (e2e)', () => {
   let app: INestApplication;
-  let id_user: string;
+  let userId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -50,17 +50,17 @@ describe('UsersControllerService (e2e)', () => {
         const createdUser = response.body;
         expect(createdUser.name).toBe(newUser.name);
         expect(createdUser.email).toBe(newUser.email);
-        id_user = createdUser.id
+        userId = createdUser.id
       });
   });
 
   it('/users/:id (GET) - should return a specific user', () => {
     return request(app.getHttpServer())
-      .get(`/users/${id_user}`)
+      .get(`/users/${userId}`)
       .expect(200)
       .expect((response) => {
         const user = response.body;
-        expect(user.id).toBe(id_user);
+        expect(user.id).toBe(userId);
       });
   });
 
@@ -68,18 +68,18 @@ describe('UsersControllerService (e2e)', () => {
     const updatedUser = { nom: 'Berthelot' };
 
     return request(app.getHttpServer())
-      .patch(`/users/${id_user}`)
+      .patch(`/users/${userId}`)
       .send(updatedUser)
       .expect(200)
       .expect((response) => {
         const userExist = response.body;
-        expect(userExist.id).toBe(id_user);
+        expect(userExist.id).toBe(userId);
         expect(userExist.nom).toBe(updatedUser.nom);
       });
   });
 
   it('/users/:id (DELETE) - should delete a specific user', () => {
-    const currentUserId = id_user;
+    const currentUserId = userId;
 
     return request(app.getHttpServer())
       .delete(`/users/${currentUserId}`)

@@ -13,11 +13,8 @@ export class Note extends EntityStarter implements INote {
   @Column({ type: 'varchar', nullable: true })
   message?: string | null;
 
-  @Column({ default: uuidv4() })
-  id_repertoire: string;
-
-  @ManyToOne(() => RepertoireNote, repertoire => repertoire.id)
-  repertoire: RepertoireNote;
+  @ManyToOne(() => RepertoireNote, repNote => repNote.id)
+  repertoireId: RepertoireNote;
 
 
   // fonction qui ne renvoie rien (void)

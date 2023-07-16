@@ -6,6 +6,7 @@ import * as cors from 'cors';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+
   // débloque la requête Cross-Origin (requête HTTP effectuée depuis un domaine, un protocole ou un port différent de celui de la ressource demandée)
   const corsOptions: CorsOptions = {
     origin: true, // Remplacez true par l'URL ou les origines autorisées

@@ -49,13 +49,13 @@ describe('RepertoiresgroupesController (e2e)', () => {
   });
 
   it('/repertoires_groupes/user/:id (GET) - should return repertoires by user ID', async () => {
-    let id_user: String;
+    let userId: String;
     const test = await request(app.getHttpServer()) // Crécupération des user pour récupérer le premier id
       .get('/users');
 
-    id_user = test.body[0].id
+    userId = test.body[0].id
 
-    return await request(app.getHttpServer()).get(`/repertoires_groupes/user/${id_user}`).expect(200).expect((response) => {
+    return await request(app.getHttpServer()).get(`/repertoires_groupes/user/${userId}`).expect(200).expect((response) => {
       const repertoires = response.body;
       expect(Array.isArray(repertoires)).toBe(true);
     });

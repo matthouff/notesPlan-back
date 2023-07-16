@@ -14,5 +14,5 @@ export class EditGroupeDto {
 
   @IsOptional()
   @IsUUID()
-  id_repertoire: string;
+  repertoireId: string;
 }

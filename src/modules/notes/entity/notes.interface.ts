@@ -1,9 +1,11 @@
 import { IEntityStarter } from "src/modules/entity-starter.class";
+import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
+import { RepertoireNote } from "src/modules/repertoires/repertoires-notes/entity/repertoires-notes";
 
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  id_repertoire: string;
+  repertoireId: RepertoireNote;
 }
 
 interface IOptionalPart {

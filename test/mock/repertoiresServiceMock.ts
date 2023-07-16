@@ -11,8 +11,8 @@ export default class RepertoiresServiceMock {
     return this.repertoires;
   }
 
-  async findAllById_User(id_user: string): Promise<Repertoire[]> {
-    return this.repertoires.filter(repertoire => repertoire.id_user === id_user);
+  async findAllByuserId(userId: string): Promise<Repertoire[]> {
+    return this.repertoires.filter(repertoire => repertoire.userId === userId);
   }
 
   async create(data: any): Promise<Repertoire> {
@@ -36,7 +36,7 @@ export default class RepertoiresServiceMock {
     const repertoire = this.repertoires.find(repertoire => repertoire.id === id);
     if (repertoire) {
       repertoire.libelle = editRepertoireDto.libelle;
-      repertoire.id_user = editRepertoireDto.id_user;
+      repertoire.userId = editRepertoireDto.userId;
     }
     return repertoire;
   }

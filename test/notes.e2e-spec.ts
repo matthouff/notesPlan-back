@@ -56,9 +56,9 @@ describe('notesNotesController (e2e)', () => {
       expect(Array.isArray(repertoires)).toBe(true);
     });
 
-    const id_repertoire = repertoire.body[0].id
+    const repertoireId = repertoire.body[0].id
 
-    return await request(app.getHttpServer()).get(`/notes/repertoire/${id_repertoire}`).expect(200).expect((response) => {
+    return await request(app.getHttpServer()).get(`/notes/repertoire/${repertoireId}`).expect(200).expect((response) => {
       const notes = response.body;
       expect(Array.isArray(notes)).toBe(true);
     });

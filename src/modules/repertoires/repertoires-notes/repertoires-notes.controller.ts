@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
 import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
+import { RepertoireNote } from './entity/repertoires-notes';
 import { RepertoiresNotesService } from './repertoires-notes.service';
 
 
@@ -16,13 +17,13 @@ export class RepertoiresNotesController {
     return this.repertoiresService.findAll();
   }
 
-  @Get("user/:id_user")
-  findAllByUserId(@Param('id_user') id_user: string): Promise<IRepertoire[]> {
-    return this.repertoiresService.findAllByUserId(id_user);
+  @Get("user/:userId")
+  findAllByUserId(@Param('userId') userId: string): Promise<IRepertoire[]> {
+    return this.repertoiresService.findAllByUserId(userId);
   }
 
   @Post()
-  create(@Body() repertoireDto: Repertoire) {
+  create(@Body() repertoireDto: RepertoireNote) {
     return this.repertoiresService.create(repertoireDto)
   }
 

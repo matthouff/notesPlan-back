@@ -1,10 +1,11 @@
 import { IEntityStarter } from "src/modules/entity-starter.class";
+import { User } from "src/modules/users/entity/users";
 
 interface IFixedPart { }
 
 interface IMandatoryPart {
   libelle: string;
-  id_user: string;
+  user: User;
 }
 
 interface IOptionalPart { }

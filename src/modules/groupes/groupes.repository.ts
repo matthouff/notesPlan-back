@@ -10,9 +10,9 @@ export class GroupesRepository extends RepositoryStarter<Groupe> {
     super(datasource.getRepository(Groupe));
   }
 
-  async findByRepertoireId(id_repertoire: string) {
+  async findByRepertoireId(repertoireId: string) {
     try {
-      return await this.model.find({ where: { repertoire: { id: id_repertoire } } });
+      return await this.model.find({ where: { id: repertoireId } });
     } catch (error) {
       // Gérer les erreurs
       console.error(error);

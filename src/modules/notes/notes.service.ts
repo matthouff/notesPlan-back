@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { RepertoireNote } from "../repertoires/repertoires-notes/entity/repertoires-notes";
 import { EditNoteDto } from "./dto/notes-edit.dto";
 import { Note } from "./entity/notes";
 import { INote } from "./entity/notes.interface";
@@ -13,8 +14,8 @@ export class NoteService {
     return await this.notesRepository.getAll();
   }
 
-  async findAllByRepertoireId(id_repertoire: string): Promise<INote[]> {
-    return await this.notesRepository.findByRepertoireId(id_repertoire);
+  async findAllByRepertoireId(repertoireId: string): Promise<INote[]> {
+    return await this.notesRepository.findByRepertoireId(repertoireId);
   }
 
   async create(data: Note): Promise<Note> {

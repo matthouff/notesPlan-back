@@ -10,8 +10,8 @@ export default class NotesServiceMock {
     return this.notes;
   }
 
-  async findAllById_repertoire(id_repertoire: string): Promise<Note[]> {
-    return this.notes.filter(note => note.id_repertoire === id_repertoire);
+  async findAllByrepertoireId(repertoireId: string): Promise<Note[]> {
+    return this.notes.filter(note => note.repertoireId === repertoireId);
   }
 
   async create(data: any): Promise<Note> {
@@ -35,7 +35,7 @@ export default class NotesServiceMock {
     const note = this.notes.find(note => note.id === id);
     if (note) {
       note.libelle = editnoteDto.libelle;
-      note.id_repertoire = editnoteDto.id_repertoire;
+      note.repertoireId = editnoteDto.repertoireId;
     }
     return note;
   }

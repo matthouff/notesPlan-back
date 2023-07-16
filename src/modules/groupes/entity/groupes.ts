@@ -13,11 +13,8 @@ export class Groupe extends EntityStarter implements IGroupe {
   @Column({ type: 'varchar', nullable: true })
   couleur: string | null;
 
-  @Column({ default: uuidv4() })
-  id_repertoire: string;
-
   @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id)
-  repertoire: RepertoireGroupe;
+  repertoireId: RepertoireGroupe;
 
 
   // fonction qui ne renvoie rien (void)
