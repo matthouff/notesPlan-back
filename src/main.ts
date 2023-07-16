@@ -9,7 +9,7 @@ async function bootstrap() {
   // débloque la requête Cross-Origin (requête HTTP effectuée depuis un domaine, un protocole ou un port différent de celui de la ressource demandée)
   const corsOptions: CorsOptions = {
     origin: true, // Remplacez true par l'URL ou les origines autorisées
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
 

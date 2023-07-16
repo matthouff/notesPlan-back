@@ -31,14 +31,3 @@ export interface IUserResponse extends IUser { }
 export interface IUserEditorMandatory extends Partial<IMandatoryPart> { }
 export interface IUserEditorOptional extends IOptionalPart { }
 export interface IUserEditor extends IUserEditorMandatory, IUserEditorOptional { }
-
-
-
-// export interface IUser {
-//   id: number;
-//   us_nom: string | null;
-//   us_prenom: string | null;
-//   us_email: string | null;
-//   us_login: string | null;
-//   us_password: string | null;
-// }
