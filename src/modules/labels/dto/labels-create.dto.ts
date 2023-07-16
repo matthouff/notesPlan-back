@@ -6,11 +6,11 @@ export class CreateTacheDto {
   })
   @IsOptional()
   @IsOptional()
-  la_libelle?: string | null;
+  libelle?: string | null;
 
   @IsOptional()
   @IsString()
-  la_couleur?: string | null;
+  couleur?: string | null;
 
   @IsNotEmpty()
   @IsUUID()

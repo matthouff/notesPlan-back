@@ -34,7 +34,7 @@ export default class NotesServiceMock {
   async update(editnoteDto: EditNoteDto, id: string) {
     const note = this.notes.find(note => note.id === id);
     if (note) {
-      note.no_libelle = editnoteDto.no_libelle;
+      note.libelle = editnoteDto.libelle;
       note.id_repertoire = editnoteDto.id_repertoire;
     }
     return note;

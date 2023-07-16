@@ -10,8 +10,8 @@ export class userRepository extends RepositoryStarter<User> {
     super(datasource.getRepository(User));
   }
 
-  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM users WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(us_nom: string) {
-    return await this.model.exist({ where: { us_nom } });
+  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM users WHERE nom = 'Berthelot') AS result;
+  async findByNom(nom: string) {
+    return await this.model.exist({ where: { nom } });
   }
 }

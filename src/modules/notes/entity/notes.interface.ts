@@ -7,8 +7,8 @@ interface IMandatoryPart {
 }
 
 interface IOptionalPart {
-  no_libelle?: string | null,
-  no_message?: string | null,
+  libelle?: string | null,
+  message?: string | null,
 }
 
 export interface INote

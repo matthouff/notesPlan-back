@@ -3,7 +3,7 @@ import { IsString, IsEmail, Length, IsOptional, IsNotEmpty, IsUUID } from 'class
 export class EditRepertoireDto {
   @IsString()
   @IsOptional()
-  re_libelle: string;
+  libelle: string;
 
   @IsUUID()
   @IsOptional()

@@ -37,14 +37,14 @@ describe('tachesController (e2e)', () => {
   });
 
   it('/taches (POST) - should create a new tache', () => {
-    const newTache = { ta_libelle: 'New tache' };
+    const newTache = { libelle: 'New tache' };
     return request(app.getHttpServer())
       .post('/taches')
       .send(newTache)
       .expect(201)
       .expect((response) => {
         const createdTache = response.body;
-        expect(createdTache.ta_libelle).toBe(newTache.ta_libelle);
+        expect(createdTache.libelle).toBe(newTache.libelle);
         createdTacheId = createdTache.id;
       });
   });
@@ -75,7 +75,7 @@ describe('tachesController (e2e)', () => {
   });
 
   it('/taches/:id (PATCH) - should update a specific tache', () => {
-    const updatedtache = { ta_libelle: 'Nouvelle tache' }; // Provide the necessary data for updating the tache
+    const updatedtache = { libelle: 'Nouvelle tache' }; // Provide the necessary data for updating the tache
 
     return request(app.getHttpServer())
       .patch(`/taches/${createdTacheId}`)
@@ -84,7 +84,7 @@ describe('tachesController (e2e)', () => {
       .expect((response) => {
         const retrievedtache = response.body;
         expect(retrievedtache.id).toBe(createdTacheId);
-        expect(retrievedtache.ta_libelle).toBe(updatedtache.ta_libelle);
+        expect(retrievedtache.libelle).toBe(updatedtache.libelle);
       });
   });
 

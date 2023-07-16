@@ -8,10 +8,10 @@ import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity
 @Entity('notes')
 export class Note extends EntityStarter implements INote {
   @Column({ type: 'varchar', length: 100 })
-  no_libelle?: string | null;
+  libelle?: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  no_message?: string | null;
+  message?: string | null;
 
   @Column({ default: uuidv4() })
   id_repertoire: string;
@@ -23,10 +23,10 @@ export class Note extends EntityStarter implements INote {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes
   editOptional(data: INoteEditorOptional): void {
-    const { no_libelle } = data;
+    const { libelle } = data;
 
-    if (no_libelle && no_libelle !== this.no_libelle) {
-      this.no_libelle = no_libelle;
+    if (libelle && libelle !== this.libelle) {
+      this.libelle = libelle;
     }
   }
 

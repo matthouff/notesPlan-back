@@ -6,11 +6,11 @@ export class CreateGroupeDto {
   })
   @IsNotEmpty()
   @IsString()
-  gr_libelle: string;
+  libelle: string;
 
   @IsOptional()
   @IsString()
-  gr_couleur?: string | null;
+  couleur?: string | null;
 
   @IsNotEmpty()
   @IsUUID()

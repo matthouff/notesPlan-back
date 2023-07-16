@@ -37,14 +37,14 @@ describe('labelslabelsController (e2e)', () => {
   });
 
   it('/labels (POST) - should create a new label', () => {
-    const newLabel = { la_libelle: 'New label' };
+    const newLabel = { libelle: 'New label' };
     return request(app.getHttpServer())
       .post('/labels')
       .send(newLabel)
       .expect(201)
       .expect((response) => {
         const createdlabel = response.body;
-        expect(createdlabel.la_libelle).toBe(newLabel.la_libelle);
+        expect(createdlabel.libelle).toBe(newLabel.libelle);
         createdlabelId = createdlabel.id;
       });
   });
@@ -60,7 +60,7 @@ describe('labelslabelsController (e2e)', () => {
   });
 
   it('/labels/:id (PATCH) - should update a specific label', () => {
-    const updatedlabel = { la_libelle: 'Nouvelle label' }; // Provide the necessary data for updating the label
+    const updatedlabel = { libelle: 'Nouvelle label' }; // Provide the necessary data for updating the label
 
     return request(app.getHttpServer())
       .patch(`/labels/${createdlabelId}`)
@@ -69,7 +69,7 @@ describe('labelslabelsController (e2e)', () => {
       .expect((response) => {
         const retrievedlabel = response.body;
         expect(retrievedlabel.id).toBe(createdlabelId);
-        expect(retrievedlabel.la_libelle).toBe(updatedlabel.la_libelle);
+        expect(retrievedlabel.libelle).toBe(updatedlabel.libelle);
       });
   });
 

@@ -34,7 +34,7 @@ export default class LabelsServiceMock {
   async update(editlabelDto: EditLabelDto, id: string) {
     const label = this.labels.find(label => label.id === id);
     if (label) {
-      label.la_libelle = editlabelDto.la_libelle;
+      label.libelle = editlabelDto.libelle;
       label.id_tache = editlabelDto.id_tache;
     }
     return label;

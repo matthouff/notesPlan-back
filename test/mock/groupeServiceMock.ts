@@ -34,8 +34,8 @@ export default class GroupesServiceMock {
   async update(editgroupeDto: EditGroupeDto, id: string) {
     const groupe = this.groupes.find(groupe => groupe.id === id);
     if (groupe) {
-      groupe.gr_libelle = editgroupeDto.gr_libelle;
-      groupe.gr_couleur = editgroupeDto.gr_couleur;
+      groupe.libelle = editgroupeDto.libelle;
+      groupe.couleur = editgroupeDto.couleur;
       groupe.id_repertoire = editgroupeDto.id_repertoire;
     }
     return groupe;

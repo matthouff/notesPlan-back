@@ -6,11 +6,11 @@ export class CreateNoteDto {
   })
   @IsOptional()
   @IsString()
-  no_libelle?: string | null;
+  libelle?: string | null;
 
   @IsOptional()
   @IsString()
-  no_message?: string | null;
+  message?: string | null;
 
   @IsNotEmpty()
   @IsUUID()

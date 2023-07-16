@@ -35,7 +35,7 @@ export default class RepertoiresServiceMock {
   async update(editRepertoireDto: EditRepertoireDto, id: string) {
     const repertoire = this.repertoires.find(repertoire => repertoire.id === id);
     if (repertoire) {
-      repertoire.re_libelle = editRepertoireDto.re_libelle;
+      repertoire.libelle = editRepertoireDto.libelle;
       repertoire.id_user = editRepertoireDto.id_user;
     }
     return repertoire;

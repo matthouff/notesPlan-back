@@ -3,14 +3,14 @@ import { IEntityStarter } from "src/modules/entity-starter.class";
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  us_prenom: string
-  us_email: string
-  us_login: string
-  us_password: string
+  prenom: string
+  email: string
+  login: string
+  password: string
 }
 
 interface IOptionalPart {
-  us_nom?: string | null;
+  nom?: string | null;
 }
 
 export interface IUser

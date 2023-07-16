@@ -7,16 +7,16 @@ import { Groupe } from 'src/modules/groupes/entity/groupes';
 @Entity('taches')
 export class Tache extends EntityStarter implements ITache {
   @Column({ type: 'varchar', length: 100 })
-  ta_libelle: string;
+  libelle: string;
 
   @Column({ type: 'varchar', nullable: true })
-  ta_couleur: string | null;
+  couleur: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  ta_detail: string | null;
+  detail: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  ta_date: string | null;
+  date: string | null;
 
   @Column({ default: uuidv4() })
   id_groupe: string;
@@ -28,10 +28,10 @@ export class Tache extends EntityStarter implements ITache {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
   editMandatory(data: ITacheEditorMandatory): void {
-    const { ta_libelle } = data;
+    const { libelle } = data;
 
-    if (ta_libelle && ta_libelle !== this.ta_libelle) {
-      this.ta_libelle = ta_libelle;
+    if (libelle && libelle !== this.libelle) {
+      this.libelle = libelle;
     }
   }
 

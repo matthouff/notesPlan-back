@@ -7,8 +7,8 @@ interface IMandatoryPart {
 }
 
 interface IOptionalPart {
-  la_libelle?: string | null;
-  la_couleur?: string | null;
+  libelle?: string | null;
+  couleur?: string | null;
 }
 
 export interface ILabel

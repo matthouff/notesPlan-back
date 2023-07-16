@@ -37,14 +37,14 @@ describe('notesNotesController (e2e)', () => {
   });
 
   it('/notes (POST) - should create a new Note', () => {
-    const newNote = { no_libelle: 'New Note' };
+    const newNote = { libelle: 'New Note' };
     return request(app.getHttpServer())
       .post('/notes')
       .send(newNote)
       .expect(201)
       .expect((response) => {
         const createdNote = response.body;
-        expect(createdNote.no_libelle).toBe(newNote.no_libelle);
+        expect(createdNote.libelle).toBe(newNote.libelle);
         createdNoteId = createdNote.id;
       });
   });
@@ -75,7 +75,7 @@ describe('notesNotesController (e2e)', () => {
   });
 
   it('/notes/:id (PATCH) - should update a specific Note', () => {
-    const updatedNote = { no_libelle: 'Nouvelle note' }; // Provide the necessary data for updating the Note
+    const updatedNote = { libelle: 'Nouvelle note' }; // Provide the necessary data for updating the Note
 
     return request(app.getHttpServer())
       .patch(`/notes/${createdNoteId}`)
@@ -84,7 +84,7 @@ describe('notesNotesController (e2e)', () => {
       .expect((response) => {
         const retrievedNote = response.body;
         expect(retrievedNote.id).toBe(createdNoteId);
-        expect(retrievedNote.no_libelle).toBe(updatedNote.no_libelle);
+        expect(retrievedNote.libelle).toBe(updatedNote.libelle);
       });
   });
 

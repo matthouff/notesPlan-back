@@ -8,7 +8,7 @@ import { User } from 'src/modules/users/entity/users';
 export abstract class Repertoire extends EntityStarter implements IRepertoire {
 
   @Column({ length: 100 })
-  re_libelle: string;
+  libelle: string;
 
   @Column({ default: uuidv4() })
   id_user: string;
@@ -19,10 +19,10 @@ export abstract class Repertoire extends EntityStarter implements IRepertoire {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
   editMandatory(data: IRepertoireEditorMandatory): void {
-    const { re_libelle } = data;
+    const { libelle } = data;
 
-    if (re_libelle && re_libelle !== this.re_libelle) {
-      this.re_libelle = re_libelle;
+    if (libelle && libelle !== this.libelle) {
+      this.libelle = libelle;
     }
   }
 

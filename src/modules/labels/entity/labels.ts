@@ -9,10 +9,10 @@ import { Tache } from 'src/modules/taches/entity/taches';
 @Entity('labels')
 export class Label extends EntityStarter implements ILabel {
   @Column({ type: 'varchar', length: 25, nullable: true })
-  la_libelle?: string | null;
+  libelle?: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  la_couleur?: string | null;
+  couleur?: string | null;
 
   @Column({ default: uuidv4() })
   id_tache: string;
@@ -24,13 +24,13 @@ export class Label extends EntityStarter implements ILabel {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes
   editOptional(data: ILabelEditorOptional): void {
-    const { la_libelle, la_couleur } = data;
+    const { libelle, couleur } = data;
 
-    if (la_libelle && la_libelle !== this.la_libelle) {
-      this.la_libelle = la_libelle;
+    if (libelle && libelle !== this.libelle) {
+      this.libelle = libelle;
     }
-    if (la_couleur && la_couleur !== this.la_couleur) {
-      this.la_couleur = la_couleur;
+    if (couleur && couleur !== this.couleur) {
+      this.couleur = couleur;
     }
   }
 

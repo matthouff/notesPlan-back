@@ -3,14 +3,14 @@ import { IEntityStarter } from "src/modules/entity-starter.class";
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  ta_libelle: string;
+  libelle: string;
   id_groupe: string;
 }
 
 interface IOptionalPart {
-  ta_couleur?: string | null;
-  ta_detail?: string | null;
-  ta_date?: string | null;
+  couleur?: string | null;
+  detail?: string | null;
+  date?: string | null;
 }
 
 export interface ITache

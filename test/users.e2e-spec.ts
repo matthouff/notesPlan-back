@@ -65,7 +65,7 @@ describe('UsersControllerService (e2e)', () => {
   });
 
   it('/users/:id (PATCH) - should update a specific user', () => {
-    const updatedUser = { us_nom: 'Berthelot' };
+    const updatedUser = { nom: 'Berthelot' };
 
     return request(app.getHttpServer())
       .patch(`/users/${id_user}`)
@@ -74,7 +74,7 @@ describe('UsersControllerService (e2e)', () => {
       .expect((response) => {
         const userExist = response.body;
         expect(userExist.id).toBe(id_user);
-        expect(userExist.us_nom).toBe(updatedUser.us_nom);
+        expect(userExist.nom).toBe(updatedUser.nom);
       });
   });
 

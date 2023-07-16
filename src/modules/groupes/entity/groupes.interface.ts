@@ -3,12 +3,12 @@ import { IEntityStarter } from "src/modules/entity-starter.class";
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  gr_libelle: string;
+  libelle: string;
   id_repertoire: string;
 }
 
 interface IOptionalPart {
-  gr_couleur?: string | null;
+  couleur?: string | null;
 }
 
 export interface IGroupe

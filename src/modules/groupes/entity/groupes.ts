@@ -8,10 +8,10 @@ import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/en
 @Entity('groupes')
 export class Groupe extends EntityStarter implements IGroupe {
   @Column({ type: 'varchar', length: 50 })
-  gr_libelle: string;
+  libelle: string;
 
   @Column({ type: 'varchar', nullable: true })
-  gr_couleur: string | null;
+  couleur: string | null;
 
   @Column({ default: uuidv4() })
   id_repertoire: string;
@@ -23,10 +23,10 @@ export class Groupe extends EntityStarter implements IGroupe {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
   editMandatory(data: IGroupeEditorMandatory): void {
-    const { gr_libelle } = data;
+    const { libelle } = data;
 
-    if (gr_libelle && gr_libelle !== this.gr_libelle) {
-      this.gr_libelle = gr_libelle;
+    if (libelle && libelle !== this.libelle) {
+      this.libelle = libelle;
     }
   }
 

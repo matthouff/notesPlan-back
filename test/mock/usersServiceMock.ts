@@ -29,8 +29,8 @@ export default class UsersServiceMock {
   async update(editUserDto: EditUserDto, id: string) {
     const user = this.users.find(user => user.id === id);
     if (user) {
-      user.us_nom = editUserDto.us_nom;
-      user.us_email = editUserDto.us_email;
+      user.nom = editUserDto.nom;
+      user.email = editUserDto.email;
     }
     return user;
   }

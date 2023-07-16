@@ -37,14 +37,14 @@ describe('RepertoiresgroupesController (e2e)', () => {
   });
 
   it('/repertoires_groupes (POST) - should create a new repertoire', () => {
-    const newRepertoire = { re_libelle: 'New Repertoire' };
+    const newRepertoire = { libelle: 'New Repertoire' };
     return request(app.getHttpServer())
       .post('/repertoires_groupes')
       .send(newRepertoire)
       .expect(201)
       .expect((response) => {
         const createdRepertoire = response.body;
-        expect(createdRepertoire.re_libelle).toBe(newRepertoire.re_libelle);
+        expect(createdRepertoire.libelle).toBe(newRepertoire.libelle);
         createdRepertoireId = createdRepertoire.id;
       });
   });
@@ -73,7 +73,7 @@ describe('RepertoiresgroupesController (e2e)', () => {
   });
 
   it('/repertoires_groupes/:id (PATCH) - should update a specific repertoire', () => {
-    const updatedRepertoire = { re_libelle: 'Nouveau répertoire' }; // Provide the necessary data for updating the repertoire
+    const updatedRepertoire = { libelle: 'Nouveau répertoire' }; // Provide the necessary data for updating the repertoire
 
     return request(app.getHttpServer())
       .patch(`/repertoires_groupes/${createdRepertoireId}`)
@@ -82,7 +82,7 @@ describe('RepertoiresgroupesController (e2e)', () => {
       .expect((response) => {
         const retrievedRepertoire = response.body;
         expect(retrievedRepertoire.id).toBe(createdRepertoireId);
-        expect(retrievedRepertoire.re_libelle).toBe(updatedRepertoire.re_libelle);
+        expect(retrievedRepertoire.libelle).toBe(updatedRepertoire.libelle);
       });
   });
 

@@ -10,9 +10,9 @@ export class RepertoiresNotesRepository extends RepositoryStarter<RepertoireNote
     super(datasource.getRepository(RepertoireNote));
   }
 
-  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE us_nom = 'Berthelot') AS result;
-  async findByNom(re_libelle: string) {
-    return await this.model.exist({ where: { re_libelle } });
+  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoiress WHERE nom = 'Berthelot') AS result;
+  async findByNom(libelle: string) {
+    return await this.model.exist({ where: { libelle } });
   }
 
   async findAllByUserId(id_user: string) {

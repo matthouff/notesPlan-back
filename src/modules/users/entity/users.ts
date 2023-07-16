@@ -7,42 +7,42 @@ import { IUser, IUserEditor, IUserEditorMandatory, IUserEditorOptional } from '.
 export class User extends EntityStarter implements IUser {
 
   @Column({ length: 50, nullable: true })
-  us_nom: string;
+  nom: string;
 
   @Column({ length: 50, nullable: true })
-  us_prenom: string;
+  prenom: string;
 
   @Column({ length: 50, nullable: true })
-  us_email: string;
+  email: string;
 
   @Column({ length: 25, nullable: true })
-  us_login: string;
+  login: string;
 
   @Column({ length: 25, nullable: true })
-  us_password: string;
+  password: string;
 
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
   editMandatory(data: IUserEditorMandatory): void {
-    const { us_prenom, us_email } = data;
+    const { prenom, email } = data;
 
-    if (us_prenom && us_prenom !== this.us_prenom) {
-      this.us_prenom = us_prenom;
+    if (prenom && prenom !== this.prenom) {
+      this.prenom = prenom;
     }
 
-    if (us_email && us_email !== this.us_email) {
-      this.us_email = us_email;
+    if (email && email !== this.email) {
+      this.email = email;
     }
   }
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes
   editOptional(data: IUserEditorOptional): void {
-    const { us_nom } = data;
+    const { nom } = data;
 
-    if (us_nom && us_nom !== this.us_nom) {
-      this.us_nom = us_nom;
+    if (nom && nom !== this.nom) {
+      this.nom = nom;
     }
   }
 

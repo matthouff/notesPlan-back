@@ -34,7 +34,7 @@ export default class TachesServiceMock {
   async update(edittacheDto: EditTacheDto, id: string) {
     const tache = this.taches.find(tache => tache.id === id);
     if (tache) {
-      tache.ta_libelle = edittacheDto.ta_libelle;
+      tache.libelle = edittacheDto.libelle;
       tache.id_groupe = edittacheDto.id_groupe;
     }
     return tache;
