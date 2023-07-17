@@ -1,15 +1,9 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import {
-  IRepertoire,
-  IRepertoireCreator,
   IRepertoireEditor,
   IRepertoireEditorMandatory,
 } from './repertoires.interface';
-import { v4 as uuidv4 } from 'uuid';
-import { User } from 'src/modules/users/entity/users';
-import { Note } from 'src/modules/notes/entity/notes';
-import { RepertoireNote } from '../../repertoires-notes/entity/repertoires-notes';
 
 @Entity({ name: 'repertoires' })
 export abstract class Repertoire extends EntityStarter {
