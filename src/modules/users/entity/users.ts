@@ -2,8 +2,8 @@ import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
 import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity/repertoires-notes';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IUser, IUserEditor, IUserEditorMandatory, IUserEditorOptional } from './users.interface';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: "users" })
 export class User extends EntityStarter implements IUser {
@@ -23,10 +23,10 @@ export class User extends EntityStarter implements IUser {
   @Column({ length: 25, nullable: true })
   password: string;
 
-  @OneToMany(() => RepertoireGroupe, repertoireGroupe => repertoireGroupe.user)
+  @OneToMany(() => RepertoireGroupe, (repertoireGroupe) => repertoireGroupe.user)
   repertoiresGroupes: RepertoireGroupe[];
 
-  @OneToMany(() => RepertoireNote, repertoireNote => repertoireNote.user)
+  @OneToMany(() => RepertoireNote, (repertoireNote) => repertoireNote.user)
   repertoiresNotes: RepertoireNote[];
 
 

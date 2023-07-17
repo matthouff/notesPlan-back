@@ -1,5 +1,11 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { INote, INoteEditor, INoteEditorOptional } from './notes.interface';
+import {
+  INote,
+  INoteConstructor,
+  INoteCreator,
+  INoteEditor,
+  INoteEditorOptional,
+} from './notes.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Groupe } from 'src/modules/groupes/entity/groupes';
@@ -13,9 +19,18 @@ export class Note extends EntityStarter implements INote {
   @Column({ type: 'varchar', nullable: true })
   message?: string | null;
 
-  @ManyToOne(() => RepertoireNote, repNote => repNote.notes)
-  repertoire: RepertoireNote;
+  @ManyToOne(() => RepertoireNote, (repNote) => repNote.notes)
+  repertoire?: RepertoireNote | null;
 
+  private constructor(data: INoteConstructor) {
+    super();
+
+    Object.assign(this, data);
+  }
+
+  static factory(data: INoteCreator): Note {
+    return new Note(data);
+  }
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes

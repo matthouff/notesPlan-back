@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { InjectDataSource } from "@nestjs/typeorm";
-import { RepositoryStarter } from "src/modules/repository-starter.class";
-import { DataSource } from "typeorm";
-import { RepertoireNote } from "../repertoires/repertoires-notes/entity/repertoires-notes";
-import { Note } from "./entity/notes";
+import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { RepositoryStarter } from 'src/modules/repository-starter.class';
+import { DataSource } from 'typeorm';
+import { RepertoireNote } from '../repertoires/repertoires-notes/entity/repertoires-notes';
+import { Note } from './entity/notes';
 
 @Injectable()
 export class NoteRepository extends RepositoryStarter<Note> {
@@ -17,13 +17,9 @@ export class NoteRepository extends RepositoryStarter<Note> {
   }
 
   async findByRepertoireId(id_repertoire: string) {
-    try {
-      const notes = await this.model.find({ where: { id: id_repertoire } });
-      return notes;
-    } catch (error) {
-      // Gérer les erreurs
-      console.error(error);
-      throw new Error("Erreur lors de la récupération des notes.");
-    }
+    const data = await this.model.find({
+      where: { repertoire: { id: id_repertoire } },
+    });
+    return data;
   }
 }
