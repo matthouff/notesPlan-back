@@ -14,8 +14,8 @@ export class RepertoiresNotesService {
     return await this.repertoiresRepository.getAll();
   }
 
-  async findAllByUserId(userId: string): Promise<IRepertoire[]> {
-    return await this.repertoiresRepository.findAllByUserId(userId);
+  async findAllByUserId(userId: string) {
+    return await this.repertoiresRepository.findByUserId(userId);
   }
 
   async create(data: RepertoireNote): Promise<RepertoireNote> {

@@ -5,7 +5,7 @@ import { RepertoireNote } from "src/modules/repertoires/repertoires-notes/entity
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  repertoireId: RepertoireNote;
+  repertoire: RepertoireNote;
 }
 
 interface IOptionalPart {

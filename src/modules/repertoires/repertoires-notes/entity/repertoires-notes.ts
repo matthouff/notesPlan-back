@@ -9,6 +9,6 @@ export class RepertoireNote extends Repertoire implements IRepertoire {
   @ManyToOne(() => User, user => user.repertoiresNotes)
   user: User;
 
-  @OneToMany(() => Note, note => note.repertoireId)
-  repertoiresNotes: Note[];
+  @OneToMany(() => Note, note => note.repertoire)
+  notes: Note[];
 }

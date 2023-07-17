@@ -12,6 +12,7 @@ async function bootstrap() {
     origin: true, // Remplacez true par l'URL ou les origines autorisées
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Cache-Control', 'Pragma'],
   };
 
   app.use(cors(corsOptions));

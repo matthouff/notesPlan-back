@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Res } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
+import { RepertoireDto } from '../commun/dto/repertoires.dto';
 import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
 import { RepertoireNote } from './entity/repertoires-notes';
@@ -18,7 +19,7 @@ export class RepertoiresNotesController {
   }
 
   @Get("user/:userId")
-  findAllByUserId(@Param('userId') userId: string): Promise<IRepertoire[]> {
+  findAllByUserId(@Param('userId') userId: string) {
     return this.repertoiresService.findAllByUserId(userId);
   }
 
