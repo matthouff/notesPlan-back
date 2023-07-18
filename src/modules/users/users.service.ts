@@ -3,12 +3,11 @@ import { CreateUserDto } from './dto/users-create.dto';
 import { EditUserDto } from './dto/users-edit.dto';
 import { User } from './entity/users';
 import { IUser } from './entity/users.interface';
-import { userRepository } from './users.repository';
+import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-
-  constructor(readonly usersRepository: userRepository,) { }
+  constructor(readonly usersRepository: UserRepository) {}
 
   async findAll(): Promise<IUser[]> {
     return await this.usersRepository.getAll();

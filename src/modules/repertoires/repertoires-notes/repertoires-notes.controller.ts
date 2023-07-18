@@ -14,6 +14,7 @@ import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
 import { RepertoireNote } from './entity/repertoires-notes';
 import { RepertoiresNotesService } from './repertoires-notes.service';
+import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 
 // http://localhost:3000
 @Controller('repertoires_notes')
@@ -31,7 +32,7 @@ export class RepertoiresNotesController {
   }
 
   @Post()
-  create(@Body() repertoireDto: RepertoireNote) {
+  create(@Body() repertoireDto: CreateRepertoireDto) {
     return this.repertoiresService.create(repertoireDto);
   }
 

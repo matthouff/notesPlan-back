@@ -4,10 +4,15 @@ import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
 import { RepertoireNote } from './entity/repertoires-notes';
 import { RepertoiresNotesRepository } from './repertoires-notes.repository';
+import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
+import { UserActions } from 'src/modules/users/users.actions';
 
 @Injectable()
 export class RepertoiresNotesService {
-  constructor(readonly repertoiresRepository: RepertoiresNotesRepository) {}
+  constructor(
+    readonly repertoiresRepository: RepertoiresNotesRepository,
+    readonly userAction: UserActions,
+  ) {}
 
   async findAll(): Promise<IRepertoire[]> {
     return await this.repertoiresRepository.getAll();
@@ -17,8 +22,13 @@ export class RepertoiresNotesService {
     return await this.repertoiresRepository.findByUserId(userId);
   }
 
-  async create(data: RepertoireNote): Promise<RepertoireNote> {
-    return await this.repertoiresRepository.save(data);
+  async create(data: CreateRepertoireDto) {
+    const user = await this.userAction.getUserById(data.userId);
+
+    const repertoireNote = RepertoireNote.factory({ ...data, user });
+
+    console.log(user);
+    return await this.repertoiresRepository.save(repertoireNote);
   }
 
   async findById(id: string): Promise<RepertoireNote> {
