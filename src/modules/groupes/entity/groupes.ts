@@ -14,6 +14,7 @@ export class Groupe extends EntityStarter implements IGroupe {
   couleur: string | null;
 
   @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id)
+  @JoinColumn({ name: 'repertoireid' })
   repertoireId: RepertoireGroupe;
 
 

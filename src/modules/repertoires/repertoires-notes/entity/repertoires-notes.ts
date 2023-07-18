@@ -11,6 +11,7 @@ import {
 @Entity({ name: 'repertoires_notes' })
 export class RepertoireNote extends Repertoire implements IRepertoire {
   @ManyToOne(() => User, (user) => user.repertoiresNotes)
+  @JoinColumn({ name: 'userid' })
   user: User;
 
   @OneToMany(() => Note, (note) => note.repertoire)

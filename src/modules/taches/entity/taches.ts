@@ -1,5 +1,9 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { ITache, ITacheEditor, ITacheEditorMandatory } from './taches.interface';
+import {
+  ITache,
+  ITacheEditor,
+  ITacheEditorMandatory,
+} from './taches.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Groupe } from 'src/modules/groupes/entity/groupes';
@@ -21,9 +25,9 @@ export class Tache extends EntityStarter implements ITache {
   @Column({ default: uuidv4() })
   id_groupe: string;
 
-  @ManyToOne(() => Groupe, groupe => groupe.id)
+  @ManyToOne(() => Groupe, (groupe) => groupe.id)
+  @JoinColumn({ name: 'groupeid' })
   groupe: Groupe;
-
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes

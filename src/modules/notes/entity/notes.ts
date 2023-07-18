@@ -20,6 +20,7 @@ export class Note extends EntityStarter implements INote {
   message?: string | null;
 
   @ManyToOne(() => RepertoireNote, (repNote) => repNote.notes)
+  @JoinColumn({ name: 'repertoireid' })
   repertoire?: RepertoireNote | null;
 
   private constructor(data: INoteConstructor) {
