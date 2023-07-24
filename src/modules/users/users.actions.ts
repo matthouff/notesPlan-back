@@ -8,7 +8,7 @@ export class UserActions {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
   //
   // Update le User ciblé avec User et IUserEditor passé en paramettre
@@ -29,8 +29,6 @@ export class UserActions {
 
   async getUserById(id: string): Promise<User> {
     const found = await this.userRepository.findByID(id);
-
-    console.log(found);
 
     if (!found) {
       this.logger.debug(`Aucun User n'a été récupéré pour l'id "${id}"`);

@@ -21,5 +21,5 @@ export class EditNoteDto {
 
   @IsOptional()
   @IsUUID()
-  repertoireId: string;
+  repertoireId?: string | null;
 }

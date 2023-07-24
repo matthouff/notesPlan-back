@@ -4,6 +4,7 @@ import {
   INoteConstructor,
   INoteCreator,
   INoteEditor,
+  INoteEditorMandatory,
   INoteEditorOptional,
 } from './notes.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,7 +15,7 @@ import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity
 @Entity('notes')
 export class Note extends EntityStarter implements INote {
   @Column({ type: 'varchar', length: 100 })
-  libelle?: string | null;
+  libelle: string;
 
   @Column({ type: 'varchar', nullable: true })
   message?: string | null;
@@ -35,7 +36,10 @@ export class Note extends EntityStarter implements INote {
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes
-  editOptional(data: INoteEditorOptional): void {
+  editOptional(): void {
+  }
+
+  editMandatory(data: INoteEditorMandatory): void {
     const { libelle } = data;
 
     if (libelle && libelle !== this.libelle) {
@@ -45,6 +49,6 @@ export class Note extends EntityStarter implements INote {
 
   // On met a jour les données de l'entité
   edit(data: INoteEditor): void {
-    this.editOptional({ ...data });
+    this.editMandatory({ ...data });
   }
 }

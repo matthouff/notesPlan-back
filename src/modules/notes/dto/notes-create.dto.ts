@@ -4,15 +4,15 @@ export class CreateNoteDto {
   @Length(0, 100, {
     message: "Le libelle doit être compris entre 1 et 100 caractères.",
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  libelle?: string | null;
+  libelle: string;
 
   @IsOptional()
   @IsString()
   message?: string | null;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsUUID()
-  repertoireId: string;
+  repertoireId?: string | null;
 }

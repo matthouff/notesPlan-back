@@ -12,7 +12,7 @@ export class RepertoiresNotesService {
   constructor(
     readonly repertoiresRepository: RepertoiresNotesRepository,
     readonly userAction: UserActions,
-  ) {}
+  ) { }
 
   async findAll(): Promise<IRepertoire[]> {
     return await this.repertoiresRepository.getAll();
@@ -28,6 +28,7 @@ export class RepertoiresNotesService {
     const repertoireNote = RepertoireNote.factory({ ...data, user });
 
     console.log(user);
+    console.log(data);
     return await this.repertoiresRepository.save(repertoireNote);
   }
 

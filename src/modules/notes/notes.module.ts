@@ -4,9 +4,11 @@ import { Note } from './entity/notes';
 import { NoteController } from './notes.controller';
 import { NoteRepository } from './notes.repository';
 import { NoteService } from './notes.service';
+import { RepertoireNote } from '../repertoires/repertoires-notes/entity/repertoires-notes';
+import { RepertoireNotesModule } from '../repertoires/repertoires-notes/repertoires-notes.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Note])],
+  imports: [TypeOrmModule.forFeature([Note, RepertoireNote]), RepertoireNotesModule],
   exports: [TypeOrmModule],
   controllers: [NoteController],
   providers: [NoteService, NoteRepository]

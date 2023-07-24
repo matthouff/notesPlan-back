@@ -1,9 +1,8 @@
-import { Logger } from "@nestjs/common";
-import { Repertoire } from "../commun/entity/repertoires";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { RepertoireNote } from "./entity/repertoires-notes";
 import { RepertoiresNotesRepository } from "./repertoires-notes.repository";
 
-
+@Injectable()
 export class RepertoiresActions {
 	constructor(private readonly repertoiresRepository: RepertoiresNotesRepository, private readonly logger: Logger) { }
 
@@ -26,18 +25,18 @@ export class RepertoiresActions {
 	//
 	// On récupère le repertoires avec l'id passé en parametre
 	//
-	// async getrepertoiresById(id: string): Promise<repertoires> {
-	// 	const found = await this.repertoiresRepository.findByID(id);
+	async getrepertoiresById(id: string): Promise<RepertoireNote> {
+		const found = await this.repertoiresRepository.findByID(id);
 
-	// 	if (!found) {
-	// 		this.logger.debug(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
-	// 		throw new NotFoundException(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
-	// 	}
+		if (!found) {
+			this.logger.debug(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
+			throw new NotFoundException(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
+		}
 
-	// 	this.logger.debug(`Le repertoires a été récupéré`);
+		this.logger.debug(`Le repertoires a été récupéré`);
 
-	// 	return found;
-	// }
+		return found;
+	}
 
 	// async removerepertoiresById(id: string): Promise<boolean> {
 	// 	const deleted = await this.repertoiresRepository.deleteByID(id);

@@ -28,14 +28,3 @@ export interface IRepertoireResponse extends IRepertoire { }
 export interface IRepertoireEditorMandatory extends Partial<IMandatoryPart> { }
 export interface IRepertoireEditorOptional extends IOptionalPart { }
 export interface IRepertoireEditor extends IRepertoireEditorMandatory, IRepertoireEditorOptional { }
-
-
-
-// export interface IRepertoire {
-//   id: number;
-//   nom: string | null;
-//   prenom: string | null;
-//   email: string | null;
-//   login: string | null;
-//   password: string | null;
-// }
