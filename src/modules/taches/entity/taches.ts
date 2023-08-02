@@ -1,8 +1,11 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import {
   ITache,
+  ITacheConstructor,
+  ITacheCreator,
   ITacheEditor,
   ITacheEditorMandatory,
+  ITacheEditorOptional,
 } from './taches.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
@@ -22,12 +25,16 @@ export class Tache extends EntityStarter implements ITache {
   @Column({ type: 'varchar', nullable: true })
   date: string | null;
 
-  @Column({ default: uuidv4() })
-  id_groupe: string;
-
   @ManyToOne(() => Groupe, (groupe) => groupe.id)
   @JoinColumn({ name: 'groupeid' })
-  groupe: Groupe;
+  groupe?: Groupe | null;
+
+  private constructor(data: ITacheConstructor) {
+    super();
+
+    Object.assign(this, data);
+  }
+
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
@@ -39,8 +46,27 @@ export class Tache extends EntityStarter implements ITache {
     }
   }
 
+  editOptionnal(data: ITacheEditorOptional): void {
+    const { couleur, detail, groupe } = data;
+
+    if (couleur && couleur !== this.libelle) {
+      this.couleur = couleur;
+    }
+    if (detail && detail !== this.detail) {
+      this.detail = detail;
+    }
+    if (groupe && groupe !== this.groupe) {
+      this.groupe = groupe;
+    }
+  }
+
   // On met a jour les données de l'entité
   edit(data: ITacheEditor): void {
+    this.editOptionnal({ ...data });
     this.editMandatory({ ...data });
+  }
+
+  static factory(data: ITacheCreator): Tache {
+    return new Tache(data);
   }
 }

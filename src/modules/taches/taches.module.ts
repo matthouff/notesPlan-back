@@ -1,14 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Tache } from './entity/taches';
 import { TacheController } from './taches.controller';
 import { TacheRepository } from './taches.repository';
 import { TacheService } from './taches.service';
+import { TacheActions } from './taches.actions';
+import { GroupeModule } from '../groupes/groupes.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Tache])],
-  exports: [TypeOrmModule],
+  imports: [TypeOrmModule.forFeature([Tache]), GroupeModule],
+  exports: [TypeOrmModule, TacheActions],
   controllers: [TacheController],
-  providers: [TacheService, TacheRepository]
+  providers: [TacheService, TacheRepository, TacheActions, Logger]
 })
 export class TacheModule { }

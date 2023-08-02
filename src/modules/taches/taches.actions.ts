@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Logger, NotFoundException } from "@nestjs/common";
 import { Tache } from "./entity/taches";
 import { TacheRepository } from "./taches.repository";
 
@@ -24,19 +24,19 @@ export class TacheActions {
 
 	//
 	// On récupère le tache avec l'id passé en parametre
-	//
-	// async gettacheById(id: string): Promise<tache> {
-	// 	const found = await this.tacheRepository.findByID(id);
 
-	// 	if (!found) {
-	// 		this.logger.debug(`Aucun tache n'a été récupéré pour l'id "${id}"`);
-	// 		throw new NotFoundException(`Aucun tache n'a été récupéré pour l'id "${id}"`);
-	// 	}
+	async getTacheById(id: string): Promise<Tache> {
+		const found = await this.tacheRepository.findByID(id);
 
-	// 	this.logger.debug(`Le tache a été récupéré`);
+		if (!found) {
+			this.logger.debug(`Aucun tache n'a été récupéré pour l'id "${id}"`);
+			throw new NotFoundException(`Aucun tache n'a été récupéré pour l'id "${id}"`);
+		}
 
-	// 	return found;
-	// }
+		this.logger.debug(`Le tache a été récupéré`);
+
+		return found;
+	}
 
 	// async removetacheById(id: string): Promise<boolean> {
 	// 	const deleted = await this.tacheRepository.deleteByID(id);

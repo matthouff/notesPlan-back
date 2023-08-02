@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm';
-import { IGroupe, IGroupeEditor, IGroupeEditorMandatory } from './groupes.interface';
+import { IGroupe, IGroupeConstructor, IGroupeCreator, IGroupeEditor, IGroupeEditorMandatory } from './groupes.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
 import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
+import { Tache } from 'src/modules/taches/entity/taches';
 
 @Entity('groupes')
 export class Groupe extends EntityStarter implements IGroupe {
@@ -11,12 +12,25 @@ export class Groupe extends EntityStarter implements IGroupe {
   libelle: string;
 
   @Column({ type: 'varchar', nullable: true })
-  couleur: string | null;
+  couleur: string | null
+
+  @Column({ type: 'jsonb', nullable: true })
+  taches: Tache[] | null
 
   @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id)
   @JoinColumn({ name: 'repertoireid' })
-  repertoireId: RepertoireGroupe;
+  repertoire: RepertoireGroupe;
 
+
+  private constructor(data: IGroupeConstructor) {
+    super();
+
+    Object.assign(this, data);
+
+    if (!this.taches) {
+      this.taches = [];
+    }
+  }
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
@@ -31,5 +45,9 @@ export class Groupe extends EntityStarter implements IGroupe {
   // On met a jour les données de l'entité
   edit(data: IGroupeEditor): void {
     this.editMandatory({ ...data });
+  }
+
+  static factory(data: IGroupeCreator): Groupe {
+    return new Groupe(data);
   }
 }

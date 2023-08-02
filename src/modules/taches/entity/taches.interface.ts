@@ -1,13 +1,14 @@
 import { IEntityStarter } from "src/modules/entity-starter.class";
+import { Groupe } from "src/modules/groupes/entity/groupes";
 
 interface IFixedPart { }
 
 interface IMandatoryPart {
   libelle: string;
-  id_groupe: string;
 }
 
 interface IOptionalPart {
+  groupe?: Groupe | null;
   couleur?: string | null;
   detail?: string | null;
   date?: string | null;

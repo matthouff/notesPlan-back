@@ -11,7 +11,9 @@ export class RepertoiresGroupesRepository extends RepositoryStarter<RepertoireGr
     super(datasource.getRepository(RepertoireGroupe));
   }
 
-  async findAllByUserId(id_user: string) {
-    return await this.model.find({ where: { user: { id: id_user } } });
+  // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM repertoires WHERE userId = 'id_user') AS result;
+  async findByUserId(userId: string) {
+    const data = await this.model.findBy({ user: { id: userId } });
+    return data;
   }
 }

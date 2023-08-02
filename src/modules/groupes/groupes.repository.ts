@@ -11,12 +11,7 @@ export class GroupesRepository extends RepositoryStarter<Groupe> {
   }
 
   async findByRepertoireId(repertoireId: string) {
-    try {
-      return await this.model.find({ where: { id: repertoireId } });
-    } catch (error) {
-      // Gérer les erreurs
-      console.error(error);
-      throw new Error("Erreur lors de la récupération des notes.");
-    }
+    const data = await this.model.findBy({ repertoire: { id: repertoireId } });
+    return data;
   }
 }

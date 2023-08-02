@@ -4,22 +4,26 @@ import { Repertoire } from "../commun/entity/repertoires";
 import { IRepertoire } from "../commun/entity/repertoires.interface";
 import { RepertoireGroupe } from "./entity/repertoires-groupes";
 import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
+import { UserActions } from "src/modules/users/users.actions";
+import { CreateRepertoireDto } from "../commun/dto/repertoires-create.dto";
 
 @Injectable()
 export class RepertoiresGroupesService {
 
-  constructor(readonly repertoiresRepository: RepertoiresGroupesRepository) { }
+  constructor(readonly repertoiresRepository: RepertoiresGroupesRepository, readonly userAction: UserActions,) { }
 
   async findAll(): Promise<IRepertoire[]> {
     return await this.repertoiresRepository.getAll();
   }
 
-  async findAllByUserId(userId: string): Promise<IRepertoire[]> {
-    return await this.repertoiresRepository.findAllByUserId(userId);
+  async findAllByUserId(userId: string) {
+    return await this.repertoiresRepository.findByUserId(userId);
   }
 
-  async create(data: RepertoireGroupe): Promise<RepertoireGroupe> {
-    return await this.repertoiresRepository.save(data);
+  async create(data: CreateRepertoireDto) {
+    const user = await this.userAction.getUserById(data.userId);
+    const repertoireGroupe = RepertoireGroupe.factory({ ...data, user });
+    return await this.repertoiresRepository.save(repertoireGroupe);
   }
 
   async findById(id: string): Promise<RepertoireGroupe> {

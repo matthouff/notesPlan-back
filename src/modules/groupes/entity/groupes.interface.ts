@@ -5,10 +5,10 @@ interface IFixedPart { }
 
 interface IMandatoryPart {
   libelle: string;
-  repertoireId: RepertoireGroupe;
 }
 
 interface IOptionalPart {
+  repertoire?: RepertoireGroupe | null;
   couleur?: string | null;
 }
 

@@ -24,11 +24,7 @@ export class RepertoiresNotesService {
 
   async create(data: CreateRepertoireDto) {
     const user = await this.userAction.getUserById(data.userId);
-
     const repertoireNote = RepertoireNote.factory({ ...data, user });
-
-    console.log(user);
-    console.log(data);
     return await this.repertoiresRepository.save(repertoireNote);
   }
 

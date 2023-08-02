@@ -10,13 +10,16 @@ export class TacheRepository extends RepositoryStarter<Tache> {
     super(datasource.getRepository(Tache));
   }
 
-  async findByGroupeId(id_groupe: string) {
-    try {
-      return await this.model.find({ where: { groupe: { id: id_groupe } } });
-    } catch (error) {
-      // Gérer les erreurs
-      console.error(error);
-      throw new Error("Erreur lors de la récupération des notes.");
-    }
+  async findByGroupeId(groupeId: string) {
+    const data = await this.model.findBy({ groupe: { id: groupeId } });
+    return data;
+
+    // try {
+    //   return await this.model.find({ where: { groupe: { id: id_groupe } } });
+    // } catch (error) {
+    //   // Gérer les erreurs
+    //   console.error(error);
+    //   throw new Error("Erreur lors de la récupération des notes.");
+    // }
   }
 }

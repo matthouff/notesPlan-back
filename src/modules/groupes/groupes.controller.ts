@@ -17,6 +17,11 @@ export class GroupeController {
     return this.groupesService.findAll();
   }
 
+  @Get("repertoire_groupe/:repertoireId")
+  findAllByUserId(@Param('repertoireId') repertoireId: string) {
+    return this.groupesService.findAllByRepertoireGroupeId(repertoireId);
+  }
+
   @Post()
   create(@Body() repertoireDto: Groupe) {
     return this.groupesService.create(repertoireDto)

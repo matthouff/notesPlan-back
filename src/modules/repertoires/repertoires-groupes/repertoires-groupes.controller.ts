@@ -4,12 +4,12 @@ import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
 import { RepertoireGroupe } from './entity/repertoires-groupes';
 import { RepertoiresGroupesService } from './repertoires-groupes.service';
+import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 
 
 // http://localhost:3000
 @Controller('repertoires_groupes')
 export class RepertoiresGroupesController {
-
   constructor(readonly repertoiresService: RepertoiresGroupesService,) { }
 
   @Get()
@@ -18,12 +18,12 @@ export class RepertoiresGroupesController {
   }
 
   @Get("user/:userId")
-  findAllByUserId(@Param('userId') userId: string): Promise<IRepertoire[]> {
+  findAllByUserId(@Param('userId') userId: string) {
     return this.repertoiresService.findAllByUserId(userId);
   }
 
   @Post()
-  create(@Body() repertoireDto: RepertoireGroupe) {
+  create(@Body() repertoireDto: CreateRepertoireDto) {
     return this.repertoiresService.create(repertoireDto)
   }
 

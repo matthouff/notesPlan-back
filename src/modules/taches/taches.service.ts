@@ -3,11 +3,13 @@ import { EditTacheDto } from "./dto/taches-edit.dto";
 import { Tache } from "./entity/taches";
 import { ITache } from "./entity/taches.interface";
 import { TacheRepository } from "./taches.repository";
+import { TacheActions } from "./taches.actions";
+import { GroupeActions } from "../groupes/groupes.actions";
 
 @Injectable()
 export class TacheService {
 
-  constructor(readonly tachesRepository: TacheRepository) { }
+  constructor(readonly tachesRepository: TacheRepository, readonly groupeActions: GroupeActions) { }
 
   async findAll(): Promise<ITache[]> {
     return await this.tachesRepository.getAll();
@@ -17,8 +19,10 @@ export class TacheService {
     return await this.tachesRepository.findByGroupeId(id_groupe);
   }
 
-  async create(data: Tache): Promise<Tache> {
-    return await this.tachesRepository.save(data);
+  async create(data: Tache) {
+    const groupe = await this.groupeActions.getGroupeById(data.groupe.id);
+    const groupeElement = Tache.factory({ ...data, groupe });
+    return await this.tachesRepository.save(groupeElement);
   }
 
   async findById(id: string): Promise<Tache> {
