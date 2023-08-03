@@ -1,8 +1,8 @@
-import { Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Groupe } from "./entity/groupes";
 import { GroupesRepository } from "./groupes.repository";
 
-
+@Injectable()
 export class GroupeActions {
 	constructor(private readonly groupeRepository: GroupesRepository, private readonly logger: Logger) { }
 

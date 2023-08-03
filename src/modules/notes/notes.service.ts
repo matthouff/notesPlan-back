@@ -22,10 +22,6 @@ export class NoteService {
 
   async create(data: CreateNoteDto) {
     const repertoire = await this.repertoiresActions.getrepertoiresById(data.repertoireId);
-
-    console.log(repertoire);
-    console.log(data);
-
     const note = Note.factory({ ...data, repertoire });
 
     return await this.notesRepository.save(note);

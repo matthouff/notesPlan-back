@@ -6,13 +6,9 @@ export class EditGroupeDto {
   })
   @IsOptional()
   @IsString()
-  libelle: string;
+  libelle?: string | null;
 
   @IsOptional()
   @IsString()
   couleur?: string | null;
-
-  @IsOptional()
-  @IsUUID()
-  repertoireId: string;
 }

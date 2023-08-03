@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm';
-import { IGroupe, IGroupeConstructor, IGroupeCreator, IGroupeEditor, IGroupeEditorMandatory } from './groupes.interface';
+import { IGroupe, IGroupeConstructor, IGroupeCreator, IGroupeEditor, IGroupeEditorMandatory, IGroupeEditorOptional } from './groupes.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
@@ -17,9 +17,12 @@ export class Groupe extends EntityStarter implements IGroupe {
   @Column({ type: 'jsonb', nullable: true })
   taches: Tache[] | null
 
-  @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id)
+  @ManyToOne(() => RepertoireGroupe, repertoire => repertoire.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'repertoireid' })
   repertoire: RepertoireGroupe;
+
+  @OneToMany(() => Tache, (tache) => tache.groupe, { cascade: true })
+  tache: Tache[];
 
 
   private constructor(data: IGroupeConstructor) {
@@ -42,8 +45,17 @@ export class Groupe extends EntityStarter implements IGroupe {
     }
   }
 
+  editOptionnal(data: IGroupeEditorOptional): void {
+    const { couleur } = data;
+
+    if (couleur && couleur !== this.couleur) {
+      this.couleur = couleur;
+    }
+  }
+
   // On met a jour les données de l'entité
   edit(data: IGroupeEditor): void {
+    this.editOptionnal({ ...data });
     this.editMandatory({ ...data });
   }
 

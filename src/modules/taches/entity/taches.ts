@@ -25,9 +25,9 @@ export class Tache extends EntityStarter implements ITache {
   @Column({ type: 'varchar', nullable: true })
   date: string | null;
 
-  @ManyToOne(() => Groupe, (groupe) => groupe.id)
+  @ManyToOne(() => Groupe, (groupe) => groupe.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'groupeid' })
-  groupe?: Groupe | null;
+  groupe: Groupe;
 
   private constructor(data: ITacheConstructor) {
     super();

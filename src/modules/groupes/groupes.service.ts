@@ -6,6 +6,7 @@ import { IGroupe } from "./entity/groupes.interface";
 import { GroupesRepository } from "./groupes.repository";
 import { RepertoiresGroupeActions } from "../repertoires/repertoires-groupes/repertoires-groupes.actions";
 import { TacheRepository } from "../taches/taches.repository";
+import { CreateGroupeDto } from "./dto/groupes-create.dto";
 
 @Injectable()
 export class GroupeService {
@@ -24,6 +25,8 @@ export class GroupeService {
       groupes.map(async (groupe) => {
         const taches = await this.tacheRepository.findByGroupeId(groupe.id);
         return {
+          id: groupe.id,
+          createdat: groupe.createdat,
           libelle: groupe.libelle,
           couleur: groupe.couleur,
           taches: taches.map(tache => ({
@@ -40,8 +43,8 @@ export class GroupeService {
     return groupesWithTaches;
   }
 
-  async create(data: Groupe) {
-    const repertoire = await this.repertoiresActions.getrepertoiresById(data.repertoire.id);
+  async create(data: CreateGroupeDto) {
+    const repertoire = await this.repertoiresActions.getrepertoiresById(data.repertoireId);
     const repertoireGroupe = Groupe.factory({ ...data, repertoire });
     return await this.groupesRepository.save(repertoireGroupe);
   }

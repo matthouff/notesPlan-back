@@ -4,6 +4,7 @@ import { EditGroupeDto } from './dto/groupes-edit.dto';
 import { Groupe } from './entity/groupes';
 import { IGroupe } from './entity/groupes.interface';
 import { GroupeService } from './groupes.service';
+import { CreateGroupeDto } from './dto/groupes-create.dto';
 
 
 // http://localhost:3000
@@ -23,7 +24,7 @@ export class GroupeController {
   }
 
   @Post()
-  create(@Body() repertoireDto: Groupe) {
+  create(@Body() repertoireDto: CreateGroupeDto) {
     return this.groupesService.create(repertoireDto)
   }
 

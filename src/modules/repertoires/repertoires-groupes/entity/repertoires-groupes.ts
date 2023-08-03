@@ -10,7 +10,7 @@ export class RepertoireGroupe extends Repertoire implements IRepertoire {
   @JoinColumn({ name: 'userid' })
   user: User;
 
-  @OneToMany(() => Groupe, (groupe) => groupe.repertoire)
+  @OneToMany(() => Groupe, (groupe) => groupe.repertoire, { cascade: true })
   repertoiresGroupes: Groupe[];
 
   private constructor(data: IRepertoireConstructor) {
