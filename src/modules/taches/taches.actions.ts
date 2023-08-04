@@ -1,8 +1,8 @@
-import { Logger, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { Tache } from "./entity/taches";
 import { TacheRepository } from "./taches.repository";
 
-
+@Injectable()
 export class TacheActions {
 	constructor(private readonly tacheRepository: TacheRepository, private readonly logger: Logger) { }
 

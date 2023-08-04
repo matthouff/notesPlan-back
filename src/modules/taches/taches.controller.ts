@@ -3,6 +3,7 @@ import { EditTacheDto } from './dto/taches-edit.dto';
 import { Tache } from './entity/taches';
 import { ITache } from './entity/taches.interface';
 import { TacheService } from './taches.service';
+import { CreateTacheDto } from './dto/taches-create.dto';
 
 
 // http://localhost:3000
@@ -22,7 +23,7 @@ export class TacheController {
   }
 
   @Post()
-  create(@Body() repertoireDto: Tache) {
+  create(@Body() repertoireDto: CreateTacheDto) {
     return this.tachesService.create(repertoireDto)
   }
 

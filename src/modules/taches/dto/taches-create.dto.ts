@@ -22,5 +22,5 @@ export class CreateTacheDto {
 
   @IsNotEmpty()
   @IsUUID()
-  id_groupe: string;
+  groupeId: string;
 }

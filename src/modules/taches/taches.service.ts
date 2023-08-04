@@ -5,6 +5,7 @@ import { ITache } from "./entity/taches.interface";
 import { TacheRepository } from "./taches.repository";
 import { TacheActions } from "./taches.actions";
 import { GroupeActions } from "../groupes/groupes.actions";
+import { CreateTacheDto } from "./dto/taches-create.dto";
 
 @Injectable()
 export class TacheService {
@@ -19,8 +20,8 @@ export class TacheService {
     return await this.tachesRepository.findByGroupeId(id_groupe);
   }
 
-  async create(data: Tache) {
-    const groupe = await this.groupeActions.getGroupeById(data.groupe.id);
+  async create(data: CreateTacheDto) {
+    const groupe = await this.groupeActions.getGroupeById(data.groupeId);
     const groupeElement = Tache.factory({ ...data, groupe });
     return await this.tachesRepository.save(groupeElement);
   }
