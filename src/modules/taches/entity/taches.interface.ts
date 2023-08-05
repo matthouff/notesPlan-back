@@ -5,10 +5,10 @@ interface IFixedPart { }
 
 interface IMandatoryPart {
   libelle: string;
+  groupe: Groupe;
 }
 
 interface IOptionalPart {
-  groupe?: Groupe | null;
   couleur?: string | null;
   detail?: string | null;
   date?: string | null;

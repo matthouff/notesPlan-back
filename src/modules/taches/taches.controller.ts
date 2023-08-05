@@ -23,23 +23,23 @@ export class TacheController {
   }
 
   @Post()
-  create(@Body() repertoireDto: CreateTacheDto) {
-    return this.tachesService.create(repertoireDto)
+  create(@Body() tacheDto: CreateTacheDto) {
+    return this.tachesService.create(tacheDto)
   }
 
   @Get(":id")
-  findById(@Param() repertoire: ITache) {
-    return this.tachesService.findById(repertoire.id)
+  findById(@Param() tache: ITache) {
+    return this.tachesService.findById(tache.id)
   }
 
   @Delete(":id")
-  delete(@Param() repertoire: ITache) {
-    return this.tachesService.delete(repertoire.id)
+  delete(@Param() tache: ITache) {
+    return this.tachesService.delete(tache.id)
   }
 
   @Patch(":id")
-  update(@Body() repertoireDto: EditTacheDto, @Param() repertoire: ITache) {
-    return this.tachesService.update(repertoireDto, repertoire.id)
+  update(@Body() tacheDto: EditTacheDto, @Param() tache: ITache) {
+    return this.tachesService.update(tacheDto, tache.id)
   }
 
 }

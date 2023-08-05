@@ -39,24 +39,24 @@ export class Tache extends EntityStarter implements ITache {
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles données sont différentes
   editMandatory(data: ITacheEditorMandatory): void {
-    const { libelle } = data;
+    const { libelle, groupe } = data;
 
     if (libelle && libelle !== this.libelle) {
       this.libelle = libelle;
     }
+    if (groupe && groupe !== this.groupe) {
+      this.groupe = groupe;
+    }
   }
 
   editOptionnal(data: ITacheEditorOptional): void {
-    const { couleur, detail, groupe } = data;
+    const { couleur, detail } = data;
 
     if (couleur && couleur !== this.libelle) {
       this.couleur = couleur;
     }
     if (detail && detail !== this.detail) {
       this.detail = detail;
-    }
-    if (groupe && groupe !== this.groupe) {
-      this.groupe = groupe;
     }
   }
 

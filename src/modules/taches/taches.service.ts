@@ -36,8 +36,11 @@ export class TacheService {
 
   async update(edittachesDto: EditTacheDto, id: string) {
     let taches = await this.tachesRepository.findByID(id);
-
     taches.edit(edittachesDto);
+
+    const groupe = await this.groupeActions.getGroupeById(edittachesDto.groupeId);
+    const groupeElement = Tache.factory({ ...edittachesDto, groupe });
+    await this.tachesRepository.save(groupeElement);
 
     return await this.tachesRepository.save(taches);
   }

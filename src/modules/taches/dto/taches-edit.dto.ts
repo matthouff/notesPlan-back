@@ -22,5 +22,5 @@ export class EditTacheDto {
 
   @IsOptional()
   @IsUUID()
-  id_groupe: string;
+  groupeId: string;
 }
