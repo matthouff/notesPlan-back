@@ -10,8 +10,8 @@ export default class LabelsServiceMock {
     return this.labels;
   }
 
-  async findAllById_tache(id_tache: string): Promise<Label[]> {
-    return this.labels.filter(label => label.id_tache === id_tache);
+  async findAllById_tache(tacheId: string): Promise<Label[]> {
+    return this.labels.filter(label => label.tacheId === tacheId);
   }
 
   async create(data: any): Promise<Label> {
@@ -35,7 +35,7 @@ export default class LabelsServiceMock {
     const label = this.labels.find(label => label.id === id);
     if (label) {
       label.libelle = editlabelDto.libelle;
-      label.id_tache = editlabelDto.id_tache;
+      label.tacheId = editlabelDto.tacheId;
     }
     return label;
   }

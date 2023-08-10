@@ -9,4 +9,9 @@ export class LabelRepository extends RepositoryStarter<Label> {
   constructor(@InjectDataSource() datasource: DataSource) {
     super(datasource.getRepository(Label));
   }
+
+  async findLabelByTacheId(tacheId: string) {
+    const data = await this.model.findBy({ tache: { id: tacheId } });
+    return data;
+  }
 }

@@ -7,11 +7,12 @@ import { GroupesRepository } from "./groupes.repository";
 import { RepertoiresGroupeActions } from "../repertoires/repertoires-groupes/repertoires-groupes.actions";
 import { TacheRepository } from "../taches/taches.repository";
 import { CreateGroupeDto } from "./dto/groupes-create.dto";
+import { LabelRepository } from "../labels/labels.repository";
 
 @Injectable()
 export class GroupeService {
 
-  constructor(readonly groupesRepository: GroupesRepository, readonly repertoiresActions: RepertoiresGroupeActions, readonly tacheRepository: TacheRepository,) { }
+  constructor(readonly groupesRepository: GroupesRepository, readonly repertoiresActions: RepertoiresGroupeActions, readonly tacheRepository: TacheRepository, readonly labelRepository: LabelRepository) { }
 
   async findAll(): Promise<IGroupe[]> {
     return await this.groupesRepository.getAll();
@@ -24,18 +25,24 @@ export class GroupeService {
     const groupesWithTaches = await Promise.all(
       groupes.map(async (groupe) => {
         const taches = await this.tacheRepository.findByGroupeId(groupe.id);
+        const label = await this.labelRepository.findLabelByTacheId(groupe.id);
+
         return {
           id: groupe.id,
           createdat: groupe.createdat,
           libelle: groupe.libelle,
           couleur: groupe.couleur,
-          taches: taches.map(tache => ({
-            id: tache.id,
-            libelle: tache.libelle,
-            couleur: tache.couleur,
-            detail: tache.detail,
-            date: tache.date,
-            createdat: tache.createdat
+          taches: await Promise.all(taches.map(async tache => {
+            const labels = await this.labelRepository.findLabelByTacheId(tache.id);
+
+            return {
+              id: tache.id,
+              libelle: tache.libelle,
+              labels: labels,
+              detail: tache.detail,
+              date: tache.date,
+              createdat: tache.createdat,
+            };
           })),
         };
       })

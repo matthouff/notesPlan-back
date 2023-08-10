@@ -10,10 +10,6 @@ export class EditTacheDto {
 
   @IsOptional()
   @IsString()
-  couleur?: string | null;
-
-  @IsOptional()
-  @IsString()
   detail?: string | null;
 
   @IsOptional()

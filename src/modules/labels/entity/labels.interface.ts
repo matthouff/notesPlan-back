@@ -1,9 +1,9 @@
 import { IEntityStarter } from "src/modules/entity-starter.class";
+import { Tache } from "src/modules/taches/entity/taches";
 
 interface IFixedPart { }
 
 interface IMandatoryPart {
-  id_tache: string;
 }
 
 interface IOptionalPart {

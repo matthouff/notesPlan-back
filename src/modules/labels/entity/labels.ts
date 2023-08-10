@@ -19,12 +19,12 @@ export class Label extends EntityStarter implements ILabel {
   @Column({ type: 'varchar', nullable: true })
   couleur?: string | null;
 
-  @Column({ default: uuidv4() })
-  id_tache: string;
-
-  @ManyToOne(() => Tache, (tache) => tache.id)
-  @JoinColumn({ name: 'tacheid' })
-  tache: Tache;
+  @ManyToMany(
+    () => Tache,
+    tache => tache.label,
+    { onDelete: 'NO ACTION', onUpdate: 'NO ACTION', },
+  )
+  tache: Tache[];
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes

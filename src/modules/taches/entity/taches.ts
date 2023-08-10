@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import {
   ITache,
   ITacheConstructor,
@@ -10,14 +10,12 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Groupe } from 'src/modules/groupes/entity/groupes';
+import { Label } from 'src/modules/labels/entity/labels';
 
 @Entity('taches')
 export class Tache extends EntityStarter implements ITache {
   @Column({ type: 'varchar', length: 100 })
   libelle: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  couleur: string | null;
 
   @Column({ type: 'varchar', nullable: true })
   detail: string | null;
@@ -28,6 +26,23 @@ export class Tache extends EntityStarter implements ITache {
   @ManyToOne(() => Groupe, (groupe) => groupe.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'groupeid' })
   groupe: Groupe;
+
+  @ManyToMany(
+    () => Label,
+    label => label.tache, //optional
+    { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' })
+  @JoinTable({
+    name: 'tache_label',
+    joinColumn: {
+      name: 'tacheId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'labelId',
+      referencedColumnName: 'id',
+    },
+  })
+  label: Label[];
 
   private constructor(data: ITacheConstructor) {
     super();
@@ -50,11 +65,8 @@ export class Tache extends EntityStarter implements ITache {
   }
 
   editOptionnal(data: ITacheEditorOptional): void {
-    const { couleur, detail } = data;
+    const { detail } = data;
 
-    if (couleur && couleur !== this.libelle) {
-      this.couleur = couleur;
-    }
     if (detail && detail !== this.detail) {
       this.detail = detail;
     }

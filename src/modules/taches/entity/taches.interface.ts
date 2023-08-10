@@ -9,7 +9,6 @@ interface IMandatoryPart {
 }
 
 interface IOptionalPart {
-  couleur?: string | null;
   detail?: string | null;
   date?: string | null;
 }
