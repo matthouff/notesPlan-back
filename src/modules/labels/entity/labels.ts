@@ -22,7 +22,7 @@ export class Label extends EntityStarter implements ILabel {
   @ManyToMany(
     () => Tache,
     tache => tache.label,
-    { onDelete: 'NO ACTION', onUpdate: 'NO ACTION', },
+    { onDelete: 'CASCADE' },
   )
   tache: Tache[];
 

@@ -25,7 +25,6 @@ export class GroupeService {
     const groupesWithTaches = await Promise.all(
       groupes.map(async (groupe) => {
         const taches = await this.tacheRepository.findByGroupeId(groupe.id);
-        const label = await this.labelRepository.findLabelByTacheId(groupe.id);
 
         return {
           id: groupe.id,

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { EditTacheDto } from "./dto/taches-edit.dto";
 import { Tache } from "./entity/taches";
 import { ITache } from "./entity/taches.interface";
@@ -6,11 +6,14 @@ import { TacheRepository } from "./taches.repository";
 import { TacheActions } from "./taches.actions";
 import { GroupeActions } from "../groupes/groupes.actions";
 import { CreateTacheDto } from "./dto/taches-create.dto";
+import { DataSource } from "typeorm";
+import { LabelRepository } from "../labels/labels.repository";
+import { Label } from "../labels/entity/labels";
 
 @Injectable()
 export class TacheService {
 
-  constructor(readonly tachesRepository: TacheRepository, readonly groupeActions: GroupeActions) { }
+  constructor(readonly tachesRepository: TacheRepository, readonly groupeActions: GroupeActions, readonly labelRepository: LabelRepository) { }
 
   async findAll(): Promise<ITache[]> {
     return await this.tachesRepository.getAll();
@@ -44,4 +47,5 @@ export class TacheService {
 
     return await this.tachesRepository.save(taches);
   }
+
 }

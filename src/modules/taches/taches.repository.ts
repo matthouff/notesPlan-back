@@ -13,13 +13,5 @@ export class TacheRepository extends RepositoryStarter<Tache> {
   async findByGroupeId(groupeId: string) {
     const data = await this.model.findBy({ groupe: { id: groupeId } });
     return data;
-
-    // try {
-    //   return await this.model.find({ where: { groupe: { id: id_groupe } } });
-    // } catch (error) {
-    //   // Gérer les erreurs
-    //   console.error(error);
-    //   throw new Error("Erreur lors de la récupération des notes.");
-    // }
   }
 }

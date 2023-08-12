@@ -30,7 +30,7 @@ export class Tache extends EntityStarter implements ITache {
   @ManyToMany(
     () => Label,
     label => label.tache, //optional
-    { onDelete: 'NO ACTION', onUpdate: 'NO ACTION' })
+    { onDelete: 'CASCADE' })
   @JoinTable({
     name: 'tache_label',
     joinColumn: {

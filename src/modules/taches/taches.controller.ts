@@ -4,6 +4,8 @@ import { Tache } from './entity/taches';
 import { ITache } from './entity/taches.interface';
 import { TacheService } from './taches.service';
 import { CreateTacheDto } from './dto/taches-create.dto';
+import { ILabel } from '../labels/entity/labels.interface';
+import { Label } from '../labels/entity/labels';
 
 
 // http://localhost:3000
@@ -41,5 +43,4 @@ export class TacheController {
   update(@Body() tacheDto: EditTacheDto, @Param() tache: ITache) {
     return this.tachesService.update(tacheDto, tache.id)
   }
-
 }
