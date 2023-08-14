@@ -10,6 +10,7 @@ import { TacheModule } from './modules/taches/taches.module';
 import { LabelModule } from './modules/labels/labels.module';
 import { NoteModule } from './modules/notes/notes.module';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DatabaseModule } from './database/database.module';
     TacheModule,
     LabelModule,
     NoteModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

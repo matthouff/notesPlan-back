@@ -20,7 +20,7 @@ export class User extends EntityStarter implements IUser {
   @Column({ length: 25, nullable: true })
   login: string;
 
-  @Column({ length: 25, nullable: true })
+  @Column({ nullable: true })
   password: string;
 
   @OneToMany(() => RepertoireGroupe, (repertoireGroupe) => repertoireGroupe.user)

@@ -7,7 +7,7 @@ import { UserRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(readonly usersRepository: UserRepository) {}
+  constructor(readonly usersRepository: UserRepository) { }
 
   async findAll(): Promise<IUser[]> {
     return await this.usersRepository.getAll();
@@ -19,6 +19,10 @@ export class UsersService {
 
   async findById(id: string): Promise<User> {
     return await this.usersRepository.findByID(id);
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOneByEmail(email);
   }
 
   async delete(id: string) {

@@ -11,7 +11,10 @@ export class UserRepository extends RepositoryStarter<User> {
   }
 
   // cette méthode fait référence à cette requête : SELECT EXISTS (SELECT * FROM users WHERE nom = 'Berthelot') AS result;
-  async findByNom(nom: string) {
-    return await this.model.exist({ where: { nom } });
+  async findOneByEmail(email: string) {
+    return await this.model.findOneBy({ email });
+  }
+  async findOneById(id: string) {
+    return await this.model.findOne({ where: { id } });
   }
 }

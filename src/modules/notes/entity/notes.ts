@@ -20,7 +20,7 @@ export class Note extends EntityStarter implements INote {
   @Column({ type: 'varchar', nullable: true })
   message?: string | null;
 
-  @ManyToOne(() => RepertoireNote, (repNote) => repNote.notes)
+  @ManyToOne(() => RepertoireNote, (repNote) => repNote.notes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'repertoireid' })
   repertoire?: RepertoireNote | null;
 
@@ -36,7 +36,12 @@ export class Note extends EntityStarter implements INote {
 
   // fonction qui ne renvoie rien (void)
   // Permet de vérifier si les nouvelles donées sont différentes
-  editOptional(): void {
+  editOptional(data: INoteEditorOptional): void {
+    const { message } = data;
+
+    if (message && message !== this.message) {
+      this.message = message;
+    }
   }
 
   editMandatory(data: INoteEditorMandatory): void {
@@ -49,6 +54,7 @@ export class Note extends EntityStarter implements INote {
 
   // On met a jour les données de l'entité
   edit(data: INoteEditor): void {
+    this.editOptional({ ...data });
     this.editMandatory({ ...data });
   }
 }

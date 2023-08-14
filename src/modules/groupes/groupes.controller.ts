@@ -24,8 +24,8 @@ export class GroupeController {
   }
 
   @Post()
-  create(@Body() repertoireDto: CreateGroupeDto) {
-    return this.groupesService.create(repertoireDto)
+  create(@Body() groupeDto: CreateGroupeDto) {
+    return this.groupesService.create(groupeDto)
   }
 
   @Get(":id")
@@ -39,8 +39,8 @@ export class GroupeController {
   }
 
   @Patch(":id")
-  update(@Body() repertoireDto: RepertoireGroupe, @Param() repertoire: IGroupe) {
-    return this.groupesService.update(repertoireDto, repertoire.id)
+  update(@Body() groupeDto: RepertoireGroupe, @Param() repertoire: IGroupe) {
+    return this.groupesService.update(groupeDto, repertoire.id)
   }
 
 }

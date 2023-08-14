@@ -22,9 +22,8 @@ export class NoteService {
 
   async create(data: CreateNoteDto) {
     const repertoire = await this.repertoiresActions.getrepertoiresById(data.repertoireId);
-    const note = Note.factory({ ...data, repertoire });
-
-    return await this.notesRepository.save(note);
+    const repertoireNote = Note.factory({ ...data, repertoire });
+    return await this.notesRepository.save(repertoireNote);
   }
 
   async findById(id: string): Promise<Note> {
@@ -37,7 +36,6 @@ export class NoteService {
 
   async update(editnotesDto: EditNoteDto, id: string) {
     let notes = await this.notesRepository.findByID(id);
-
     notes.edit(editnotesDto);
 
     return await this.notesRepository.save(notes);

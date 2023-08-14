@@ -8,8 +8,8 @@ import { UserActions } from './users.actions';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  exports: [TypeOrmModule, UserActions],
+  exports: [TypeOrmModule, UserActions, UsersService],
   controllers: [UsersController],
   providers: [UsersService, UserRepository, UserActions, Logger],
 })
-export class UsersModule {}
+export class UsersModule { }
