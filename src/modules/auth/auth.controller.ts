@@ -4,6 +4,7 @@ import { CreateUserDto } from '../users/dto/users-create.dto';
 import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
+import { User } from '../users/entity/users';
 
 @Controller('auth')
 export class AuthController {
@@ -20,8 +21,6 @@ export class AuthController {
   async login(@Body("email") email: string, @Body("password") password: string, @Res({ passthrough: true }) response: Response, @Req() request: Request) {
     const user = await this.authService.findOneByEmail(email);
 
-    console.log(user);
-
     if (!user) {
       throw new BadRequestException("Donnée invalide");
     }
@@ -32,11 +31,16 @@ export class AuthController {
     // Création du JWTTokent
     const jwt = await this.jwtService.signAsync({ id: user.id })
 
-    response.cookie('jwt', jwt, { httpOnly: true })
-    // httpOnly permet de sécuriser le cookie et devient inaxessible depuis JavaScript côté client
+    response.cookie('jwt', jwt, {
+      httpOnly: true, // cookie devient inaxessible depuis JavaScript côté client
+      sameSite: "lax",
+      secure: true,
+      domain: "localhost"
+    })
 
     return {
       message: "success",
+      type: "success"
     };
   }
 
@@ -48,42 +52,48 @@ export class AuthController {
   async register(@Body() userDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(userDto.password, 12)
 
-    const user = this.authService.register({
-      email: userDto.email,
-      password: hashedPassword
-    });
+    try {
+      const user = this.authService.register({
+        email: userDto.email,
+        password: hashedPassword
+      });
 
-    // Enlève le password de la réponse
-    delete (await user).password
+      // Enlève le password de la réponse
+      delete (await user).password
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new BadRequestException("Les données sont invalides");
+    }
   }
 
 
   /////////   RÉCUPÉRATION DU USER ////////////
 
+  @HttpCode(HttpStatus.OK)
   @Get('user')
-  async user(@Req() req: Request) {
-
+  async getUser(@Req() request: Request) {
     try {
-      const cookie = req.cookies['jwt'];
-      const data = await this.jwtService.verifyAsync(cookie);
-
-      if (!data) {
+      const cookie = request.cookies['jwt'];
+      if (!cookie) {
         throw new UnauthorizedException();
       }
 
-      const user = await this.authService.findOneById(data.id)
+      const decodedToken = await this.jwtService.verifyAsync(cookie);
+      if (!decodedToken) {
+        throw new UnauthorizedException();
+      }
 
-      // Enlève le password de la réponse
-      const { password, ...result } = user;
+      const user = await this.authService.findOneById(decodedToken.id) // Remplacez par la méthode appropriée pour récupérer l'utilisateur
+      if (!user) {
+        throw new UnauthorizedException();
+      }
 
-      return result;
-
-    } catch (e) {
+      const { password, ...userData } = user;
+      return userData;
+    } catch (error) {
       throw new UnauthorizedException();
     }
-
   }
 
 

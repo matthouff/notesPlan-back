@@ -5,7 +5,6 @@ interface IFixedPart { }
 interface IMandatoryPart {
   prenom: string
   email: string
-  login: string
   password: string
 }
 

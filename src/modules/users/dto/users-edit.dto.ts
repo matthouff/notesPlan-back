@@ -13,16 +13,14 @@ export class EditUserDto {
   })
   @IsOptional()
   @IsString()
-  prenom: string;
+  prenom?: string | null;
 
   @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string | null;
 
-  @Length(8, 25, {
-    message: "Le prénom doit être compris entre 2 et 50 caractères.",
-  })
   @IsOptional()
   @IsString()
-  login: string;
+  password?: string | null;
+
 }

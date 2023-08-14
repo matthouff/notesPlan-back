@@ -19,13 +19,6 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @Length(8, 25, {
-    message: "Le prénom doit être compris entre 2 et 50 caractères.",
-  })
-  @IsNotEmpty()
-  @IsString()
-  login: string;
-
   @IsNotEmpty()
   @IsString()
   password: string;

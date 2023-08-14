@@ -9,18 +9,15 @@ import { Column, Entity, OneToMany } from 'typeorm';
 export class User extends EntityStarter implements IUser {
 
   @Column({ length: 50, nullable: true })
-  nom: string;
+  nom?: string | null;
 
-  @Column({ length: 50, nullable: true })
+  @Column({ length: 50, nullable: false })
   prenom: string;
 
-  @Column({ length: 50, nullable: true })
+  @Column({ length: 50, nullable: false })
   email: string;
 
-  @Column({ length: 25, nullable: true })
-  login: string;
-
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   password: string;
 
   @OneToMany(() => RepertoireGroupe, (repertoireGroupe) => repertoireGroupe.user)
