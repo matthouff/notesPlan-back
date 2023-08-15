@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { CreateUserDto } from './dto/users-create.dto';
 import { EditUserDto } from './dto/users-edit.dto';
 import { User } from './entity/users';
 import { IUser } from './entity/users.interface';

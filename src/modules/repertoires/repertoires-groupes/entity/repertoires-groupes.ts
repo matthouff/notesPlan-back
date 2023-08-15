@@ -1,6 +1,6 @@
 import { Groupe } from 'src/modules/groupes/entity/groupes';
 import { User } from 'src/modules/users/entity/users';
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Repertoire } from '../../commun/entity/repertoires';
 import { IRepertoire, IRepertoireConstructor, IRepertoireCreator } from '../../commun/entity/repertoires.interface';
 

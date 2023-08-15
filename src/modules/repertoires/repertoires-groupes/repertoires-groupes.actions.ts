@@ -1,5 +1,4 @@
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { Repertoire } from "../commun/entity/repertoires";
 import { RepertoireGroupe } from "./entity/repertoires-groupes";
 import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
 

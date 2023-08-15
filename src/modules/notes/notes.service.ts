@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { RepertoireNote } from "../repertoires/repertoires-notes/entity/repertoires-notes";
 import { EditNoteDto } from "./dto/notes-edit.dto";
 import { Note } from "./entity/notes";
 import { INote } from "./entity/notes.interface";

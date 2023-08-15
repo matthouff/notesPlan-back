@@ -1,4 +1,4 @@
-import { IsString, IsEmail, Length, IsOptional, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsUUID } from 'class-validator';
 
 export class EditRepertoireDto {
   @IsString()

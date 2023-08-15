@@ -7,7 +7,6 @@ import { GroupeService } from './groupes.service';
 import { RepertoireGroupesModule } from '../repertoires/repertoires-groupes/repertoires-groupes.module';
 import { GroupeActions } from './groupes.actions';
 import { TacheRepository } from '../taches/taches.repository';
-import { TacheModule } from '../taches/taches.module';
 import { LabelModule } from '../labels/labels.module';
 import { LabelRepository } from '../labels/labels.repository';
 

@@ -6,34 +6,37 @@ import {
   Param,
   Patch,
   Post,
-  Res,
+  Req,
 } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
-import { RepertoireDto } from '../commun/dto/repertoires.dto';
-import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
-import { RepertoireNote } from './entity/repertoires-notes';
 import { RepertoiresNotesService } from './repertoires-notes.service';
 import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
+import { AuthActions } from 'src/modules/auth/auth.actions';
+import { Request } from 'express';
 
 // http://localhost:3000
 @Controller('repertoires_notes')
 export class RepertoiresNotesController {
-  constructor(readonly repertoiresService: RepertoiresNotesService) { }
+  constructor(
+    readonly repertoiresService: RepertoiresNotesService,
+    readonly authActions: AuthActions,
+  ) { }
 
   @Get()
-  findAll(): Promise<IRepertoire[]> {
-    return this.repertoiresService.findAll();
-  }
+  async findAllByUserId(@Req() request: Request) {
+    try {
+      const user = await this.authActions.getUser(request);
+      return this.repertoiresService.findAllByUserId(user.id);
+    } catch (error) {
 
-  @Get('user/:userId')
-  findAllByUserId(@Param('userId') userId: string) {
-    return this.repertoiresService.findAllByUserId(userId);
+    }
   }
 
   @Post()
-  create(@Body() repertoireDto: CreateRepertoireDto) {
-    return this.repertoiresService.create(repertoireDto);
+  async create(@Body() repertoireDto: CreateRepertoireDto, @Req() request: Request) {
+    const user = await this.authActions.getUser(request);
+    return this.repertoiresService.create({ ...repertoireDto, userId: user.id });
   }
 
   @Get(':id')

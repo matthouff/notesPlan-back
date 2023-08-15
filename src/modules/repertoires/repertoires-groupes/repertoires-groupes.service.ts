@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { EditRepertoireDto } from "../commun/dto/repertoires-edit.dto";
-import { Repertoire } from "../commun/entity/repertoires";
 import { IRepertoire } from "../commun/entity/repertoires.interface";
 import { RepertoireGroupe } from "./entity/repertoires-groupes";
 import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";

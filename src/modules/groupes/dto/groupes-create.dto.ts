@@ -1,4 +1,4 @@
-import { IsString, IsEmail, Length, IsOptional, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsString, Length, IsOptional, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateGroupeDto {
   @Length(2, 50, {

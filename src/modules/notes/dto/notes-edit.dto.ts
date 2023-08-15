@@ -2,10 +2,8 @@ import {
   IsString,
   Length,
   IsOptional,
-  IsNotEmpty,
   IsUUID,
 } from 'class-validator';
-import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity/repertoires-notes';
 
 export class EditNoteDto {
   @Length(0, 100, {

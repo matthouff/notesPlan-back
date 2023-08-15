@@ -1,7 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { RepertoireGroupe } from '../repertoires/repertoires-groupes/entity/repertoires-groupes';
-import { EditGroupeDto } from './dto/groupes-edit.dto';
-import { Groupe } from './entity/groupes';
 import { IGroupe } from './entity/groupes.interface';
 import { GroupeService } from './groupes.service';
 import { CreateGroupeDto } from './dto/groupes-create.dto';

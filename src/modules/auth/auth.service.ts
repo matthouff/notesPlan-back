@@ -1,7 +1,6 @@
-import { Body, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/users-create.dto';
 import { UserRepository } from '../users/users.repository';
-import { promises } from 'dns';
 import { User } from '../users/entity/users';
 
 @Injectable()

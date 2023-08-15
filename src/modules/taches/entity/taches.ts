@@ -7,7 +7,6 @@ import {
   ITacheEditorMandatory,
   ITacheEditorOptional,
 } from './taches.interface';
-import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { Groupe } from 'src/modules/groupes/entity/groupes';
 import { Label } from 'src/modules/labels/entity/labels';

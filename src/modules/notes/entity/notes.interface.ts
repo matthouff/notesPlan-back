@@ -1,5 +1,4 @@
 import { IEntityStarter } from 'src/modules/entity-starter.class';
-import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
 import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity/repertoires-notes';
 
 interface IFixedPart { }

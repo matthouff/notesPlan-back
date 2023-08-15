@@ -1,14 +1,10 @@
-import { Entity, Column, ManyToOne, JoinColumn, ManyToMany } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { Entity, Column, ManyToMany } from 'typeorm';
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Groupe } from 'src/modules/groupes/entity/groupes';
 import {
   ILabel,
   ILabelEditor,
-  ILabelEditorMandatory,
   ILabelEditorOptional,
 } from './labels.interface';
-import { IUserEditorOptional } from 'src/modules/users/entity/users.interface';
 import { Tache } from 'src/modules/taches/entity/taches';
 
 @Entity('labels')

@@ -1,5 +1,4 @@
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
 import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity/repertoires-notes';
 import { IUser, IUserEditor, IUserEditorMandatory, IUserEditorOptional } from './users.interface';

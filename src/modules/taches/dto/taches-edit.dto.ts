@@ -13,10 +13,6 @@ export class EditTacheDto {
   detail?: string | null;
 
   @IsOptional()
-  @IsString()
-  date: string;
-
-  @IsOptional()
   @IsUUID()
   groupeId: string;
 }

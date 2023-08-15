@@ -1,30 +1,39 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
-import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
-import { RepertoireGroupe } from './entity/repertoires-groupes';
 import { RepertoiresGroupesService } from './repertoires-groupes.service';
 import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
+import { AuthActions } from 'src/modules/auth/auth.actions';
+import { Request } from 'express';
 
 
 // http://localhost:3000
 @Controller('repertoires_groupes')
 export class RepertoiresGroupesController {
-  constructor(readonly repertoiresService: RepertoiresGroupesService,) { }
+  constructor(
+    readonly repertoiresService: RepertoiresGroupesService,
+    readonly authActions: AuthActions,
+  ) { }
 
   // @Get()
   // findAll(): Promise<IRepertoire[]> {
   //   return this.repertoiresService.findAll();
   // }
 
-  @Get("user/:userId")
-  findAllByUserId(@Param('userId') userId: string) {
-    return this.repertoiresService.findAllByUserId(userId);
+  @Get()
+  async findAllByUserId(@Req() request: Request) {
+    try {
+      const user = await this.authActions.getUser(request);
+      return this.repertoiresService.findAllByUserId(user.id);
+    } catch (error) {
+
+    }
   }
 
   @Post()
-  create(@Body() repertoireDto: CreateRepertoireDto) {
-    return this.repertoiresService.create(repertoireDto)
+  async create(@Body() repertoireDto: CreateRepertoireDto, @Req() request: Request) {
+    const user = await this.authActions.getUser(request);
+    return this.repertoiresService.create({ ...repertoireDto, userId: user.id })
   }
 
   @Get(":id")

@@ -12,10 +12,6 @@ export class CreateTacheDto {
   @IsString()
   detail?: string | null;
 
-  @IsOptional()
-  @IsString()
-  date?: string | null;
-
   @IsNotEmpty()
   @IsUUID()
   groupeId: string;

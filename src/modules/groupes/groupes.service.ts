@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { RepertoireGroupe } from "../repertoires/repertoires-groupes/entity/repertoires-groupes";
-import { EditGroupeDto } from "./dto/groupes-edit.dto";
 import { Groupe } from "./entity/groupes";
 import { IGroupe } from "./entity/groupes.interface";
 import { GroupesRepository } from "./groupes.repository";

@@ -1,11 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { EditTacheDto } from './dto/taches-edit.dto';
-import { Tache } from './entity/taches';
 import { ITache } from './entity/taches.interface';
 import { TacheService } from './taches.service';
 import { CreateTacheDto } from './dto/taches-create.dto';
-import { ILabel } from '../labels/entity/labels.interface';
-import { Label } from '../labels/entity/labels';
 
 
 // http://localhost:3000

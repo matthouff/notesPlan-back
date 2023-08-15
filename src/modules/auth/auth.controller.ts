@@ -4,10 +4,12 @@ import { CreateUserDto } from '../users/dto/users-create.dto';
 import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
+import { AuthActions } from './auth.actions';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private authAction: AuthActions,
     private authService: AuthService,
     private jwtService: JwtService
   ) { }
@@ -73,23 +75,7 @@ export class AuthController {
   @Get('user')
   async getUser(@Req() request: Request) {
     try {
-      const cookie = request.cookies['jwt'];
-      if (!cookie) {
-        throw new UnauthorizedException();
-      }
-
-      const decodedToken = await this.jwtService.verifyAsync(cookie);
-      if (!decodedToken) {
-        throw new UnauthorizedException();
-      }
-
-      const user = await this.authService.findOneById(decodedToken.id) // Remplacez par la méthode appropriée pour récupérer l'utilisateur
-      if (!user) {
-        throw new UnauthorizedException();
-      }
-
-      const { password, ...userData } = user;
-      return userData;
+      return await this.authAction.getUser(request)
     } catch (error) {
       throw new UnauthorizedException();
     }

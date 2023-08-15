@@ -3,12 +3,9 @@ import { EditTacheDto } from "./dto/taches-edit.dto";
 import { Tache } from "./entity/taches";
 import { ITache } from "./entity/taches.interface";
 import { TacheRepository } from "./taches.repository";
-import { TacheActions } from "./taches.actions";
 import { GroupeActions } from "../groupes/groupes.actions";
 import { CreateTacheDto } from "./dto/taches-create.dto";
-import { DataSource } from "typeorm";
 import { LabelRepository } from "../labels/labels.repository";
-import { Label } from "../labels/entity/labels";
 
 @Injectable()
 export class TacheService {

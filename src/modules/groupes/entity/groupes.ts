@@ -1,8 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { IGroupe, IGroupeConstructor, IGroupeCreator, IGroupeEditor, IGroupeEditorMandatory, IGroupeEditorOptional } from './groupes.interface';
-import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
 import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { Tache } from 'src/modules/taches/entity/taches';
 

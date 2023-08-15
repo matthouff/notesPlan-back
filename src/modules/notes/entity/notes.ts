@@ -7,9 +7,7 @@ import {
   INoteEditorMandatory,
   INoteEditorOptional,
 } from './notes.interface';
-import { v4 as uuidv4 } from 'uuid';
 import { EntityStarter } from 'src/modules/entity-starter.class';
-import { Groupe } from 'src/modules/groupes/entity/groupes';
 import { RepertoireNote } from 'src/modules/repertoires/repertoires-notes/entity/repertoires-notes';
 
 @Entity('notes')

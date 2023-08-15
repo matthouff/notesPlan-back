@@ -1,5 +1,4 @@
-import { Body, Injectable, Param } from '@nestjs/common';
-import { CreateUserDto } from './dto/users-create.dto';
+import { Injectable } from '@nestjs/common';
 import { EditUserDto } from './dto/users-edit.dto';
 import { User } from './entity/users';
 import { IUser } from './entity/users.interface';

@@ -5,8 +5,6 @@ import { LabelController } from './labels.controller';
 import { LabelRepository } from './labels.repository';
 import { LabelService } from './labels.service';
 import { TacheRepository } from '../taches/taches.repository';
-import { TacheModule } from '../taches/taches.module';
-import { TacheService } from '../taches/taches.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Label])],
