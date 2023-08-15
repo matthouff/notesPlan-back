@@ -6,25 +6,6 @@ import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
 export class RepertoiresGroupeActions {
 	constructor(private readonly repertoiresRepository: RepertoiresGroupesRepository, private readonly logger: Logger) { }
 
-
-	//
-	// Update le repertoires ciblé avec repertoires et IrepertoiresEditor passé en paramettre
-	//
-	// updaterepertoiresValidation(repertoires: repertoires, updaterepertoiresDto: IrepertoiresEditor): repertoires {
-	// 	const data: IrepertoiresEditor = {
-	// 		...updaterepertoiresDto,
-	// 	};
-
-	// 	repertoires.edit(data);
-
-	// 	this.logger.debug(`Le repertoires a été mis à jour`);
-
-	// 	return repertoires;
-	// }
-
-	//
-	// On récupère le repertoires avec l'id passé en parametre
-	//
 	async getrepertoiresById(id: string): Promise<RepertoireGroupe> {
 		const found = await this.repertoiresRepository.findByID(id);
 

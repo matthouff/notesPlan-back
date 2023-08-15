@@ -14,4 +14,9 @@ export class LabelRepository extends RepositoryStarter<Label> {
     const data = await this.model.findBy({ tache: { id: tacheId } });
     return data;
   }
+
+  async findAllLabelByRepertoireId(repertoireId: string) {
+    const data = await this.model.findBy({ repertoire: { id: repertoireId } });
+    return data;
+  }
 }

@@ -4,21 +4,31 @@ import { Label } from "./entity/labels";
 import { ILabel } from "./entity/labels.interface";
 import { LabelRepository } from "./labels.repository";
 import { TacheRepository } from "../taches/taches.repository";
+import { CreateLabelDto } from "./dto/labels-create.dto";
+import { LabelActions } from "./labels.actions";
+import { RepertoiresGroupeActions } from "../repertoires/repertoires-groupes/repertoires-groupes.actions";
 
 @Injectable()
 export class LabelService {
 
   constructor(
     readonly labelsRepository: LabelRepository,
-    readonly tachesRepository: TacheRepository
+    readonly tachesRepository: TacheRepository,
+    readonly repertoiresGroupeActions: RepertoiresGroupeActions
   ) { }
 
   async findAll(): Promise<ILabel[]> {
     return await this.labelsRepository.getAll();
   }
 
-  async create(data: Label): Promise<Label> {
-    return await this.labelsRepository.save(data);
+  async findAllLabelByRepertoireId(repertoireId: string): Promise<ILabel[]> {
+    return await this.labelsRepository.findAllLabelByRepertoireId(repertoireId);
+  }
+
+  async create(data: CreateLabelDto) {
+    const repertoire = await this.repertoiresGroupeActions.getrepertoiresById(data.repertoireId);
+    const repertoireElement = Label.factory({ ...data, repertoire });
+    return await this.labelsRepository.save(repertoireElement);
   }
 
   async findById(id: string): Promise<Label> {
@@ -33,24 +43,12 @@ export class LabelService {
     return await this.labelsRepository.deleteByID(id);
   }
 
-  async update(editlabelsDto: EditLabelDto, id: string) {
-    let labels = await this.labelsRepository.findByID(id);
-
-    labels.edit(editlabelsDto);
-
-    return await this.labelsRepository.save(labels);
-  }
-
-
 
   // Table de liaison Taches / Labels
 
   async AddLabelToTache(tacheId: string, label: string): Promise<void> {
     const labelAdded = await this.labelsRepository.findByID(label);
     const tache = await this.tachesRepository.findByID(tacheId);
-
-    // console.log(tacheId);
-    // console.log(label);
 
     if (!tache) {
       throw new NotFoundException('Tache introuvable');

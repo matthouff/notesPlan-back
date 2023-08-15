@@ -3,6 +3,7 @@ import { IGroupe, IGroupeConstructor, IGroupeCreator, IGroupeEditor, IGroupeEdit
 import { EntityStarter } from 'src/modules/entity-starter.class';
 import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { Tache } from 'src/modules/taches/entity/taches';
+import { Label } from 'src/modules/labels/entity/labels';
 
 @Entity('groupes')
 export class Groupe extends EntityStarter implements IGroupe {

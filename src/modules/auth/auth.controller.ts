@@ -1,17 +1,19 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/users-create.dto';
 import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import { AuthActions } from './auth.actions';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authAction: AuthActions,
     private authService: AuthService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private userService: UsersService
   ) { }
 
 
@@ -23,10 +25,10 @@ export class AuthController {
     const user = await this.authService.findOneByEmail(email);
 
     if (!user) {
-      throw new BadRequestException("Donnée invalide");
+      throw new BadRequestException({ message: "Donnée invalide", type: "error" });
     }
     if (!await bcrypt.compare(password, user.password)) {
-      throw new BadRequestException("Donnée invalide");
+      throw new BadRequestException({ message: "Donnée invalide", type: "error" });
     }
 
     // Création du JWTTokent
@@ -52,13 +54,17 @@ export class AuthController {
   @Post('register')
   async register(@Body() userDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(userDto.password, 12)
+    const userExist = await this.userService.findByEmail(userDto.email)
+
+    if (userExist) {
+      throw new ConflictException({ message: "Un compte à déjà été créé avec cet email", type: "error" });
+    }
 
     try {
-      const user = this.authService.register({
-        email: userDto.email,
+      const user = await this.authService.register({
+        ...userDto,
         password: hashedPassword
       });
-
       // Enlève le password de la réponse
       delete (await user).password
 

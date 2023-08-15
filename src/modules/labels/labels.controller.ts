@@ -3,6 +3,7 @@ import { EditLabelDto } from './dto/labels-edit.dto';
 import { Label } from './entity/labels';
 import { ILabel } from './entity/labels.interface';
 import { LabelService } from './labels.service';
+import { CreateLabelDto } from './dto/labels-create.dto';
 
 
 // http://localhost:3000
@@ -13,13 +14,18 @@ export class LabelController {
     readonly labelsService: LabelService
   ) { }
 
-  @Get()
-  findAll(): Promise<ILabel[]> {
-    return this.labelsService.findAll();
+  // @Get()
+  // findAll(): Promise<ILabel[]> {
+  //   return this.labelsService.findAll();
+  // }
+
+  @Get("/repertoire/:repertoireId")
+  findAllLabelByRepertoireId(@Param("repertoireId") repertoireId: string): Promise<ILabel[]> {
+    return this.labelsService.findAllLabelByRepertoireId(repertoireId);
   }
 
   @Post()
-  create(@Body() repertoireDto: Label) {
+  create(@Body() repertoireDto: CreateLabelDto) {
     return this.labelsService.create(repertoireDto)
   }
 
@@ -37,13 +43,6 @@ export class LabelController {
   delete(@Param() repertoire: ILabel) {
     return this.labelsService.delete(repertoire.id)
   }
-
-  @Patch(":id")
-  update(@Body() repertoireDto: EditLabelDto, @Param() repertoire: ILabel) {
-    return this.labelsService.update(repertoireDto, repertoire.id)
-  }
-
-
 
   // Realation manyToMany taches / labels
 
