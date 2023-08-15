@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { jwtConstants } from './constants';
 import { UserRepository } from '../users/users.repository';
 import { JwtStrategy } from './jwt.strategy';
+import { AuthActions } from './auth.actions';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, UserRepository], // Ajoutez JwtStrategy aux fournisseurs
+  providers: [AuthService, JwtStrategy, UserRepository, AuthActions], // Ajoutez JwtStrategy aux fournisseurs
   controllers: [AuthController],
   exports: [AuthService],
 })

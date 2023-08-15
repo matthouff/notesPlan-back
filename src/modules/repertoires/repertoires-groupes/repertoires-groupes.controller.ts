@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
 import { Repertoire } from '../commun/entity/repertoires';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
@@ -12,10 +12,10 @@ import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 export class RepertoiresGroupesController {
   constructor(readonly repertoiresService: RepertoiresGroupesService,) { }
 
-  @Get()
-  findAll(): Promise<IRepertoire[]> {
-    return this.repertoiresService.findAll();
-  }
+  // @Get()
+  // findAll(): Promise<IRepertoire[]> {
+  //   return this.repertoiresService.findAll();
+  // }
 
   @Get("user/:userId")
   findAllByUserId(@Param('userId') userId: string) {

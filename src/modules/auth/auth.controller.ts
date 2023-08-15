@@ -4,7 +4,6 @@ import { CreateUserDto } from '../users/dto/users-create.dto';
 import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
-import { User } from '../users/entity/users';
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +17,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body("email") email: string, @Body("password") password: string, @Res({ passthrough: true }) response: Response, @Req() request: Request) {
+  async login(@Body("email") email: string, @Body("password") password: string, @Res({ passthrough: true }) response: Response) {
     const user = await this.authService.findOneByEmail(email);
 
     if (!user) {
@@ -33,7 +32,7 @@ export class AuthController {
 
     response.cookie('jwt', jwt, {
       httpOnly: true, // cookie devient inaxessible depuis JavaScript côté client
-      sameSite: "lax",
+      sameSite: "none",
       secure: true,
       domain: "localhost"
     })

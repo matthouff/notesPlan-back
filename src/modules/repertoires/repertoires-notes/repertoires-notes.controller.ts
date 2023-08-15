@@ -19,7 +19,7 @@ import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 // http://localhost:3000
 @Controller('repertoires_notes')
 export class RepertoiresNotesController {
-  constructor(readonly repertoiresService: RepertoiresNotesService) {}
+  constructor(readonly repertoiresService: RepertoiresNotesService) { }
 
   @Get()
   findAll(): Promise<IRepertoire[]> {
