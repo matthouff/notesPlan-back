@@ -10,7 +10,7 @@ import {
 
 @Entity({ name: 'repertoires_notes' })
 export class RepertoireNote extends Repertoire implements IRepertoire {
-  @ManyToOne(() => User, (user) => user.repertoiresNotes)
+  @ManyToOne(() => User, (user) => user.repertoiresNotes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userid' })
   user: User;
 

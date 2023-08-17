@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -35,8 +36,17 @@ export class RepertoiresNotesController {
 
   @Post()
   async create(@Body() repertoireDto: CreateRepertoireDto, @Req() request: Request) {
-    const user = await this.authActions.getUser(request);
-    return this.repertoiresService.create({ ...repertoireDto, userId: user.id });
+    try {
+      const user = await this.authActions.getUser(request);
+      await this.repertoiresService.create({ ...repertoireDto, userId: user.id });
+
+      return {
+        message: "Le répertoire à bien été ajouté",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Get(':id')
@@ -45,15 +55,33 @@ export class RepertoiresNotesController {
   }
 
   @Delete(':id')
-  delete(@Param() repertoire: IRepertoire) {
-    return this.repertoiresService.delete(repertoire.id);
+  async delete(@Param() repertoire: IRepertoire) {
+    try {
+      await this.repertoiresService.delete(repertoire.id);
+
+      return {
+        message: "Le répertoire à bien été supprimé",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Body() repertoireDto: EditRepertoireDto,
     @Param() repertoire: IRepertoire,
   ) {
-    return this.repertoiresService.update(repertoireDto, repertoire.id);
+    try {
+      await this.repertoiresService.update(repertoireDto, repertoire.id);
+
+      return {
+        message: "Le repertoire à bien été modifié",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 }

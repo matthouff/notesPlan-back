@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { EditLabelDto } from './dto/labels-edit.dto';
 import { Label } from './entity/labels';
 import { ILabel } from './entity/labels.interface';
@@ -25,8 +25,17 @@ export class LabelController {
   }
 
   @Post()
-  create(@Body() repertoireDto: CreateLabelDto) {
-    return this.labelsService.create(repertoireDto)
+  async create(@Body() repertoireDto: CreateLabelDto) {
+    try {
+      await this.labelsService.create(repertoireDto)
+
+      return {
+        message: "Le label à bien été ajouté",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Get(":id")
@@ -52,11 +61,20 @@ export class LabelController {
   }
 
   @Delete(':labelId/tache/:tacheId')
-  removeLabelFromTache(
+  async removeLabelFromTache(
     @Param('tacheId') tacheId: string,
     @Param('labelId') labelId: string
   ) {
-    return this.labelsService.removeLabelFromTache(labelId, tacheId);
+    try {
+      await this.labelsService.removeLabelFromTache(labelId, tacheId);
+
+      return {
+        message: "Le label à bien été supprimé",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
 }

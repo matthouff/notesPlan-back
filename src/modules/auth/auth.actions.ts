@@ -1,4 +1,4 @@
-import { Injectable, Logger, Req, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request } from "express";
 import { JwtService } from "@nestjs/jwt";
@@ -21,7 +21,7 @@ export class AuthActions {
       throw new UnauthorizedException();
     }
 
-    const user = await this.authService.findOneById(decodedToken.id) // Remplacez par la méthode appropriée pour récupérer l'utilisateur
+    const user = await this.authService.findOneById(decodedToken.id)
     if (!user) {
       throw new UnauthorizedException();
     }

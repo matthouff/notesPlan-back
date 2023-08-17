@@ -25,10 +25,10 @@ export class AuthController {
     const user = await this.authService.findOneByEmail(email);
 
     if (!user) {
-      throw new BadRequestException({ message: "Donnée invalide", type: "error" });
+      throw new BadRequestException({ message: "Les informations sont invalides", type: "error" });
     }
     if (!await bcrypt.compare(password, user.password)) {
-      throw new BadRequestException({ message: "Donnée invalide", type: "error" });
+      throw new BadRequestException({ message: "Les informations sont invalides", type: "error" });
     }
 
     // Création du JWTTokent
@@ -42,7 +42,7 @@ export class AuthController {
     })
 
     return {
-      message: "success",
+      message: "Connecté",
       type: "success"
     };
   }
@@ -68,7 +68,10 @@ export class AuthController {
       // Enlève le password de la réponse
       delete (await user).password
 
-      return user;
+      return {
+        message: "Votre compte à bien été créé",
+        type: "success"
+      };
     } catch (error) {
       throw new BadRequestException("Les données sont invalides");
     }
@@ -83,7 +86,7 @@ export class AuthController {
     try {
       return await this.authAction.getUser(request)
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Vous n'avez pas les autorisations");
     }
   }
 
@@ -96,7 +99,8 @@ export class AuthController {
     res.clearCookie("jwt")
 
     return {
-      message: "delete success"
-    }
+      message: "Déconnecté",
+      type: "success"
+    };
   }
 }

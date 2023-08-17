@@ -7,7 +7,7 @@ import { Label } from 'src/modules/labels/entity/labels';
 
 @Entity({ name: 'repertoires_groupes' })
 export class RepertoireGroupe extends Repertoire implements IRepertoire {
-  @ManyToOne(() => User, (user) => user.repertoiresGroupes)
+  @ManyToOne(() => User, (user) => user.repertoiresGroupes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userid' })
   user: User;
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { EditTacheDto } from './dto/taches-edit.dto';
 import { ITache } from './entity/taches.interface';
 import { TacheService } from './taches.service';
@@ -22,8 +22,17 @@ export class TacheController {
   }
 
   @Post()
-  create(@Body() tacheDto: CreateTacheDto) {
-    return this.tachesService.create(tacheDto)
+  async create(@Body() tacheDto: CreateTacheDto) {
+    try {
+      await this.tachesService.create(tacheDto)
+
+      return {
+        message: "La tache à bien été ajoutée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Get(":id")
@@ -32,12 +41,30 @@ export class TacheController {
   }
 
   @Delete(":id")
-  delete(@Param() tache: ITache) {
-    return this.tachesService.delete(tache.id)
+  async delete(@Param() tache: ITache) {
+    try {
+      await this.tachesService.delete(tache.id)
+
+      return {
+        message: "La tache à bien été supprimée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Patch(":id")
-  update(@Body() tacheDto: EditTacheDto, @Param() tache: ITache) {
-    return this.tachesService.update(tacheDto, tache.id)
+  async update(@Body() tacheDto: EditTacheDto, @Param() tache: ITache) {
+    try {
+      await this.tachesService.update(tacheDto, tache.id)
+
+      return {
+        message: "La tache à bien été modifiée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 }

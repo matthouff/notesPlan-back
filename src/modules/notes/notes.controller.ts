@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -19,7 +20,6 @@ export class NoteController {
 
   @Get('/repertoire-notes/:id')
   findAllByRepertoireId(@Param('id') repertoireId: string) {
-    console.log(repertoireId);
     return this.notesService.findAllByRepertoireId(repertoireId);
   }
 
@@ -29,8 +29,17 @@ export class NoteController {
   // }
 
   @Post()
-  create(@Body() noteDto: CreateNoteDto) {
-    return this.notesService.create(noteDto);
+  async create(@Body() noteDto: CreateNoteDto) {
+    try {
+      await this.notesService.create(noteDto);
+
+      return {
+        message: "La note à bien été ajoutée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Get(':id')
@@ -39,12 +48,30 @@ export class NoteController {
   }
 
   @Delete(':id')
-  delete(@Param() note: INote) {
-    return this.notesService.delete(note.id);
+  async delete(@Param() note: INote) {
+    try {
+      await this.notesService.delete(note.id);
+
+      return {
+        message: "La note à bien été supprimée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 
   @Patch(':id')
-  update(@Body() noteDto: EditNoteDto, @Param() note: INote) {
-    return this.notesService.update(noteDto, note.id);
+  async update(@Body() noteDto: EditNoteDto, @Param() note: INote) {
+    try {
+      await this.notesService.update(noteDto, note.id);
+
+      return {
+        message: "La note à bien été modifiée",
+        type: "success"
+      }
+    } catch (error) {
+      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+    }
   }
 }
