@@ -1,4 +1,5 @@
 
+import { Groupe } from 'src/modules/groupes/entity/groupes';
 import { EditTacheDto } from 'src/modules/taches/dto/taches-edit.dto';
 import { Tache } from 'src/modules/taches/entity/taches';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,8 +11,8 @@ export default class TachesServiceMock {
     return this.taches;
   }
 
-  async findAllById_groupe(id_groupe: string): Promise<Tache[]> {
-    return this.taches.filter(tache => tache.id_groupe === id_groupe);
+  async findAllById_groupe(groupe: Groupe): Promise<Tache[]> {
+    return this.taches.filter(tache => tache.groupe === groupe);
   }
 
   async create(data: any): Promise<Tache> {
@@ -35,7 +36,7 @@ export default class TachesServiceMock {
     const tache = this.taches.find(tache => tache.id === id);
     if (tache) {
       tache.libelle = edittacheDto.libelle;
-      tache.id_groupe = edittacheDto.id_groupe;
+      tache.detail = edittacheDto.detail;
     }
     return tache;
   }

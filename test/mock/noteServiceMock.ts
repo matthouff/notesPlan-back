@@ -1,6 +1,7 @@
 
 import { EditNoteDto } from "src/modules/notes/dto/notes-edit.dto";
 import { Note } from "src/modules/notes/entity/notes";
+import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class NotesServiceMock {
@@ -10,8 +11,8 @@ export default class NotesServiceMock {
     return this.notes;
   }
 
-  async findAllByrepertoireId(repertoireId: string): Promise<Note[]> {
-    return this.notes.filter(note => note.repertoireId === repertoireId);
+  async findAllByrepertoireId(repertoire: Repertoire): Promise<Note[]> {
+    return this.notes.filter(note => note.repertoire === repertoire);
   }
 
   async create(data: any): Promise<Note> {
@@ -35,7 +36,7 @@ export default class NotesServiceMock {
     const note = this.notes.find(note => note.id === id);
     if (note) {
       note.libelle = editnoteDto.libelle;
-      note.repertoireId = editnoteDto.repertoireId;
+      note.message = editnoteDto.message;
     }
     return note;
   }

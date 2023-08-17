@@ -1,6 +1,7 @@
 
 import { EditGroupeDto } from "src/modules/groupes/dto/groupes-edit.dto";
 import { Groupe } from "src/modules/groupes/entity/groupes";
+import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class GroupesServiceMock {
@@ -10,8 +11,8 @@ export default class GroupesServiceMock {
     return this.groupes;
   }
 
-  async findAllByrepertoireId(repertoireId: string): Promise<Groupe[]> {
-    return this.groupes.filter(groupe => groupe.repertoireId === repertoireId);
+  async findAllByrepertoireId(repertoire: Repertoire): Promise<Groupe[]> {
+    return this.groupes.filter(groupe => groupe.repertoire === repertoire);
   }
 
   async create(data: any): Promise<Groupe> {
@@ -36,7 +37,6 @@ export default class GroupesServiceMock {
     if (groupe) {
       groupe.libelle = editgroupeDto.libelle;
       groupe.couleur = editgroupeDto.couleur;
-      groupe.repertoireId = editgroupeDto.repertoireId;
     }
     return groupe;
   }

@@ -1,8 +1,9 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { RepertoireGroupe } from '../repertoires/repertoires-groupes/entity/repertoires-groupes';
 import { IGroupe } from './entity/groupes.interface';
 import { GroupeService } from './groupes.service';
 import { CreateGroupeDto } from './dto/groupes-create.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 
 // http://localhost:3000
@@ -17,6 +18,7 @@ export class GroupeController {
   }
 
   @Get("repertoire_groupe/:repertoireId")
+  // @UseGuards(AuthGuard)
   findAllByUserId(@Param('repertoireId') repertoireId: string) {
     return this.groupesService.findAllByRepertoireGroupeId(repertoireId);
   }

@@ -1,6 +1,7 @@
 
 import { EditLabelDto } from 'src/modules/labels/dto/labels-edit.dto';
 import { Label } from 'src/modules/labels/entity/labels';
+import { Tache } from 'src/modules/taches/entity/taches';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class LabelsServiceMock {
@@ -10,8 +11,8 @@ export default class LabelsServiceMock {
     return this.labels;
   }
 
-  async findAllById_tache(tacheId: string): Promise<Label[]> {
-    return this.labels.filter(label => label.tacheId === tacheId);
+  async findAllById_tache(tache: Tache[]): Promise<Label[]> {
+    return this.labels.filter(label => label.tache === tache);
   }
 
   async create(data: any): Promise<Label> {
@@ -35,7 +36,7 @@ export default class LabelsServiceMock {
     const label = this.labels.find(label => label.id === id);
     if (label) {
       label.libelle = editlabelDto.libelle;
-      label.tacheId = editlabelDto.tacheId;
+      label.couleur = editlabelDto.couleur;
     }
     return label;
   }

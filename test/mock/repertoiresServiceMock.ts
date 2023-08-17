@@ -2,6 +2,7 @@ import { CreateRepertoireDto } from "src/modules/repertoires/commun/dto/repertoi
 import { EditRepertoireDto } from "src/modules/repertoires/commun/dto/repertoires-edit.dto";
 import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
 import { IRepertoireCreator } from "src/modules/repertoires/commun/entity/repertoires.interface";
+import { User } from "src/modules/users/entity/users";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class RepertoiresServiceMock {
@@ -9,10 +10,6 @@ export default class RepertoiresServiceMock {
 
   async findAll(): Promise<Repertoire[]> {
     return this.repertoires;
-  }
-
-  async findAllByuserId(userId: string): Promise<Repertoire[]> {
-    return this.repertoires.filter(repertoire => repertoire.userId === userId);
   }
 
   async create(data: any): Promise<Repertoire> {
@@ -36,7 +33,6 @@ export default class RepertoiresServiceMock {
     const repertoire = this.repertoires.find(repertoire => repertoire.id === id);
     if (repertoire) {
       repertoire.libelle = editRepertoireDto.libelle;
-      repertoire.userId = editRepertoireDto.userId;
     }
     return repertoire;
   }
