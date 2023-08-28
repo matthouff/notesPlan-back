@@ -11,4 +11,9 @@ export class EditGroupeDto {
   @IsOptional()
   @IsString()
   couleur?: string | null;
+
+
+  @IsOptional()
+  @IsUUID()
+  repertoireId?: string | null;
 }

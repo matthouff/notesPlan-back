@@ -14,7 +14,7 @@ export class CreateLabelDto {
 
   @IsNotEmpty()
   @IsUUID()
-  tacheId: string;
+  tacheId: string[];
 
   @IsNotEmpty()
   @IsString()

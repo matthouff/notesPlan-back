@@ -14,5 +14,9 @@ export class EditLabelDto {
 
   @IsOptional()
   @IsUUID()
-  tacheId: string;
+  tacheId: string[];
+
+  @IsOptional()
+  @IsString()
+  repertoireId: string;
 }
