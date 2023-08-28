@@ -1,43 +1,75 @@
-
+import { faker } from "@faker-js/faker";
+import { INestApplication } from "@nestjs/common";
+import { Repository } from "typeorm";
+import { IRepertoireResponse } from "src/modules/repertoires/commun/entity/repertoires.interface";
+import { addRepertoireGroupeToDB } from "./repertoiresGroupesServiceMock";
+import { CreateGroupeDto } from "src/modules/groupes/dto/groupes-create.dto";
 import { EditGroupeDto } from "src/modules/groupes/dto/groupes-edit.dto";
+import { IGroupeResponse } from "src/modules/groupes/entity/groupes.interface";
 import { Groupe } from "src/modules/groupes/entity/groupes";
-import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
-import { v4 as uuidv4 } from 'uuid';
 
-export default class GroupesServiceMock {
-  private groupes: Groupe[] = [];
+/** Génère des fausses données destinés à la création */
+export const createGroupeMock = ({ repertoireId }: { repertoireId: string }): CreateGroupeDto => ({
+  repertoireId,
+  libelle: faker.company.name(),
+});
 
-  async findAll(): Promise<Groupe[]> {
-    return this.groupes;
+/** Génère des fausses données destinés à la mise à jour */
+export const updateGroupeMock = (data?: { repertoireId?: string }): EditGroupeDto => ({
+  repertoireId: data.repertoireId,
+  libelle: faker.company.name(),
+});
+
+/** Insert dans la base de données avec de fausses données */
+export async function addGroupeToDB({
+  nestApp,
+  repertoire,
+}: {
+  nestApp: INestApplication;
+  repertoire?: IRepertoireResponse;
+}): Promise<IGroupeResponse> {
+  const repository = nestApp.get<Repository<Groupe>>("GroupeRepository");
+
+  repertoire = repertoire ?? (await addRepertoireGroupeToDB({ nestApp }));
+
+  const mockData = createGroupeMock({ repertoireId: repertoire.id });
+
+  const GroupeCreator = {
+    ...mockData,
+    repertoire,
+  };
+
+  return await repository.save(GroupeCreator);
+}
+
+/** Insert plusieurs éléments dans la base de données avec de fausses données */
+export async function addManyGroupeToDB({
+  nestApp,
+  numberOfRows,
+  repertoire,
+}: {
+  nestApp: INestApplication;
+  numberOfRows: number;
+  repertoire?: IRepertoireResponse;
+}): Promise<IGroupeResponse[]> {
+  const promises: Promise<IGroupeResponse>[] = [];
+
+  for (let i = 1; i <= numberOfRows; i += 1) {
+    promises.push(addGroupeToDB({ nestApp, repertoire }));
   }
 
-  async findAllByrepertoireId(repertoire: Repertoire): Promise<Groupe[]> {
-    return this.groupes.filter(groupe => groupe.repertoire === repertoire);
-  }
+  return await Promise.all(promises);
+}
 
-  async create(data: any): Promise<Groupe> {
-    const newgroupe = { ...data, id: uuidv4() };
-    this.groupes.push(newgroupe);
-    return newgroupe;
-  }
+/** Récupération d'un élément depuis la base de données */
+export async function getGroupeFromDB({
+  nestApp,
+  id,
+}: {
+  nestApp: INestApplication;
+  id: string;
+}): Promise<IGroupeResponse> {
+  const repository = nestApp.get<Repository<Groupe>>("GroupeRepository");
 
-  async findById(id: string): Promise<Groupe> {
-    return this.groupes.find(groupe => groupe.id === id);
-  }
-
-  async delete(id: string) {
-    const index = this.groupes.findIndex(groupe => groupe.id === id);
-    if (index !== -1) {
-      this.groupes.splice(index, 1);
-    }
-  }
-
-  async update(editgroupeDto: EditGroupeDto, id: string) {
-    const groupe = this.groupes.find(groupe => groupe.id === id);
-    if (groupe) {
-      groupe.libelle = editgroupeDto.libelle;
-      groupe.couleur = editgroupeDto.couleur;
-    }
-    return groupe;
-  }
+  return await repository.findOne({ where: { id }, relations: { repertoire: true } });
 }

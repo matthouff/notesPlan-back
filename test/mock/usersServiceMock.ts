@@ -1,37 +1,76 @@
+import { faker } from "@faker-js/faker";
+import { INestApplication } from "@nestjs/common";
+import { CreateUserDto } from "src/modules/users/dto/users-create.dto";
 import { EditUserDto } from "src/modules/users/dto/users-edit.dto";
 import { User } from "src/modules/users/entity/users";
-import { v4 as uuidv4 } from 'uuid';
+import { IUserResponse } from "src/modules/users/entity/users.interface";
+import { Repository } from "typeorm";
 
-export default class UsersServiceMock {
-  private users: User[] = [];
+/** Génère des fausses données destinés à la création */
+export const createUserMock = (data?: { email?: string }): CreateUserDto => ({
+  nom: faker.person.lastName(),
+  prenom: faker.person.firstName(),
+  email: data?.email ?? faker.internet.email(),
+  password: faker.internet.password(),
+});
 
-  async findAll(): Promise<User[]> {
-    return this.users;
+/** Génère des fausses données destinés à la mise à jour */
+export const updateUserMock = (): EditUserDto => ({
+  nom: faker.person.lastName(),
+  prenom: faker.person.firstName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+});
+
+/** Insert dans la base de données avec de fausses données */
+export async function addUserToDB({
+  nestApp,
+  email,
+}: {
+  nestApp: INestApplication;
+  email?: string;
+}): Promise<IUserResponse> {
+  const repository = nestApp.get<Repository<User>>("UserRepository");
+
+  const mockData = createUserMock({
+    email,
+  });
+
+  const userCreator = {
+    ...mockData,
+    prenom: mockData.prenom.charAt(0).toUpperCase() + mockData.prenom.slice(1),
+    nom: mockData.nom.charAt(0).toUpperCase() + mockData.nom.slice(1),
+  };
+
+  return await repository.save(userCreator);
+}
+
+/** Insert plusieurs éléments dans la base de données avec de fausses données */
+export async function addManyUserToDB({
+  nestApp,
+  numberOfRows,
+}: {
+  nestApp: INestApplication;
+  numberOfRows: number;
+}): Promise<IUserResponse[]> {
+  const promises: Promise<IUserResponse>[] = [];
+
+  for (let i = 1; i <= numberOfRows; i += 1) {
+    promises.push(addUserToDB({ nestApp }));
   }
 
-  async create(data: any): Promise<User> {
-    const newUser = { ...data, id: uuidv4() };
-    this.users.push(newUser);
-    return newUser;
-  }
+  return await Promise.all(promises);
+}
 
-  async findById(id: string): Promise<User> {
-    return this.users.find(user => user.id === id);
-  }
+/** Récupération d'un élément depuis la base de données */
+export async function getUserFromDB({
+  nestApp,
+  id,
+}: {
+  nestApp: INestApplication;
+  id: string;
+}): Promise<IUserResponse> {
+  const repository = nestApp.get<Repository<User>>("UserRepository");
 
-  async delete(id: string) {
-    const index = this.users.findIndex(user => user.id === id);
-    if (index !== -1) {
-      this.users.splice(index, 1);
-    }
-  }
-
-  async update(editUserDto: EditUserDto, id: string) {
-    const user = this.users.find(user => user.id === id);
-    if (user) {
-      user.nom = editUserDto.nom;
-      user.email = editUserDto.email;
-    }
-    return user;
-  }
+  return await repository.findOne({ where: { id } });
 }
