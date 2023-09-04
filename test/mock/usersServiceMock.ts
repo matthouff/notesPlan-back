@@ -1,10 +1,10 @@
-import { faker } from "@faker-js/faker";
-import { INestApplication } from "@nestjs/common";
-import { CreateUserDto } from "src/modules/users/dto/users-create.dto";
-import { EditUserDto } from "src/modules/users/dto/users-edit.dto";
-import { User } from "src/modules/users/entity/users";
-import { IUserResponse } from "src/modules/users/entity/users.interface";
-import { Repository } from "typeorm";
+import { faker } from '@faker-js/faker';
+import { INestApplication } from '@nestjs/common';
+import { CreateUserDto } from 'src/modules/users/dto/users-create.dto';
+import { EditUserDto } from 'src/modules/users/dto/users-edit.dto';
+import { User } from 'src/modules/users/entity/users';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { Repository } from 'typeorm';
 
 /** Génère des fausses données destinés à la création */
 export const createUserMock = (data?: { email?: string }): CreateUserDto => ({
@@ -30,7 +30,7 @@ export async function addUserToDB({
   nestApp: INestApplication;
   email?: string;
 }): Promise<IUserResponse> {
-  const repository = nestApp.get<Repository<User>>("UserRepository");
+  const repository = nestApp.get<Repository<User>>('UserRepository');
 
   const mockData = createUserMock({
     email,
@@ -70,7 +70,7 @@ export async function getUserFromDB({
   nestApp: INestApplication;
   id: string;
 }): Promise<IUserResponse> {
-  const repository = nestApp.get<Repository<User>>("UserRepository");
+  const repository = nestApp.get<Repository<User>>('UserRepository');
 
   return await repository.findOne({ where: { id } });
 }

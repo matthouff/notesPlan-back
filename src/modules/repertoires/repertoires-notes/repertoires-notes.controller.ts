@@ -16,42 +16,53 @@ import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 import { AuthActions } from 'src/modules/auth/auth.actions';
 import { Request } from 'express';
 
-// http://localhost:3000
+// http://127.0.0.1:3000
 @Controller('repertoires_notes')
 export class RepertoiresNotesController {
   constructor(
     readonly repertoiresService: RepertoiresNotesService,
     readonly authActions: AuthActions,
-  ) { }
+  ) {}
 
   @Get()
   async findAllByUserId(@Req() request: Request) {
     try {
       const user = await this.authActions.getUser(request);
       return this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   }
 
   @Post()
-  async create(@Body() repertoireDto: CreateRepertoireDto, @Req() request: Request) {
+  async create(
+    @Body() repertoireDto: CreateRepertoireDto,
+    @Req() request: Request,
+  ) {
     try {
       const user = await this.authActions.getUser(request);
-      await this.repertoiresService.create({ ...repertoireDto, userId: user.id });
+      await this.repertoiresService.create({
+        ...repertoireDto,
+        userId: user.id,
+      });
 
       return {
-        message: "Le répertoire à bien été ajouté",
-        type: "success"
-      }
+        message: 'Le répertoire à bien été ajouté',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
   @Get(':id')
-  findById(@Param() repertoire: IRepertoire) {
-    return this.repertoiresService.findById(repertoire.id);
+  async findById(@Param() repertoire: IRepertoire) {
+    try {
+      return await this.repertoiresService.findById(repertoire.id);
+    } catch (error) {
+      throw new BadRequestException("Le répertoire n'a pas été trouvé");
+    }
   }
 
   @Delete(':id')
@@ -60,11 +71,14 @@ export class RepertoiresNotesController {
       await this.repertoiresService.delete(repertoire.id);
 
       return {
-        message: "Le répertoire à bien été supprimé",
-        type: "success"
-      }
+        message: 'Le répertoire à bien été supprimé',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
@@ -77,11 +91,14 @@ export class RepertoiresNotesController {
       await this.repertoiresService.update(repertoireDto, repertoire.id);
 
       return {
-        message: "Le repertoire à bien été modifié",
-        type: "success"
-      }
+        message: 'Le repertoire à bien été modifié',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 }

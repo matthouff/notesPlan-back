@@ -1,22 +1,29 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { EditTacheDto } from './dto/taches-edit.dto';
 import { ITache } from './entity/taches.interface';
 import { TacheService } from './taches.service';
 import { CreateTacheDto } from './dto/taches-create.dto';
 
-
-// http://localhost:3000
+// http://127.0.0.1:3000
 @Controller('taches')
 export class TacheController {
-
-  constructor(readonly tachesService: TacheService) { }
+  constructor(readonly tachesService: TacheService) {}
 
   @Get()
   findAll(): Promise<ITache[]> {
     return this.tachesService.findAll();
   }
 
-  @Get("/groupe/:id")
+  @Get('/groupe/:id')
   findAllByGroupeId(@Param('id') id_groupe: string): Promise<ITache[]> {
     return this.tachesService.findAllByGroupeId(id_groupe);
   }
@@ -24,47 +31,56 @@ export class TacheController {
   @Post()
   async create(@Body() tacheDto: CreateTacheDto) {
     try {
-      await this.tachesService.create(tacheDto)
+      await this.tachesService.create(tacheDto);
 
       return {
-        message: "La tache à bien été ajoutée",
-        type: "success"
-      }
+        message: 'La tache à bien été ajoutée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
-  @Get(":id")
+  @Get(':id')
   findById(@Param() tache: ITache) {
-    return this.tachesService.findById(tache.id)
+    return this.tachesService.findById(tache.id);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   async delete(@Param() tache: ITache) {
     try {
-      await this.tachesService.delete(tache.id)
+      await this.tachesService.delete(tache.id);
 
       return {
-        message: "La tache à bien été supprimée",
-        type: "success"
-      }
+        message: 'La tache à bien été supprimée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
-  @Patch(":id")
+  @Patch(':id')
   async update(@Body() tacheDto: EditTacheDto, @Param() tache: ITache) {
     try {
-      await this.tachesService.update(tacheDto, tache.id)
+      await this.tachesService.update(tacheDto, tache.id);
 
       return {
-        message: "La tache à bien été modifiée",
-        type: "success"
-      }
+        message: 'La tache à bien été modifiée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 }

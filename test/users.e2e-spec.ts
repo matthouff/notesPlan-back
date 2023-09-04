@@ -1,88 +1,203 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { v4 as uuidv4 } from 'uuid';
-import { UsersService } from 'src/modules/users/users.service';
-import UsersServiceMock from './mock/usersServiceMock';
+import { ApiCall } from './api-call.class';
+import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
+import {
+  addUserToDB,
+  createUserMock,
+  getUserFromDB,
+  updateUserMock,
+} from './mock/usersServiceMock';
+import { CreateUserDto } from 'src/modules/users/dto/users-create.dto';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { EditUserDto } from 'src/modules/users/dto/users-edit.dto';
 
 describe('UsersControllerService (e2e)', () => {
-  let app: INestApplication;
-  let userId: string;
+  let apiCall: ApiCall;
+  let nestApp: INestApplication;
+  let route = '/users';
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: UsersService,
-          useClass: UsersServiceMock, // Utilisez le mock du service des users
-        },
-      ],
-    }).compile();
+  // POST
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+  describe('POST', () => {
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      apiCall = new ApiCall(nestApp);
+    });
 
-  afterAll(async () => {
-    await app.close();
-  });
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
 
-  it('/users (GET) - should return all users', () => {
-    return request(app.getHttpServer())
-      .get('/users')
-      .expect(200)
-      .expect((response) => {
-        const users = response.body;
-        expect(Array.isArray(users)).toBe(true);
+    describe('CREATE', () => {
+      it('400 - Should not accept empty body', async () => {
+        const response = await apiCall.post('/auth/register', {});
+
+        expect(response.status).toBe(400);
       });
-  });
 
-  it('/users (POST) - should create a new user', () => {
-    const newUser = { name: 'Bertholus', email: 'matth@example.com' };
+      it('200 - Should create successfully', async () => {
+        const createUserDto: CreateUserDto = createUserMock();
 
-    return request(app.getHttpServer())
-      .post('/users')
-      .send(newUser)
-      .expect(201)
-      .expect((response) => {
-        const createdUser = response.body;
-        expect(createdUser.name).toBe(newUser.name);
-        expect(createdUser.email).toBe(newUser.email);
-        userId = createdUser.id
+        const response = await apiCall.post<CreateUserDto>(
+          '/auth/register',
+          createUserDto,
+        );
+
+        expect(response.status).toBe(201);
+
+        const { email, prenom, nom, password }: IUserResponse =
+          response.body.data;
+
+        expect(email).toEqual(createUserDto.email);
+        expect(prenom).toEqual(createUserDto.prenom);
+        expect(nom).toEqual(createUserDto.nom);
+        expect(password).toEqual(createUserDto.password);
       });
-  });
 
-  it('/users/:id (GET) - should return a specific user', () => {
-    return request(app.getHttpServer())
-      .get(`/users/${userId}`)
-      .expect(200)
-      .expect((response) => {
-        const user = response.body;
-        expect(user.id).toBe(userId);
+      it('409 - Should not create successfully when the email is already used', async () => {
+        const emailValues = [
+          'tesT@email.com',
+          'test@email.com',
+          'TEST@EMAIL.COM',
+        ];
+        const emailValue = 'test@email.com';
+
+        await addUserToDB({ nestApp, email: emailValue });
+
+        for await (const email of emailValues) {
+          const createUserDto: CreateUserDto = createUserMock({ email });
+
+          const response = await apiCall.post<CreateUserDto>(
+            '/auth/register',
+            createUserDto,
+          );
+
+          expect(response.status).toBe(409);
+        }
       });
+    });
   });
 
-  it('/users/:id (PATCH) - should update a specific user', () => {
-    const updatedUser = { nom: 'Berthelot' };
+  // PUT
 
-    return request(app.getHttpServer())
-      .patch(`/users/${userId}`)
-      .send(updatedUser)
-      .expect(200)
-      .expect((response) => {
-        const userExist = response.body;
-        expect(userExist.id).toBe(userId);
-        expect(userExist.nom).toBe(updatedUser.nom);
+  describe('PUT', () => {
+    let baseUser: IUserResponse;
+
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+
+      baseUser = await addUserToDB({ nestApp });
+
+      apiCall = new ApiCall(nestApp);
+    });
+
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
+
+    describe('UPDATE', () => {
+      it('400 - Should not accept a value that is not a UUID', async () => {
+        const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+        for await (const id of values) {
+          const { status } = await apiCall.patch(route, id, {});
+
+          expect(status).toBe(400);
+        }
       });
+
+      it('200 - Should update successfully', async () => {
+        const updateUserDto: EditUserDto = updateUserMock();
+
+        const response = await apiCall.patch<EditUserDto>(
+          route,
+          baseUser.id,
+          updateUserDto,
+        );
+
+        expect(response.status).toBe(200);
+
+        const { id, email, prenom, nom, password }: IUserResponse =
+          await getUserFromDB({
+            nestApp,
+            id: baseUser.id,
+          });
+
+        expect(id).toBeDefined();
+        expect(email).toBeDefined();
+        expect(prenom).toEqual(updateUserDto.prenom);
+        expect(nom).toEqual(updateUserDto.nom);
+        expect(password).toEqual(password);
+      });
+    });
   });
 
-  it('/users/:id (DELETE) - should delete a specific user', () => {
-    const currentUserId = userId;
+  // GET
 
-    return request(app.getHttpServer())
-      .delete(`/users/${currentUserId}`)
-      .expect(200);
+  describe('GET', () => {
+    describe('FIND', () => {
+      let baseUser: IUserResponse;
+
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        baseUser = await addUserToDB({ nestApp });
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe(' (/:id) ', () => {
+        it('400 - Should not accept a value that is not a UUID', async () => {
+          const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+          for await (const id of values) {
+            const { status } = await apiCall.get(route, id);
+
+            expect(status).toBe(400);
+          }
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const response = await apiCall.get(route, baseUser.id);
+
+          expect(response.status).toBe(200);
+
+          const { id, email, prenom, nom, password }: IUserResponse =
+            response.body;
+
+          expect(id).toEqual(baseUser.id);
+          expect(email).toBeDefined();
+          expect(prenom).toBeDefined();
+          expect(nom).toBeDefined();
+          expect(password).toBeDefined();
+        });
+      });
+    });
+
+    describe('DELETE', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/:id)', () => {
+        it('200 - Should delete the entity', async () => {
+          const baseEntity = await addUserToDB({ nestApp });
+
+          const response = await apiCall.delete(route, baseEntity.id);
+
+          expect(response.status).toEqual(200);
+        });
+      });
+    });
   });
 });

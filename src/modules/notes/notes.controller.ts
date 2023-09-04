@@ -13,10 +13,10 @@ import { INote } from './entity/notes.interface';
 import { NoteService } from './notes.service';
 import { CreateNoteDto } from './dto/notes-create.dto';
 
-// http://localhost:3000
+// http://127.0.0.1:3000
 @Controller('notes')
 export class NoteController {
-  constructor(readonly notesService: NoteService) { }
+  constructor(readonly notesService: NoteService) {}
 
   @Get('/repertoire-notes/:id')
   findAllByRepertoireId(@Param('id') repertoireId: string) {
@@ -34,11 +34,14 @@ export class NoteController {
       await this.notesService.create(noteDto);
 
       return {
-        message: "La note à bien été ajoutée",
-        type: "success"
-      }
+        message: 'La note à bien été ajoutée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
@@ -53,11 +56,14 @@ export class NoteController {
       await this.notesService.delete(note.id);
 
       return {
-        message: "La note à bien été supprimée",
-        type: "success"
-      }
+        message: 'La note à bien été supprimée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 
@@ -67,11 +73,14 @@ export class NoteController {
       await this.notesService.update(noteDto, note.id);
 
       return {
-        message: "La note à bien été modifiée",
-        type: "success"
-      }
+        message: 'La note à bien été modifiée',
+        type: 'success',
+      };
     } catch (error) {
-      throw new BadRequestException({ message: "Une erreur est survenue", type: "error" })
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
     }
   }
 }

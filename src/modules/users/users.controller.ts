@@ -1,14 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { EditUserDto } from './dto/users-edit.dto';
 import { User } from './entity/users';
 import { IUser } from './entity/users.interface';
 import { UsersService } from './users.service';
 
-// http://localhost:3000
+// http://127.0.0.1:3000
 @Controller('users')
 export class UsersController {
-
-  constructor(readonly usersService: UsersService,) { }
+  constructor(readonly usersService: UsersService) {}
 
   @Get()
   findAll(): Promise<IUser[]> {
@@ -17,22 +26,29 @@ export class UsersController {
 
   @Post()
   create(@Body() userDto: User) {
-    return this.usersService.create(userDto)
+    return this.usersService.create(userDto);
   }
 
-  @Get(":id")
-  findById(@Param() user: IUser) {
-    return this.usersService.findById(user.id)
+  @Get(':id')
+  async findById(@Param() user: IUser) {
+    try {
+      return await this.usersService.findById(user.id);
+    } catch (error) {
+      throw new BadRequestException('Les données sont invalides');
+    }
   }
 
-  @Delete(":id")
+  @Delete(':id')
   delete(@Param() user: IUser) {
-    return this.usersService.delete(user.id)
+    return this.usersService.delete(user.id);
   }
 
-  @Patch(":id")
-  update(@Body() userDto: EditUserDto, @Param() user: IUser) {
-    return this.usersService.update(userDto, user.id)
+  @Patch(':id')
+  async update(@Body() userDto: EditUserDto, @Param() user: IUser) {
+    try {
+      return await this.usersService.update(userDto, user.id);
+    } catch (error) {
+      throw new BadRequestException('Les données sont invalides');
+    }
   }
-
 }

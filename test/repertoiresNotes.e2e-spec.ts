@@ -1,94 +1,248 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { RepertoiresNotesService } from 'src/modules/repertoires/repertoires-notes/repertoires-notes.service';
-import { response } from 'express';
-import RepertoiresServiceMock from './mock/repertoiresServiceMock';
+import { ApiCall } from './api-call.class';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { addUserToDB } from './mock/usersServiceMock';
+import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
+import { CreateRepertoireDto } from 'src/modules/repertoires/commun/dto/repertoires-create.dto';
+import {
+  addManyRepertoireNoteToDB,
+  addRepertoireNoteToDB,
+  createRepertoireNoteMock,
+  getRepertoireNoteFromDB,
+  updateRepertoireNoteMock,
+} from './mock/repertoiresNotesServiceMock';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
+import { EditRepertoireDto } from 'src/modules/repertoires/commun/dto/repertoires-edit.dto';
 
-describe('RepertoiresNotesController (e2e)', () => {
-  let app: INestApplication;
-  let createdRepertoireId: string;
+describe('RepertoireController (e2e)', () => {
+  let nestApp: INestApplication;
+  let apiCall: ApiCall;
+  let route = '/repertoires_notes';
+  let baseUser: IUserResponse;
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: RepertoiresNotesService,
-          useClass: RepertoiresServiceMock, // Utilisez le mock du service des users
-        },
-      ],
-    }).compile();
+  describe('POST', () => {
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseUser = await addUserToDB({ nestApp });
+      apiCall = new ApiCall(nestApp);
+    });
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
 
-  afterAll(async () => {
-    await app.close();
-  });
+    describe('CREATE', () => {
+      it('400 - Should not accept empty body', async () => {
+        const response = await apiCall.post(route, {});
 
-  it('/repertoires_notes (GET) - should return all repertoires', async () => {
-    return await request(app.getHttpServer()).get('/repertoires_notes').expect(200).expect((response) => {
-      const repertoires = response.body;
-      expect(Array.isArray(repertoires)).toBe(true);
+        expect(response.status).toBe(400);
+      });
+
+      it('200 - Should create successfully with mandatory values', async () => {
+        const createRepertoireDto: CreateRepertoireDto =
+          createRepertoireNoteMock({
+            userId: baseUser.id,
+          });
+
+        const response = await apiCall.post<CreateRepertoireDto>(route, {
+          libelle: createRepertoireDto.libelle,
+          userId: baseUser.id,
+        });
+
+        console.log(createRepertoireDto);
+
+        expect(response.status).toBe(201);
+
+        const { id, user }: IRepertoireResponse = response.body;
+
+        expect(id).toBeDefined();
+        expect(user.id).toEqual(createRepertoireDto.userId);
+      });
+
+      it('200 - Should create successfully', async () => {
+        const createRepertoireDto: CreateRepertoireDto =
+          createRepertoireNoteMock({
+            userId: baseUser.id,
+          });
+
+        const response = await apiCall.post<CreateRepertoireDto>(
+          route,
+          createRepertoireDto,
+        );
+
+        expect(response.status).toBe(201);
+
+        const { id, user }: IRepertoireResponse = response.body;
+
+        expect(id).toBeDefined();
+        expect(user.id).toEqual(createRepertoireDto.userId);
+      });
     });
   });
 
-  it('/repertoires_notes (POST) - should create a new repertoire', () => {
-    const newRepertoire = { libelle: 'New Repertoire' };
-    return request(app.getHttpServer())
-      .post('/repertoires_notes')
-      .send(newRepertoire)
-      .expect(201)
-      .expect((response) => {
-        const createdRepertoire = response.body;
-        expect(createdRepertoire.libelle).toBe(newRepertoire.libelle);
-        createdRepertoireId = createdRepertoire.id;
+  // PUT
+
+  describe('PUT', () => {
+    let baseRepertoire: IRepertoireResponse;
+
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseRepertoire = await addRepertoireNoteToDB({ nestApp: nestApp });
+      apiCall = new ApiCall(nestApp);
+    });
+
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
+
+    describe('UPDATE', () => {
+      it('400 - Should not accept a value that is not a UUID', async () => {
+        const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+        for await (const id of values) {
+          const { status } = await apiCall.patch(route, id, {});
+
+          expect(status).toBe(400);
+        }
       });
-  });
 
-  it('/repertoires_notes/user/:id (GET) - should return repertoires by user ID', async () => {
-    let userId: String;
-    const test = await request(app.getHttpServer()) // Crécupération des user pour récupérer le premier id
-      .get('/users');
+      it('200 - Should update successfully', async () => {
+        const updateRepertoireDto: EditRepertoireDto =
+          updateRepertoireNoteMock();
 
-    userId = test.body[0].id
+        const response = await apiCall.patch<EditRepertoireDto>(
+          route,
+          baseRepertoire.id,
+          updateRepertoireDto,
+        );
 
-    return await request(app.getHttpServer()).get(`/repertoires_notes/user/${userId}`).expect(200).expect((response) => {
-      const repertoires = response.body;
-      expect(Array.isArray(repertoires)).toBe(true);
+        expect(response.status).toBe(200);
+
+        const { id, user }: IRepertoireResponse = await getRepertoireNoteFromDB(
+          {
+            nestApp: nestApp,
+            id: baseRepertoire.id,
+          },
+        );
+
+        expect(id).toBeDefined();
+        expect(user).toBeDefined();
+      });
     });
   });
 
-  it('/repertoires_notes/:id (GET) - should return a specific repertoire', async () => {
-    return await request(app.getHttpServer())
-      .get(`/repertoires_notes/${createdRepertoireId}`)
-      .expect(200)
-      .expect((response) => {
-        const repertoire = response.body;
-        expect(repertoire.id).toBe(createdRepertoireId);
+  // GET
+
+  describe('GET', () => {
+    describe('FIND', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+        apiCall = new ApiCall(nestApp);
       });
-  });
 
-  it('/repertoires_notes/:id (PATCH) - should update a specific repertoire', () => {
-    const updatedRepertoire = { libelle: 'Nouveau répertoire' }; // Provide the necessary data for updating the repertoire
-
-    return request(app.getHttpServer())
-      .patch(`/repertoires_notes/${createdRepertoireId}`)
-      .send(updatedRepertoire)
-      .expect(200)
-      .expect((response) => {
-        const retrievedRepertoire = response.body;
-        expect(retrievedRepertoire.id).toBe(createdRepertoireId);
-        expect(retrievedRepertoire.libelle).toBe(updatedRepertoire.libelle);
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
       });
-  });
 
-  it('/repertoires_notes/:id (DELETE) - should delete a specific repertoire', () => {
-    return request(app.getHttpServer())
-      .delete(`/repertoires_notes/${createdRepertoireId}`)
-      .expect(200);
+      describe(' (/:id) ', () => {
+        it('400 - Should not accept a value that is not a UUID', async () => {
+          const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+          for await (const id of values) {
+            const { status } = await apiCall.get(route, id);
+
+            expect(status).toBe(400);
+          }
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const baseRepertoire = await addRepertoireNoteToDB({
+            nestApp: nestApp,
+          });
+
+          const response = await apiCall.get(route, baseRepertoire.id);
+
+          expect(response.status).toBe(200);
+
+          const { id, user }: IRepertoireResponse = response.body;
+
+          expect(id).toEqual(baseRepertoire.id);
+          expect(user).toBeDefined();
+        });
+      });
+    });
+
+    describe('LIST', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/user/:userId)', () => {
+        it('200 - Should send back the list of entity with pagination informations by user', async () => {
+          const [targeted, other] = await Promise.all([
+            addUserToDB({ nestApp }),
+            addUserToDB({ nestApp }),
+          ]);
+
+          await Promise.all([
+            addManyRepertoireNoteToDB({
+              nestApp: nestApp,
+              numberOfRows: 14,
+              user: targeted,
+            }),
+            addManyRepertoireNoteToDB({
+              nestApp: nestApp,
+              numberOfRows: 14,
+              user: other,
+            }),
+          ]);
+
+          const response = await apiCall.get(route, `user/${targeted.id}`);
+
+          expect(response.status).toBe(200);
+          expect(response.body.total).toEqual(14);
+          expect(response.body.count).toEqual(14);
+          expect(response.body.limit).toEqual(25);
+          expect(response.body.offset).toEqual(0);
+          expect(response.body.offsetMax).toEqual(0);
+          expect(response.body.data.length).toEqual(14);
+
+          response.body.data.forEach((member: IRepertoireResponse) => {
+            const { id, user }: IRepertoireResponse = member;
+
+            expect(id).toBeDefined();
+            expect(user).toBeUndefined();
+          });
+        });
+      });
+    });
+
+    describe('DELETE', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/:id)', () => {
+        it('200 - Should delete the entity', async () => {
+          const baseEntity = await addRepertoireNoteToDB({ nestApp: nestApp });
+
+          const response = await apiCall.delete(route, baseEntity.id);
+
+          expect(response.status).toEqual(200);
+        });
+      });
+    });
   });
 });
