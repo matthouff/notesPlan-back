@@ -4,8 +4,4 @@ export class EditRepertoireDto {
   @IsString()
   @IsOptional()
   libelle: string;
-
-  @IsUUID()
-  @IsOptional()
-  userId: string;
 }

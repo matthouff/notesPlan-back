@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
@@ -22,8 +23,7 @@ export class RepertoiresNotesController {
   constructor(
     readonly repertoiresService: RepertoiresNotesService,
     readonly authActions: AuthActions,
-  ) { }
-
+  ) {}
 
   @Get()
   async findAllByUserId(@Req() request: Request) {
@@ -31,7 +31,7 @@ export class RepertoiresNotesController {
     try {
       const user = await this.authActions.getUser(token);
       return this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) { }
+    } catch (error) {}
   }
 
   @Post()
@@ -39,8 +39,8 @@ export class RepertoiresNotesController {
     @Body() repertoireDto: CreateRepertoireDto,
     @Req() request: Request,
   ) {
-    const token = request.cookies['jwt'];
     try {
+      const token = request.cookies['jwt'];
       const user = await this.authActions.getUser(token);
       await this.repertoiresService.create({
         ...repertoireDto,

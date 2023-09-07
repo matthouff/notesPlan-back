@@ -29,7 +29,7 @@ export const updateUserMock = (): EditUserDto => ({
 export async function addUserToDB({
   nestApp,
   email,
-  password
+  password,
 }: {
   nestApp: INestApplication;
   email?: string;
@@ -45,7 +45,7 @@ export async function addUserToDB({
     ...mockData,
     prenom: mockData.prenom.charAt(0).toUpperCase() + mockData.prenom.slice(1),
     nom: mockData.nom.charAt(0).toUpperCase() + mockData.nom.slice(1),
-    password: await bcrypt.hash(password ?? mockData.password, 12)
+    password: await bcrypt.hash(password ?? mockData.password, 12),
   };
 
   return await repository.save(userCreator);
@@ -96,6 +96,5 @@ export async function getUserConnected({
 
   // Décodez le token JWT en utilisant jsonwebtoken
   const decodedToken = jwt.verify(jwtToken, jwtConstants.secret);
-
-  return decodedToken['id'].toString();
+  return await getUserFromDB({ nestApp, id: decodedToken['id'].toString() });
 }

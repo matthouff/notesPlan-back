@@ -11,7 +11,7 @@ const configValidator = Joi.object({
   DATABASE_PORT: Joi.number().default(5432),
   DATABASE_NAME: Joi.string().default('souviensToi'),
   DATABASE_USER: Joi.string().default('postgres'),
-  DATABASE_PASSWORD: Joi.string().default('root'),
+  DATABASE_PASSWORD: Joi.string().default('admin'),
   LOGGER_LEVEL: Joi.string()
     .valid('log', 'error', 'warn', 'debug', 'verbose')
     .default('debug'),

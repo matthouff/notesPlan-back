@@ -21,10 +21,7 @@ export const createRepertoireNoteMock = ({
 });
 
 /** Génère des fausses données destinés à la mise à jour */
-export const updateRepertoireNoteMock = (data?: {
-  userId?: string;
-}): EditRepertoireDto => ({
-  userId: data.userId,
+export const updateRepertoireNoteMock = (): EditRepertoireDto => ({
   libelle: faker.company.name(),
 });
 
@@ -46,7 +43,6 @@ export async function addRepertoireNoteToDB({
 
   const RepertoireCreator = {
     ...mockData,
-    user,
   };
 
   return await repository.save(RepertoireCreator);

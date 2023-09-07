@@ -1,24 +1,27 @@
-import { faker } from "@faker-js/faker";
-import { INestApplication } from "@nestjs/common";
-import { CreateRepertoireDto } from "src/modules/repertoires/commun/dto/repertoires-create.dto";
-import { EditRepertoireDto } from "src/modules/repertoires/commun/dto/repertoires-edit.dto";
-import { Repertoire } from "src/modules/repertoires/commun/entity/repertoires";
-import { IRepertoireResponse } from "src/modules/repertoires/commun/entity/repertoires.interface";
-import { IUserResponse } from "src/modules/users/entity/users.interface";
-import { Repository } from "typeorm";
+import { faker } from '@faker-js/faker';
+import { INestApplication } from '@nestjs/common';
+import { CreateRepertoireDto } from 'src/modules/repertoires/commun/dto/repertoires-create.dto';
+import { EditRepertoireDto } from 'src/modules/repertoires/commun/dto/repertoires-edit.dto';
+import { Repertoire } from 'src/modules/repertoires/commun/entity/repertoires';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { addUserToDB } from "./usersServiceMock";
-import { RepertoireGroupe } from "src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes";
+import { addUserToDB } from './usersServiceMock';
+import { RepertoireGroupe } from 'src/modules/repertoires/repertoires-groupes/entity/repertoires-groupes';
 
 /** Génère des fausses données destinés à la création */
-export const createRepertoireGroupeMock = ({ userId }: { userId: string }): CreateRepertoireDto => ({
+export const createRepertoireGroupeMock = ({
   userId,
-  libelle: faker.company.name()
+}: {
+  userId: string;
+}): CreateRepertoireDto => ({
+  userId,
+  libelle: faker.company.name(),
 });
 
 /** Génère des fausses données destinés à la mise à jour */
-export const updateRepertoireGroupeMock = (data?: { userId?: string }): EditRepertoireDto => ({
-  userId: data.userId,
+export const updateRepertoireGroupeMock = (): EditRepertoireDto => ({
   libelle: faker.company.name(),
 });
 
@@ -30,7 +33,9 @@ export async function addRepertoireGroupeToDB({
   nestApp: INestApplication;
   user?: IUserResponse;
 }): Promise<IRepertoireResponse> {
-  const repository = nestApp.get<Repository<RepertoireGroupe>>("RepertoireRepository");
+  const repository = nestApp.get<Repository<RepertoireGroupe>>(
+    'RepertoireGroupeRepository',
+  );
 
   user = user ?? (await addUserToDB({ nestApp }));
 
@@ -38,7 +43,6 @@ export async function addRepertoireGroupeToDB({
 
   const RepertoireCreator = {
     ...mockData,
-    user,
   };
 
   return await repository.save(RepertoireCreator);
@@ -71,7 +75,9 @@ export async function getRepertoireGroupeFromDB({
   nestApp: INestApplication;
   id: string;
 }): Promise<IRepertoireResponse> {
-  const repository = nestApp.get<Repository<RepertoireGroupe>>("RepertoireGroupeRepository");
+  const repository = nestApp.get<Repository<RepertoireGroupe>>(
+    'RepertoireRepository',
+  );
 
   return await repository.findOne({ where: { id }, relations: { user: true } });
 }

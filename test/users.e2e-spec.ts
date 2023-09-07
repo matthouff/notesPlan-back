@@ -11,8 +11,6 @@ import {
 import { CreateUserDto } from 'src/modules/users/dto/users-create.dto';
 import { IUserResponse } from 'src/modules/users/entity/users.interface';
 import { EditUserDto } from 'src/modules/users/dto/users-edit.dto';
-import { AuthActions } from 'src/modules/auth/auth.actions';
-import { jwtConstants } from 'src/modules/auth/constants';
 
 describe('UsersControllerService (e2e)', () => {
   let apiCall: ApiCall;
@@ -207,8 +205,6 @@ describe('UsersControllerService (e2e)', () => {
 
     describe('LOGIN', () => {
       let baseUser: IUserResponse;
-      let authActions: AuthActions;
-
       const password = 'MatMat';
 
       beforeEach(async () => {
@@ -238,10 +234,9 @@ describe('UsersControllerService (e2e)', () => {
 
           expect(response.status).toBe(200);
 
-          const userId = await getUserConnected({ nestApp, response });
-          const user = await getUserFromDB({ nestApp, id: userId })
+          const user = await getUserConnected({ nestApp, response });
 
-          expect(user).toBeDefined()
+          expect(user).toBeDefined();
         });
       });
     });
