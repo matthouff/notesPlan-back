@@ -22,14 +22,16 @@ export class RepertoiresNotesController {
   constructor(
     readonly repertoiresService: RepertoiresNotesService,
     readonly authActions: AuthActions,
-  ) {}
+  ) { }
+
 
   @Get()
   async findAllByUserId(@Req() request: Request) {
+    const token = request.cookies['jwt'];
     try {
-      const user = await this.authActions.getUser(request);
+      const user = await this.authActions.getUser(token);
       return this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) {}
+    } catch (error) { }
   }
 
   @Post()
@@ -37,8 +39,9 @@ export class RepertoiresNotesController {
     @Body() repertoireDto: CreateRepertoireDto,
     @Req() request: Request,
   ) {
+    const token = request.cookies['jwt'];
     try {
-      const user = await this.authActions.getUser(request);
+      const user = await this.authActions.getUser(token);
       await this.repertoiresService.create({
         ...repertoireDto,
         userId: user.id,

@@ -1,8 +1,11 @@
 import { INestApplication } from '@nestjs/common';
+import { AuthActions } from 'src/modules/auth/auth.actions';
 import * as request from 'supertest';
 
 export class ApiCall {
-  constructor(readonly nestApp: INestApplication) {}
+  constructor(
+    readonly nestApp: INestApplication,
+  ) { }
 
   /**
    * ### Méthode permettant d'exécuter une requête POST sur une route définie

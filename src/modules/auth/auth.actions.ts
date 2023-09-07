@@ -10,13 +10,15 @@ export class AuthActions {
     private jwtService: JwtService
   ) { }
 
-  async getUser(request: Request) {
-    const cookie = request.cookies['jwt'];
-    if (!cookie) {
+  async getUser(token: string) {
+
+    console.log(token);
+
+    if (!token) {
       throw new UnauthorizedException();
     }
 
-    const decodedToken = await this.jwtService.verifyAsync(cookie);
+    const decodedToken = await this.jwtService.verifyAsync(token);
     if (!decodedToken) {
       throw new UnauthorizedException();
     }

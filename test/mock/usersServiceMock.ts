@@ -5,6 +5,9 @@ import { EditUserDto } from 'src/modules/users/dto/users-edit.dto';
 import { User } from 'src/modules/users/entity/users';
 import { IUserResponse } from 'src/modules/users/entity/users.interface';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { jwtConstants } from 'src/modules/auth/constants';
+import * as jwt from 'jsonwebtoken'; // Importez jsonwebtoken
 
 /** Génère des fausses données destinés à la création */
 export const createUserMock = (data?: { email?: string }): CreateUserDto => ({
@@ -26,9 +29,11 @@ export const updateUserMock = (): EditUserDto => ({
 export async function addUserToDB({
   nestApp,
   email,
+  password
 }: {
   nestApp: INestApplication;
   email?: string;
+  password?: string;
 }): Promise<IUserResponse> {
   const repository = nestApp.get<Repository<User>>('UserRepository');
 
@@ -40,6 +45,7 @@ export async function addUserToDB({
     ...mockData,
     prenom: mockData.prenom.charAt(0).toUpperCase() + mockData.prenom.slice(1),
     nom: mockData.nom.charAt(0).toUpperCase() + mockData.nom.slice(1),
+    password: await bcrypt.hash(password ?? mockData.password, 12)
   };
 
   return await repository.save(userCreator);
@@ -73,4 +79,23 @@ export async function getUserFromDB({
   const repository = nestApp.get<Repository<User>>('UserRepository');
 
   return await repository.findOne({ where: { id } });
+}
+
+/** Récupération d'un élément depuis la base de données */
+export async function getUserConnected({
+  nestApp,
+  response,
+}: {
+  nestApp: INestApplication;
+  response: any;
+}) {
+  const cookie = require('cookie');
+  const headers = response.header;
+  const cookies = cookie.parse(headers['set-cookie'].join('; '));
+  const jwtToken = cookies.jwt;
+
+  // Décodez le token JWT en utilisant jsonwebtoken
+  const decodedToken = jwt.verify(jwtToken, jwtConstants.secret);
+
+  return decodedToken['id'].toString();
 }

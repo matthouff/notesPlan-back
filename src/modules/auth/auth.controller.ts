@@ -9,7 +9,9 @@ import {
   Post,
   Req,
   Res,
+  Session,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/users-create.dto';
@@ -18,6 +20,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import { AuthActions } from './auth.actions';
 import { UsersService } from '../users/users.service';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +29,7 @@ export class AuthController {
     private authService: AuthService,
     private jwtService: JwtService,
     private userService: UsersService,
-  ) {}
+  ) { }
 
   /////////   CONNEXION D'UN USER ////////////
 
@@ -46,8 +49,7 @@ export class AuthController {
           type: 'error',
         });
       }
-      console.log(user.password);
-      console.log(await bcrypt.hash(password, 12));
+
       if (!(await bcrypt.compare(password, user.password))) {
         throw new BadRequestException({
           message: 'Les informations sont invalides test 2',
@@ -61,7 +63,7 @@ export class AuthController {
         httpOnly: true, // cookie devient inaxessible depuis JavaScript côté client
         sameSite: 'none',
         secure: true,
-        domain: '127.0.0.1',
+        domain: 'localhost',
       });
 
       return {
@@ -114,10 +116,12 @@ export class AuthController {
   /////////   RÉCUPÉRATION DU USER ////////////
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('user')
   async getUser(@Req() request: Request) {
+    const token = request.cookies['jwt'];
     try {
-      return await this.authAction.getUser(request);
+      return await this.authAction.getUser(token);
     } catch (error) {
       throw new UnauthorizedException("Vous n'avez pas les autorisations");
     }
@@ -127,6 +131,7 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
+
     // Suppression du cookie jwt en cours
     res.clearCookie('jwt');
 

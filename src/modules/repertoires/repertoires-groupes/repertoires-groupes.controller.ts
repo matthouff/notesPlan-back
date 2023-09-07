@@ -22,7 +22,7 @@ export class RepertoiresGroupesController {
   constructor(
     readonly repertoiresService: RepertoiresGroupesService,
     readonly authActions: AuthActions,
-  ) {}
+  ) { }
 
   // @Get()
   // findAll(): Promise<IRepertoire[]> {
@@ -31,10 +31,13 @@ export class RepertoiresGroupesController {
 
   @Get()
   async findAllByUserId(@Req() request: Request) {
+    const token = request.cookies['jwt'];
+
     try {
-      const user = await this.authActions.getUser(request);
-      return this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) {}
+      const user = await this.authActions.getUser(token);
+
+      return await this.repertoiresService.findAllByUserId(user.id);
+    } catch (error) { }
   }
 
   @Post()
@@ -43,7 +46,8 @@ export class RepertoiresGroupesController {
     @Req() request: Request,
   ) {
     try {
-      const user = await this.authActions.getUser(request);
+      const token = request.cookies['jwt'];
+      const user = await this.authActions.getUser(token);
       await this.repertoiresService.create({
         ...repertoireDto,
         userId: user.id,
@@ -75,7 +79,7 @@ export class RepertoiresGroupesController {
         message: 'Le répertoire à bien été supprimé',
         type: 'success',
       };
-    } catch (error) {}
+    } catch (error) { }
     throw new BadRequestException({
       message: 'Une erreur est survenue',
       type: 'error',

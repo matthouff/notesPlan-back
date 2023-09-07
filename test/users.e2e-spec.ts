@@ -4,12 +4,15 @@ import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
 import {
   addUserToDB,
   createUserMock,
+  getUserConnected,
   getUserFromDB,
   updateUserMock,
 } from './mock/usersServiceMock';
 import { CreateUserDto } from 'src/modules/users/dto/users-create.dto';
 import { IUserResponse } from 'src/modules/users/entity/users.interface';
 import { EditUserDto } from 'src/modules/users/dto/users-edit.dto';
+import { AuthActions } from 'src/modules/auth/auth.actions';
+import { jwtConstants } from 'src/modules/auth/constants';
 
 describe('UsersControllerService (e2e)', () => {
   let apiCall: ApiCall;
@@ -196,6 +199,49 @@ describe('UsersControllerService (e2e)', () => {
           const response = await apiCall.delete(route, baseEntity.id);
 
           expect(response.status).toEqual(200);
+        });
+      });
+    });
+
+    // LOGIN
+
+    describe('LOGIN', () => {
+      let baseUser: IUserResponse;
+      let authActions: AuthActions;
+
+      const password = 'MatMat';
+
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+        baseUser = await addUserToDB({ nestApp, password: password });
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+        await apiCall.post('/auth/logout');
+      });
+
+      describe(' (/login) ', () => {
+        it('400 - Should not accept empty body', async () => {
+          const response = await apiCall.post('/auth/login', {});
+
+          expect(response.status).toBe(400);
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const response = await apiCall.post('/auth/login', {
+            ...baseUser,
+            password: password,
+          });
+
+          expect(response.status).toBe(200);
+
+          const userId = await getUserConnected({ nestApp, response });
+          const user = await getUserFromDB({ nestApp, id: userId })
+
+          expect(user).toBeDefined()
         });
       });
     });

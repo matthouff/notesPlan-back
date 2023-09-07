@@ -14,8 +14,8 @@ async function bootstrap() {
   // débloque la requête Cross-Origin (requête HTTP effectuée depuis un domaine, un protocole ou un port différent de celui de la ressource demandée)
   app.enableCors({
     origin: [
-      'http://127.0.0.1:5173',
-      'http://127.0.0.1:3000',
+      'http://localhost:5173',
+      'http://localhost:3000',
       'http://127.0.0.1:5173',
       'http://127.0.0.1:3000',
     ], // Remplacez true par l'URL ou les origines autorisées
