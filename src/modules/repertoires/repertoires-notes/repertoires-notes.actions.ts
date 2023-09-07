@@ -1,56 +1,66 @@
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
-import { RepertoireNote } from "./entity/repertoires-notes";
-import { RepertoiresNotesRepository } from "./repertoires-notes.repository";
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { RepertoireNote } from './entity/repertoires-notes';
+import { RepertoiresNotesRepository } from './repertoires-notes.repository';
 
 @Injectable()
 export class RepertoiresActions {
-	constructor(private readonly repertoiresRepository: RepertoiresNotesRepository, private readonly logger: Logger) { }
+  constructor(
+    private readonly repertoiresRepository: RepertoiresNotesRepository,
+    private readonly logger: Logger,
+  ) {}
 
+  //
+  // Update le repertoires ciblé avec repertoires et IrepertoiresEditor passé en paramettre
+  //
+  // updaterepertoiresValidation(repertoires: repertoires, updaterepertoiresDto: IrepertoiresEditor): repertoires {
+  // 	const data: IrepertoiresEditor = {
+  // 		...updaterepertoiresDto,
+  // 	};
 
-	//
-	// Update le repertoires ciblé avec repertoires et IrepertoiresEditor passé en paramettre
-	//
-	// updaterepertoiresValidation(repertoires: repertoires, updaterepertoiresDto: IrepertoiresEditor): repertoires {
-	// 	const data: IrepertoiresEditor = {
-	// 		...updaterepertoiresDto,
-	// 	};
+  // 	repertoires.edit(data);
 
-	// 	repertoires.edit(data);
+  // 	this.logger.debug(`Le repertoires a été mis à jour`);
 
-	// 	this.logger.debug(`Le repertoires a été mis à jour`);
+  // 	return repertoires;
+  // }
 
-	// 	return repertoires;
-	// }
+  //
+  // On récupère le repertoires avec l'id passé en parametre
+  //
+  async getrepertoiresById(id: string): Promise<RepertoireNote> {
+    const found = await this.repertoiresRepository.findByID(id);
 
-	//
-	// On récupère le repertoires avec l'id passé en parametre
-	//
-	async getrepertoiresById(id: string): Promise<RepertoireNote> {
-		const found = await this.repertoiresRepository.findByID(id);
+    if (!found) {
+      this.logger.debug(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
+      throw new NotFoundException(
+        `Aucun repertoires n'a été récupéré pour l'id "${id}"`,
+      );
+    }
 
-		if (!found) {
-			this.logger.debug(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
-			throw new NotFoundException(`Aucun repertoires n'a été récupéré pour l'id "${id}"`);
-		}
+    this.logger.debug(`Le repertoires a été récupéré`);
 
-		this.logger.debug(`Le repertoires a été récupéré`);
+    return found;
+  }
 
-		return found;
-	}
+  // async removerepertoiresById(id: string): Promise<boolean> {
+  // 	const deleted = await this.repertoiresRepository.deleteByID(id);
 
-	// async removerepertoiresById(id: string): Promise<boolean> {
-	// 	const deleted = await this.repertoiresRepository.deleteByID(id);
+  // 	this.logger.debug(`Le repertoires a été supprimé`);
 
-	// 	this.logger.debug(`Le repertoires a été supprimé`);
+  // 	return deleted;
+  // }
 
-	// 	return deleted;
-	// }
+  async saverepertoiresToDatabase(
+    repertoiresEntity: RepertoireNote,
+  ): Promise<RepertoireNote> {
+    const repertoires = await this.repertoiresRepository.save(
+      repertoiresEntity,
+    );
 
-	async saverepertoiresToDatabase(repertoiresEntity: RepertoireNote): Promise<RepertoireNote> {
-		const repertoires = await this.repertoiresRepository.save(repertoiresEntity);
+    this.logger.debug(
+      `Le repertoires a été sauvegardé dans la base de données`,
+    );
 
-		this.logger.debug(`Le repertoires a été sauvegardé dans la base de données`);
-
-		return repertoires;
-	}
+    return repertoires;
+  }
 }

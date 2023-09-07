@@ -1,15 +1,17 @@
-import { Injectable } from "@nestjs/common";
-import { EditNoteDto } from "./dto/notes-edit.dto";
-import { Note } from "./entity/notes";
-import { INote } from "./entity/notes.interface";
-import { NoteRepository } from "./notes.repository";
-import { RepertoiresActions } from "../repertoires/repertoires-notes/repertoires-notes.actions";
-import { CreateNoteDto } from "./dto/notes-create.dto";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { EditNoteDto } from './dto/notes-edit.dto';
+import { Note } from './entity/notes';
+import { INote } from './entity/notes.interface';
+import { NoteRepository } from './notes.repository';
+import { RepertoiresActions } from '../repertoires/repertoires-notes/repertoires-notes.actions';
+import { CreateNoteDto } from './dto/notes-create.dto';
 
 @Injectable()
 export class NoteService {
-
-  constructor(readonly notesRepository: NoteRepository, readonly repertoiresActions: RepertoiresActions) { }
+  constructor(
+    readonly notesRepository: NoteRepository,
+    readonly repertoiresActions: RepertoiresActions,
+  ) {}
 
   async findAll(): Promise<INote[]> {
     return await this.notesRepository.getAll();
@@ -20,9 +22,18 @@ export class NoteService {
   }
 
   async create(data: CreateNoteDto) {
-    const repertoire = await this.repertoiresActions.getrepertoiresById(data.repertoireId);
-    const repertoireNote = Note.factory({ ...data, repertoire });
-    return await this.notesRepository.save(repertoireNote);
+    try {
+      const repertoire = await this.repertoiresActions.getrepertoiresById(
+        data.repertoireId,
+      );
+      const repertoireNote = Note.factory({ ...data, repertoire });
+      return await this.notesRepository.save(repertoireNote);
+    } catch (error) {
+      throw new BadRequestException({
+        message: "La note n'a pas pu être créée.",
+        type: 'error',
+      });
+    }
   }
 
   async findById(id: string): Promise<Note> {

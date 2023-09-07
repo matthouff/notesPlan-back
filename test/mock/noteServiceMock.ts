@@ -1,26 +1,29 @@
-import { faker } from "@faker-js/faker";
-import { INestApplication } from "@nestjs/common";
-import { IUserResponse } from "src/modules/users/entity/users.interface";
-import { Repository } from "typeorm";
-import { Note } from "src/modules/notes/entity/notes";
-import { CreateNoteDto } from "src/modules/notes/dto/notes-create.dto";
-import { EditNoteDto } from "src/modules/notes/dto/notes-edit.dto";
-import { INoteResponse } from "src/modules/notes/entity/notes.interface";
-import { IRepertoireResponse } from "src/modules/repertoires/commun/entity/repertoires.interface";
-import { addRepertoireNoteToDB } from "./repertoiresNotesServiceMock";
+import { faker } from '@faker-js/faker';
+import { INestApplication } from '@nestjs/common';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { Repository } from 'typeorm';
+import { Note } from 'src/modules/notes/entity/notes';
+import { CreateNoteDto } from 'src/modules/notes/dto/notes-create.dto';
+import { EditNoteDto } from 'src/modules/notes/dto/notes-edit.dto';
+import { INoteResponse } from 'src/modules/notes/entity/notes.interface';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
+import { addRepertoireNoteToDB } from './repertoiresNotesServiceMock';
 
 /** Génère des fausses données destinés à la création */
-export const createNoteMock = ({ repertoireId }: { repertoireId: string }): CreateNoteDto => ({
+export const createNoteMock = ({
+  repertoireId,
+}: {
+  repertoireId: string;
+}): CreateNoteDto => ({
   repertoireId,
   libelle: faker.company.name(),
-  message: faker.lorem.paragraphs()
+  message: faker.lorem.paragraphs(),
 });
 
 /** Génère des fausses données destinés à la mise à jour */
-export const updateNoteMock = (data?: { repertoireId?: string }): EditNoteDto => ({
-  repertoireId: data.repertoireId,
+export const updateNoteMock = (): EditNoteDto => ({
   libelle: faker.company.name(),
-  message: faker.lorem.paragraphs()
+  message: faker.lorem.paragraphs(),
 });
 
 /** Insert dans la base de données avec de fausses données */
@@ -31,7 +34,7 @@ export async function addNoteToDB({
   nestApp: INestApplication;
   repertoire?: IRepertoireResponse;
 }): Promise<INoteResponse> {
-  const repository = nestApp.get<Repository<Note>>("NoteRepository");
+  const repository = nestApp.get<Repository<Note>>('NoteRepository');
 
   repertoire = repertoire ?? (await addRepertoireNoteToDB({ nestApp }));
 
@@ -72,7 +75,10 @@ export async function getNoteFromDB({
   nestApp: INestApplication;
   id: string;
 }): Promise<INoteResponse> {
-  const repository = nestApp.get<Repository<Note>>("NoteRepository");
+  const repository = nestApp.get<Repository<Note>>('NoteRepository');
 
-  return await repository.findOne({ where: { id }, relations: { repertoire: true } });
+  return await repository.findOne({
+    where: { id },
+    relations: { repertoire: true },
+  });
 }

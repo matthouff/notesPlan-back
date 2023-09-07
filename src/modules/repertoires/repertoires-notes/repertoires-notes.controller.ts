@@ -30,7 +30,7 @@ export class RepertoiresNotesController {
     const token = request.cookies['jwt'];
     try {
       const user = await this.authActions.getUser(token);
-      return this.repertoiresService.findAllByUserId(user.id);
+      return await this.repertoiresService.findAllByUserId(user.id);
     } catch (error) {}
   }
 

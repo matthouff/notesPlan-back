@@ -46,8 +46,12 @@ export class NoteController {
   }
 
   @Get(':id')
-  findById(@Param() note: INote) {
-    return this.notesService.findById(note.id);
+  async findById(@Param() note: INote) {
+    try {
+      return await this.notesService.findById(note.id);
+    } catch (error) {
+      throw new BadRequestException("Le répertoire n'a pas été trouvé");
+    }
   }
 
   @Delete(':id')

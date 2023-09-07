@@ -1,96 +1,174 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { ApiCall } from './api-call.class';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { addUserToDB, getUserConnected } from './mock/usersServiceMock';
+import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from 'src/app.module';
 import { NoteService } from 'src/modules/notes/notes.service';
-import NotesServiceMock from './mock/noteServiceMock';
+import { CreateNoteDto } from 'src/modules/notes/dto/notes-create.dto';
+import { INoteResponse } from 'src/modules/notes/entity/notes.interface';
+import { EditNoteDto } from 'src/modules/notes/dto/notes-edit.dto';
+import {
+  addNoteToDB,
+  createNoteMock,
+  updateNoteMock,
+} from './mock/noteServiceMock';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
+import { addRepertoireNoteToDB } from './mock/repertoiresNotesServiceMock';
 
-describe('notesNotesController (e2e)', () => {
+describe('NoteController (e2e)', () => {
+  let nestApp: INestApplication;
+  let apiCall: ApiCall;
+  let route = '/notes';
+  let baseUser: IUserResponse;
+  let baseRepertoire: IRepertoireResponse;
   let app: INestApplication;
-  let createdNoteId: string;
+  let notesService: NoteService;
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: NoteService,
-          useClass: NotesServiceMock, // Utilisez le mock du service des Notes
-        },
-      ],
-    }).compile();
+  describe('POST', () => {
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseUser = await addUserToDB({ nestApp });
+      baseRepertoire = await addRepertoireNoteToDB({ nestApp });
+      apiCall = new ApiCall(nestApp);
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+      const moduleFixture: TestingModule = await Test.createTestingModule({
+        imports: [AppModule], // Remplacez par le module principal de votre application
+      }).compile();
 
-  afterAll(async () => {
-    await app.close();
-  });
+      app = moduleFixture.createNestApplication();
+      await app.init();
 
-  it('/notes (GET) - should return all notes', async () => {
-    return await request(app.getHttpServer()).get('/notes').expect(200).expect((response) => {
-      const notes = response.body;
-      expect(Array.isArray(notes)).toBe(true);
+      // Obtenez une instance du service
+      notesService = moduleFixture.get<NoteService>(NoteService);
     });
 
-  });
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
 
-  it('/notes (POST) - should create a new Note', () => {
-    const newNote = { libelle: 'New Note' };
-    return request(app.getHttpServer())
-      .post('/notes')
-      .send(newNote)
-      .expect(201)
-      .expect((response) => {
-        const createdNote = response.body;
-        expect(createdNote.libelle).toBe(newNote.libelle);
-        createdNoteId = createdNote.id;
+    describe('CREATE', () => {
+      it('400 - Should not accept empty body', async () => {
+        const response = await apiCall.post(route, {});
+
+        expect(response.status).toBe(400);
       });
-  });
 
-  // Récupération d'une note à partir de l'id du premier répertoire
-  it('/notes/repertoire/:id (GET) - should return notes by repertoire ID', async () => {
-    const repertoire = await request(app.getHttpServer()).get('/repertoires_notes').expect(200).expect((response) => {
-      const repertoires = response.body;
-      expect(Array.isArray(repertoires)).toBe(true);
-    });
+      it('200 - Should create successfully', async () => {
+        // Récupération des fausses données
+        const createNoteDto: CreateNoteDto = createNoteMock({
+          repertoireId: baseRepertoire.id,
+        });
 
-    const repertoireId = repertoire.body[0].id
+        // Ajout à la bdd
+        const response = await notesService.create({
+          libelle: createNoteDto.libelle,
+          message: createNoteDto.message,
+          repertoireId: baseRepertoire.id,
+        });
 
-    return await request(app.getHttpServer()).get(`/notes/repertoire/${repertoireId}`).expect(200).expect((response) => {
-      const notes = response.body;
-      expect(Array.isArray(notes)).toBe(true);
+        expect(response.id).toBeDefined();
+      });
     });
   });
 
-  it('/notes/:id (GET) - should return a specific note', async () => {
-    return await request(app.getHttpServer())
-      .get(`/notes/${createdNoteId}`)
-      .expect(200)
-      .expect((response) => {
-        const note = response.body;
-        expect(note.id).toBe(createdNoteId);
+  // PUT
+
+  describe('PUT', () => {
+    let baseNote: INoteResponse;
+
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseNote = await addNoteToDB({ nestApp: nestApp });
+      apiCall = new ApiCall(nestApp);
+    });
+
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
+
+    describe('UPDATE', () => {
+      it('400 - Should not accept a value that is not a UUID', async () => {
+        const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+        for await (const id of values) {
+          const { status } = await apiCall.patch(route, id, {});
+
+          expect(status).toBe(400);
+        }
       });
+
+      it('200 - Should update successfully', async () => {
+        const updateNoteDto: EditNoteDto = updateNoteMock();
+
+        const response = await apiCall.patch<EditNoteDto>(
+          route,
+          baseNote.id,
+          updateNoteDto,
+        );
+
+        expect(response.status).toBe(200);
+      });
+    });
   });
 
-  it('/notes/:id (PATCH) - should update a specific Note', () => {
-    const updatedNote = { libelle: 'Nouvelle note' }; // Provide the necessary data for updating the Note
+  // GET
 
-    return request(app.getHttpServer())
-      .patch(`/notes/${createdNoteId}`)
-      .send(updatedNote)
-      .expect(200)
-      .expect((response) => {
-        const retrievedNote = response.body;
-        expect(retrievedNote.id).toBe(createdNoteId);
-        expect(retrievedNote.libelle).toBe(updatedNote.libelle);
+  describe('GET', () => {
+    describe('FIND', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+        apiCall = new ApiCall(nestApp);
       });
-  });
 
-  it('/notes/:id (DELETE) - should delete a specific Note', () => {
-    return request(app.getHttpServer())
-      .delete(`/notes/${createdNoteId}`)
-      .expect(200);
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe(' (/:id) ', () => {
+        it('400 - Should not accept a value that is not a UUID', async () => {
+          const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+          for await (const id of values) {
+            const { status } = await apiCall.get(route, id);
+
+            expect(status).toBe(400);
+          }
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const baseNote = await addNoteToDB({
+            nestApp: nestApp,
+          });
+
+          const response = await apiCall.get(route, baseNote.id);
+
+          expect(response.status).toBe(200);
+        });
+      });
+    });
+
+    describe('DELETE', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/:id)', () => {
+        it('200 - Should delete the entity', async () => {
+          const baseEntity = await addNoteToDB({ nestApp: nestApp });
+
+          const response = await apiCall.delete(route, baseEntity.id);
+
+          expect(response.status).toEqual(200);
+        });
+      });
+    });
   });
 });
