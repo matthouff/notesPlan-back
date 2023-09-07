@@ -50,7 +50,7 @@ export class NoteController {
     try {
       return await this.notesService.findById(note.id);
     } catch (error) {
-      throw new BadRequestException("Le répertoire n'a pas été trouvé");
+      throw new BadRequestException("La note n'a pas été trouvé");
     }
   }
 

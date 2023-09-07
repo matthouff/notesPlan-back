@@ -49,8 +49,12 @@ export class GroupeController {
   }
 
   @Get(':id')
-  findById(@Param() repertoire: IGroupe) {
-    return this.groupesService.findById(repertoire.id);
+  async findById(@Param() repertoire: IGroupe) {
+    try {
+      return await this.groupesService.findById(repertoire.id);
+    } catch (error) {
+      throw new BadRequestException("Le groupe n'a pas été trouvé");
+    }
   }
 
   @Delete(':id')

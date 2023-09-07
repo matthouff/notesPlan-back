@@ -1,22 +1,25 @@
-import { faker } from "@faker-js/faker";
-import { INestApplication } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { IRepertoireResponse } from "src/modules/repertoires/commun/entity/repertoires.interface";
-import { addRepertoireGroupeToDB } from "./repertoiresGroupesServiceMock";
-import { CreateGroupeDto } from "src/modules/groupes/dto/groupes-create.dto";
-import { EditGroupeDto } from "src/modules/groupes/dto/groupes-edit.dto";
-import { IGroupeResponse } from "src/modules/groupes/entity/groupes.interface";
-import { Groupe } from "src/modules/groupes/entity/groupes";
+import { faker } from '@faker-js/faker';
+import { INestApplication } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
+import { addRepertoireGroupeToDB } from './repertoiresGroupesServiceMock';
+import { CreateGroupeDto } from 'src/modules/groupes/dto/groupes-create.dto';
+import { EditGroupeDto } from 'src/modules/groupes/dto/groupes-edit.dto';
+import { IGroupeResponse } from 'src/modules/groupes/entity/groupes.interface';
+import { Groupe } from 'src/modules/groupes/entity/groupes';
 
 /** Génère des fausses données destinés à la création */
-export const createGroupeMock = ({ repertoireId }: { repertoireId: string }): CreateGroupeDto => ({
+export const createGroupeMock = ({
+  repertoireId,
+}: {
+  repertoireId: string;
+}): CreateGroupeDto => ({
   repertoireId,
   libelle: faker.company.name(),
 });
 
 /** Génère des fausses données destinés à la mise à jour */
-export const updateGroupeMock = (data?: { repertoireId?: string }): EditGroupeDto => ({
-  repertoireId: data.repertoireId,
+export const updateGroupeMock = (): EditGroupeDto => ({
   libelle: faker.company.name(),
 });
 
@@ -28,7 +31,7 @@ export async function addGroupeToDB({
   nestApp: INestApplication;
   repertoire?: IRepertoireResponse;
 }): Promise<IGroupeResponse> {
-  const repository = nestApp.get<Repository<Groupe>>("GroupeRepository");
+  const repository = nestApp.get<Repository<Groupe>>('GroupeRepository');
 
   repertoire = repertoire ?? (await addRepertoireGroupeToDB({ nestApp }));
 
@@ -69,7 +72,10 @@ export async function getGroupeFromDB({
   nestApp: INestApplication;
   id: string;
 }): Promise<IGroupeResponse> {
-  const repository = nestApp.get<Repository<Groupe>>("GroupeRepository");
+  const repository = nestApp.get<Repository<Groupe>>('GroupeRepository');
 
-  return await repository.findOne({ where: { id }, relations: { repertoire: true } });
+  return await repository.findOne({
+    where: { id },
+    relations: { repertoire: true },
+  });
 }
