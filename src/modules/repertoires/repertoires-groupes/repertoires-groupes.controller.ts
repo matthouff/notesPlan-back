@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
 import { IRepertoire } from '../commun/entity/repertoires.interface';
@@ -15,6 +16,7 @@ import { RepertoiresGroupesService } from './repertoires-groupes.service';
 import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 import { AuthActions } from 'src/modules/auth/auth.actions';
 import { Request } from 'express';
+import { AuthGuard } from 'src/modules/auth/auth.guard';
 
 // http://127.0.0.1:3000
 @Controller('repertoires_groupes')
@@ -22,7 +24,7 @@ export class RepertoiresGroupesController {
   constructor(
     readonly repertoiresService: RepertoiresGroupesService,
     readonly authActions: AuthActions,
-  ) { }
+  ) {}
 
   // @Get()
   // findAll(): Promise<IRepertoire[]> {
@@ -30,14 +32,14 @@ export class RepertoiresGroupesController {
   // }
 
   @Get()
+  @UseGuards(AuthGuard)
   async findAllByUserId(@Req() request: Request) {
     const token = request.cookies['jwt'];
-
     try {
       const user = await this.authActions.getUser(token);
 
       return await this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) { }
+    } catch (error) {}
   }
 
   @Post()
@@ -66,6 +68,7 @@ export class RepertoiresGroupesController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   findById(@Param() repertoire: IRepertoire) {
     return this.repertoiresService.findById(repertoire.id);
   }
@@ -79,7 +82,7 @@ export class RepertoiresGroupesController {
         message: 'Le répertoire à bien été supprimé',
         type: 'success',
       };
-    } catch (error) { }
+    } catch (error) {}
     throw new BadRequestException({
       message: 'Une erreur est survenue',
       type: 'error',

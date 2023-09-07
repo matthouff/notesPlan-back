@@ -18,7 +18,7 @@ import { AuthGuard } from '../auth/auth.guard';
 // http://127.0.0.1:3000
 @Controller('groupes')
 export class GroupeController {
-  constructor(readonly groupesService: GroupeService) { }
+  constructor(readonly groupesService: GroupeService) {}
 
   @Get()
   findAll(): Promise<IGroupe[]> {
@@ -28,9 +28,6 @@ export class GroupeController {
   @Get('repertoire_groupe/:repertoireId')
   @UseGuards(AuthGuard)
   findAllByRepertoireId(@Param('repertoireId') repertoireId: string) {
-
-    console.log(`groupe: ${repertoireId}`);
-
     return this.groupesService.findAllByRepertoireGroupeId(repertoireId);
   }
 

@@ -1,15 +1,17 @@
-import { Injectable } from "@nestjs/common";
-import { EditRepertoireDto } from "../commun/dto/repertoires-edit.dto";
-import { IRepertoire } from "../commun/entity/repertoires.interface";
-import { RepertoireGroupe } from "./entity/repertoires-groupes";
-import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
-import { UserActions } from "src/modules/users/users.actions";
-import { CreateRepertoireDto } from "../commun/dto/repertoires-create.dto";
+import { Injectable } from '@nestjs/common';
+import { EditRepertoireDto } from '../commun/dto/repertoires-edit.dto';
+import { IRepertoire } from '../commun/entity/repertoires.interface';
+import { RepertoireGroupe } from './entity/repertoires-groupes';
+import { RepertoiresGroupesRepository } from './repertoires-groupes.repository';
+import { UserActions } from 'src/modules/users/users.actions';
+import { CreateRepertoireDto } from '../commun/dto/repertoires-create.dto';
 
 @Injectable()
 export class RepertoiresGroupesService {
-
-  constructor(readonly repertoiresRepository: RepertoiresGroupesRepository, readonly userAction: UserActions,) { }
+  constructor(
+    readonly repertoiresRepository: RepertoiresGroupesRepository,
+    readonly userAction: UserActions,
+  ) {}
 
   async findAll(): Promise<IRepertoire[]> {
     return await this.repertoiresRepository.getAll();

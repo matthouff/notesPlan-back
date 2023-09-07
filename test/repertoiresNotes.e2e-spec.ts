@@ -49,8 +49,6 @@ describe('RepertoireController (e2e)', () => {
           userId: baseUser.id,
         });
 
-        console.log(createRepertoireDto);
-
         expect(response.status).toBe(201);
 
         const { id, user }: IRepertoireResponse = response.body;

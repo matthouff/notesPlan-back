@@ -29,7 +29,7 @@ export class AuthController {
     private authService: AuthService,
     private jwtService: JwtService,
     private userService: UsersService,
-  ) { }
+  ) {}
 
   /////////   CONNEXION D'UN USER ////////////
 
@@ -63,7 +63,7 @@ export class AuthController {
         httpOnly: true, // cookie devient inaxessible depuis JavaScript côté client
         sameSite: 'none',
         secure: true,
-        domain: 'localhost',
+        domain: '127.0.0.1',
       });
 
       return {
@@ -131,7 +131,6 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
-
     // Suppression du cookie jwt en cours
     res.clearCookie('jwt');
 
