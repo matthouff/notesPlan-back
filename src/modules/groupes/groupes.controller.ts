@@ -34,10 +34,16 @@ export class GroupeController {
   @Post()
   async create(@Body() groupeDto: CreateGroupeDto) {
     try {
-      const response = await this.groupesService.create(groupeDto);
+      if (!groupeDto.libelle) {
+        throw new BadRequestException({
+          message: 'Le libellé du groupe est manquant',
+          type: 'error',
+        });
+      }
+
+      await this.groupesService.create(groupeDto);
 
       return {
-        response,
         message: 'Le groupe à bien été ajouté',
         type: 'success',
       };

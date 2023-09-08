@@ -23,13 +23,19 @@ export class NoteController {
     return this.notesService.findAllByRepertoireId(repertoireId);
   }
 
-  // @Get()
-  // findAll(): Promise<INote[]> {
-  //   return this.notesService.findAll();
-  // }
-
   @Post()
   async create(@Body() noteDto: CreateNoteDto) {
+    if (!noteDto.libelle && noteDto.message) {
+      noteDto = {
+        ...noteDto,
+        libelle: noteDto.message.substring(4, 30),
+      };
+    }
+
+    if (!noteDto.libelle && !noteDto.message) {
+      return;
+    }
+
     try {
       await this.notesService.create(noteDto);
 
