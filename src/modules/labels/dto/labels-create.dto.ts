@@ -1,8 +1,15 @@
-import { IsString, Length, IsOptional, IsNotEmpty, IsUUID, isNotEmpty } from 'class-validator';
+import {
+  IsString,
+  Length,
+  IsOptional,
+  IsNotEmpty,
+  IsUUID,
+  isNotEmpty,
+} from 'class-validator';
 
 export class CreateLabelDto {
-  @Length(0, 25, {
-    message: "Le libelle doit être compris entre 1 et 100 caractères.",
+  @Length(1, 25, {
+    message: 'Le libelle doit être compris entre 1 et 25 caractères.',
   })
   @IsNotEmpty()
   @IsString()
@@ -11,10 +18,6 @@ export class CreateLabelDto {
   @IsOptional()
   @IsString()
   couleur?: string | null;
-
-  @IsNotEmpty()
-  @IsUUID()
-  tacheId: string[];
 
   @IsNotEmpty()
   @IsString()

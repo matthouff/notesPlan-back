@@ -1,81 +1,138 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import labelsServiceMock from './mock/labelServiceMock';
+import { ApiCall } from './api-call.class';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { addUserToDB } from './mock/usersServiceMock';
+import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from 'src/app.module';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
 import { LabelService } from 'src/modules/labels/labels.service';
+import { CreateLabelDto } from 'src/modules/labels/dto/labels-create.dto';
+import { addRepertoireGroupeToDB } from './mock/repertoiresGroupesServiceMock';
+import { addGroupeToDB } from './mock/groupeServiceMock';
+import { IGroupeResponse } from 'src/modules/groupes/entity/groupes.interface';
+import { addLabelToDB, createLabelMock } from './mock/labelServiceMock';
+import { ITacheResponse } from 'src/modules/taches/entity/taches.interface';
 
-describe('labelslabelsController (e2e)', () => {
+describe('LabelController (e2e)', () => {
+  let nestApp: INestApplication;
+  let apiCall: ApiCall;
+  let route = '/labels';
+  let baseUser: IUserResponse;
+  let baseRepertoire: IRepertoireResponse;
+  let baseGroupe: IGroupeResponse;
   let app: INestApplication;
-  let createdlabelId: string;
+  let notesService: LabelService;
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: LabelService,
-          useClass: labelsServiceMock, // Utilisez le mock du service des labels
-        },
-      ],
-    }).compile();
+  describe('POST', () => {
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseUser = await addUserToDB({ nestApp });
+      baseRepertoire = await addRepertoireGroupeToDB({ nestApp });
+      baseGroupe = await addGroupeToDB({ nestApp });
+      apiCall = new ApiCall(nestApp);
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+      const moduleFixture: TestingModule = await Test.createTestingModule({
+        imports: [AppModule], // Remplacez par le module principal de votre application
+      }).compile();
 
-  afterAll(async () => {
-    await app.close();
-  });
+      app = moduleFixture.createNestApplication();
+      await app.init();
 
-  it('/labels (GET) - should return all labels', async () => {
-    return await request(app.getHttpServer()).get('/labels').expect(200).expect((response) => {
-      const labels = response.body;
-      expect(Array.isArray(labels)).toBe(true);
+      // Obtenez une instance du service
+      notesService = moduleFixture.get<LabelService>(LabelService);
     });
 
-  });
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
 
-  it('/labels (POST) - should create a new label', () => {
-    const newLabel = { libelle: 'New label' };
-    return request(app.getHttpServer())
-      .post('/labels')
-      .send(newLabel)
-      .expect(201)
-      .expect((response) => {
-        const createdlabel = response.body;
-        expect(createdlabel.libelle).toBe(newLabel.libelle);
-        createdlabelId = createdlabel.id;
+    describe('CREATE', () => {
+      it('400 - Should not accept empty body', async () => {
+        const response = await apiCall.post(route, {});
+
+        expect(response.status).toBe(400);
       });
-  });
 
-  it('/labels/:id (GET) - should return a specific label', async () => {
-    return await request(app.getHttpServer())
-      .get(`/labels/${createdlabelId}`)
-      .expect(200)
-      .expect((response) => {
-        const label = response.body;
-        expect(label.id).toBe(createdlabelId);
+      it('400 - Should not accept labels exceeding 25 characters', async () => {
+        const createLabelDto: CreateLabelDto = createLabelMock({
+          libelle: 'Ceci est un libelle supérieur à 25 caractères',
+          repertoireId: baseRepertoire.id,
+        });
+
+        const response = await apiCall.post(route, createLabelDto);
+        expect(response.status).toBe(400);
       });
-  });
 
-  it('/labels/:id (PATCH) - should update a specific label', () => {
-    const updatedlabel = { libelle: 'Nouvelle label' }; // Provide the necessary data for updating the label
+      it('200 - Should create successfully', async () => {
+        // Récupération des fausses données
+        const createLabelDto: CreateLabelDto = createLabelMock({
+          repertoireId: baseRepertoire.id,
+        });
 
-    return request(app.getHttpServer())
-      .patch(`/labels/${createdlabelId}`)
-      .send(updatedlabel)
-      .expect(200)
-      .expect((response) => {
-        const retrievedlabel = response.body;
-        expect(retrievedlabel.id).toBe(createdlabelId);
-        expect(retrievedlabel.libelle).toBe(updatedlabel.libelle);
+        // Ajout à la bdd
+        const response = await apiCall.post(route, createLabelDto);
+        expect(response.status).toBe(201);
       });
+    });
   });
 
-  it('/labels/:id (DELETE) - should delete a specific label', () => {
-    return request(app.getHttpServer())
-      .delete(`/labels/${createdlabelId}`)
-      .expect(200);
+  // GET
+
+  describe('GET', () => {
+    describe('FIND', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe(' (/:id) ', () => {
+        it('400 - Should not accept a value that is not a UUID', async () => {
+          const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+          for await (const id of values) {
+            const { status } = await apiCall.get(route, id);
+
+            expect(status).toBe(400);
+          }
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const baseLabel = await addLabelToDB({
+            nestApp: nestApp,
+          });
+
+          const response = await apiCall.get(route, baseLabel.id);
+
+          expect(response.status).toBe(200);
+        });
+      });
+    });
+
+    describe('DELETE', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/:id)', () => {
+        it('200 - Should delete the entity', async () => {
+          const baseEntity = await addLabelToDB({ nestApp: nestApp });
+
+          const response = await apiCall.delete(route, baseEntity.id);
+
+          expect(response.status).toEqual(200);
+        });
+      });
+    });
   });
 });

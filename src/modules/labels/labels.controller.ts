@@ -19,11 +19,6 @@ import { CreateLabelDto } from './dto/labels-create.dto';
 export class LabelController {
   constructor(readonly labelsService: LabelService) {}
 
-  // @Get()
-  // findAll(): Promise<ILabel[]> {
-  //   return this.labelsService.findAll();
-  // }
-
   @Get('/repertoire/:repertoireId')
   findAllLabelByRepertoireId(
     @Param('repertoireId') repertoireId: string,
@@ -55,8 +50,15 @@ export class LabelController {
   }
 
   @Get(':id')
-  findById(@Param() repertoire: ILabel) {
-    return this.labelsService.findById(repertoire.id);
+  async findById(@Param() repertoire: ILabel) {
+    try {
+      return await this.labelsService.findById(repertoire.id);
+    } catch (error) {
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
+    }
   }
 
   @Get('/tache/:id')
@@ -67,13 +69,6 @@ export class LabelController {
   @Delete(':id')
   delete(@Param() repertoire: ILabel) {
     return this.labelsService.delete(repertoire.id);
-  }
-
-  // Realation manyToMany taches / labels
-
-  @Patch(':labelId/tache/:tacheId')
-  AddLabelToTache(@Param('tacheId') tacheId: string, @Body() label: Label) {
-    return this.labelsService.AddLabelToTache(tacheId, label.id);
   }
 
   @Delete(':labelId/tache/:tacheId')
