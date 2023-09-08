@@ -2,7 +2,7 @@ import { IsString, Length, IsOptional, IsUUID } from 'class-validator';
 
 export class EditTacheDto {
   @Length(1, 100, {
-    message: "Le libelle doit être compris entre 1 et 100 caractères.",
+    message: 'Le libelle doit être compris entre 1 et 100 caractères.',
   })
   @IsOptional()
   @IsString()

@@ -23,8 +23,7 @@ describe('GroupeController (e2e)', () => {
   let route = '/groupes';
   let baseUser: IUserResponse;
   let baseRepertoire: IRepertoireResponse;
-  let app: INestApplication;
-  let notesService: GroupeService;
+  let groupesService: GroupeService;
 
   describe('POST', () => {
     beforeAll(async () => {
@@ -32,16 +31,6 @@ describe('GroupeController (e2e)', () => {
       baseUser = await addUserToDB({ nestApp });
       baseRepertoire = await addRepertoireGroupeToDB({ nestApp });
       apiCall = new ApiCall(nestApp);
-
-      const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [AppModule], // Remplacez par le module principal de votre application
-      }).compile();
-
-      app = moduleFixture.createNestApplication();
-      await app.init();
-
-      // Obtenez une instance du service
-      notesService = moduleFixture.get<GroupeService>(GroupeService);
     });
 
     afterAll(async () => {
@@ -62,13 +51,9 @@ describe('GroupeController (e2e)', () => {
         });
 
         // Ajout à la bdd
-        const response = await notesService.create({
-          libelle: createGroupeDto.libelle,
-          couleur: createGroupeDto.couleur,
-          repertoireId: baseRepertoire.id,
-        });
+        const response = await apiCall.post(route, createGroupeDto);
 
-        expect(response.id).toBeDefined();
+        expect(response.status).toBe(201);
       });
     });
   });

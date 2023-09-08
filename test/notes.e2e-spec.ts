@@ -32,16 +32,6 @@ describe('NoteController (e2e)', () => {
       baseUser = await addUserToDB({ nestApp });
       baseRepertoire = await addRepertoireNoteToDB({ nestApp });
       apiCall = new ApiCall(nestApp);
-
-      const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [AppModule], // Remplacez par le module principal de votre application
-      }).compile();
-
-      app = moduleFixture.createNestApplication();
-      await app.init();
-
-      // Obtenez une instance du service
-      notesService = moduleFixture.get<NoteService>(NoteService);
     });
 
     afterAll(async () => {
@@ -62,13 +52,9 @@ describe('NoteController (e2e)', () => {
         });
 
         // Ajout à la bdd
-        const response = await notesService.create({
-          libelle: createNoteDto.libelle,
-          message: createNoteDto.message,
-          repertoireId: baseRepertoire.id,
-        });
+        const response = await apiCall.post(route, createNoteDto);
 
-        expect(response.id).toBeDefined();
+        expect(response.status).toBe(201);
       });
     });
   });

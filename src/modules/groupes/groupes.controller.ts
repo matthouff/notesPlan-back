@@ -34,9 +34,10 @@ export class GroupeController {
   @Post()
   async create(@Body() groupeDto: CreateGroupeDto) {
     try {
-      await this.groupesService.create(groupeDto);
+      const response = await this.groupesService.create(groupeDto);
 
       return {
+        response,
         message: 'Le groupe à bien été ajouté',
         type: 'success',
       };

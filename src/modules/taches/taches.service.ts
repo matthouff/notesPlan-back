@@ -1,16 +1,19 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { EditTacheDto } from "./dto/taches-edit.dto";
-import { Tache } from "./entity/taches";
-import { ITache } from "./entity/taches.interface";
-import { TacheRepository } from "./taches.repository";
-import { GroupeActions } from "../groupes/groupes.actions";
-import { CreateTacheDto } from "./dto/taches-create.dto";
-import { LabelRepository } from "../labels/labels.repository";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { EditTacheDto } from './dto/taches-edit.dto';
+import { Tache } from './entity/taches';
+import { ITache } from './entity/taches.interface';
+import { TacheRepository } from './taches.repository';
+import { GroupeActions } from '../groupes/groupes.actions';
+import { CreateTacheDto } from './dto/taches-create.dto';
+import { LabelRepository } from '../labels/labels.repository';
 
 @Injectable()
 export class TacheService {
-
-  constructor(readonly tachesRepository: TacheRepository, readonly groupeActions: GroupeActions, readonly labelRepository: LabelRepository) { }
+  constructor(
+    readonly tachesRepository: TacheRepository,
+    readonly groupeActions: GroupeActions,
+    readonly labelRepository: LabelRepository,
+  ) {}
 
   async findAll(): Promise<ITache[]> {
     return await this.tachesRepository.getAll();
@@ -36,13 +39,14 @@ export class TacheService {
 
   async update(edittachesDto: EditTacheDto, id: string) {
     let taches = await this.tachesRepository.findByID(id);
-    taches.edit(edittachesDto);
+    await taches.edit(edittachesDto);
 
-    const groupe = await this.groupeActions.getGroupeById(edittachesDto.groupeId);
+    const groupe = await this.groupeActions.getGroupeById(
+      edittachesDto.groupeId,
+    );
     const groupeElement = Tache.factory({ ...edittachesDto, groupe });
     await this.tachesRepository.save(groupeElement);
 
     return await this.tachesRepository.save(taches);
   }
-
 }

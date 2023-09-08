@@ -1,96 +1,183 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { ApiCall } from './api-call.class';
+import { IUserResponse } from 'src/modules/users/entity/users.interface';
+import { addUserToDB, getUserConnected } from './mock/usersServiceMock';
+import { closeTestAppConnexion, initializeTestApp } from './config/e2e.config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from 'src/app.module';
+import { IRepertoireResponse } from 'src/modules/repertoires/commun/entity/repertoires.interface';
 import { TacheService } from 'src/modules/taches/taches.service';
-import TachesServiceMock from './mock/tacheServiceMock';
+import { CreateTacheDto } from 'src/modules/taches/dto/taches-create.dto';
+import { ITacheResponse } from 'src/modules/taches/entity/taches.interface';
+import { EditTacheDto } from 'src/modules/taches/dto/taches-edit.dto';
+import {
+  addTacheToDB,
+  createTacheMock,
+  updateTacheMock,
+} from './mock/tacheServiceMock';
+import { addRepertoireGroupeToDB } from './mock/repertoiresGroupesServiceMock';
+import { addGroupeToDB } from './mock/groupeServiceMock';
+import { IGroupeResponse } from 'src/modules/groupes/entity/groupes.interface';
 
-describe('tachesController (e2e)', () => {
+describe('TacheController (e2e)', () => {
+  let nestApp: INestApplication;
+  let apiCall: ApiCall;
+  let route = '/taches';
+  let baseUser: IUserResponse;
+  let baseRepertoire: IRepertoireResponse;
+  let baseGroupe: IGroupeResponse;
   let app: INestApplication;
-  let createdTacheId: string;
+  let notesService: TacheService;
 
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-      providers: [
-        {
-          provide: TacheService,
-          useClass: TachesServiceMock, // Utilisez le mock du service des taches
-        },
-      ],
-    }).compile();
+  describe('POST', () => {
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseUser = await addUserToDB({ nestApp });
+      baseRepertoire = await addRepertoireGroupeToDB({ nestApp });
+      baseGroupe = await addGroupeToDB({ nestApp });
+      apiCall = new ApiCall(nestApp);
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
+      const moduleFixture: TestingModule = await Test.createTestingModule({
+        imports: [AppModule], // Remplacez par le module principal de votre application
+      }).compile();
 
-  afterAll(async () => {
-    await app.close();
-  });
+      app = moduleFixture.createNestApplication();
+      await app.init();
 
-  it('/taches (GET) - should return all taches', async () => {
-    return await request(app.getHttpServer()).get('/taches').expect(200).expect((response) => {
-      const taches = response.body;
-      expect(Array.isArray(taches)).toBe(true);
+      // Obtenez une instance du service
+      notesService = moduleFixture.get<TacheService>(TacheService);
     });
 
-  });
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
 
-  it('/taches (POST) - should create a new tache', () => {
-    const newTache = { libelle: 'New tache' };
-    return request(app.getHttpServer())
-      .post('/taches')
-      .send(newTache)
-      .expect(201)
-      .expect((response) => {
-        const createdTache = response.body;
-        expect(createdTache.libelle).toBe(newTache.libelle);
-        createdTacheId = createdTache.id;
+    describe('CREATE', () => {
+      it('400 - Should not accept empty body', async () => {
+        const response = await apiCall.post(route, {});
+
+        expect(response.status).toBe(400);
       });
-  });
 
-  // Récupération d'une tache à partir de l'id du premier répertoire
-  it('/taches/groupe/:id (GET) - should return taches by groupe ID', async () => {
-    const groupe = await request(app.getHttpServer()).get('/groupes').expect(200).expect((response) => {
-      const groupes = response.body;
-      expect(Array.isArray(groupes)).toBe(true);
-    });
+      it('200 - Should create successfully', async () => {
+        // Récupération des fausses données
+        const createTacheDto: CreateTacheDto = createTacheMock({
+          groupeId: baseRepertoire.id,
+        });
 
-    const id_groupe = groupe.body[0].id
+        // Ajout à la bdd
+        const response = await notesService.create({
+          libelle: createTacheDto.libelle,
+          detail: createTacheDto.detail,
+          groupeId: baseGroupe.id,
+        });
 
-    return await request(app.getHttpServer()).get(`/taches/groupe/${id_groupe}`).expect(200).expect((response) => {
-      const taches = response.body;
-      expect(Array.isArray(taches)).toBe(true);
+        expect(response.id).toBeDefined();
+      });
     });
   });
 
-  it('/taches/:id (GET) - should return a specific tache', async () => {
-    return await request(app.getHttpServer())
-      .get(`/taches/${createdTacheId}`)
-      .expect(200)
-      .expect((response) => {
-        const tache = response.body;
-        expect(tache.id).toBe(createdTacheId);
+  // PUT
+
+  describe('PUT', () => {
+    let baseTache: ITacheResponse;
+
+    beforeAll(async () => {
+      nestApp = await initializeTestApp();
+      baseUser = await addUserToDB({ nestApp });
+      baseRepertoire = await addRepertoireGroupeToDB({ nestApp });
+      baseGroupe = await addGroupeToDB({ nestApp });
+      baseTache = await addTacheToDB({ nestApp });
+      apiCall = new ApiCall(nestApp);
+    });
+
+    afterAll(async () => {
+      await closeTestAppConnexion(nestApp);
+    });
+
+    describe('UPDATE', () => {
+      it('400 - Should not accept a value that is not a UUID', async () => {
+        const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+        for await (const id of values) {
+          const { status } = await apiCall.patch(route, id, {});
+
+          expect(status).toBe(400);
+        }
       });
+
+      it('200 - Should update successfully', async () => {
+        const updateTacheDto: EditTacheDto = updateTacheMock({
+          groupeId: baseGroupe.id,
+        });
+
+        const response = await apiCall.patch<EditTacheDto>(
+          route,
+          baseTache.id,
+          updateTacheDto,
+        );
+
+        expect(response.status).toBe(200);
+      });
+    });
   });
 
-  it('/taches/:id (PATCH) - should update a specific tache', () => {
-    const updatedtache = { libelle: 'Nouvelle tache' }; // Provide the necessary data for updating the tache
+  // GET
 
-    return request(app.getHttpServer())
-      .patch(`/taches/${createdTacheId}`)
-      .send(updatedtache)
-      .expect(200)
-      .expect((response) => {
-        const retrievedtache = response.body;
-        expect(retrievedtache.id).toBe(createdTacheId);
-        expect(retrievedtache.libelle).toBe(updatedtache.libelle);
+  describe('GET', () => {
+    describe('FIND', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+        apiCall = new ApiCall(nestApp);
       });
-  });
 
-  it('/taches/:id (DELETE) - should delete a specific tache', () => {
-    return request(app.getHttpServer())
-      .delete(`/taches/${createdTacheId}`)
-      .expect(200);
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe(' (/:id) ', () => {
+        it('400 - Should not accept a value that is not a UUID', async () => {
+          const values = ['23a42931-1cba-48a0-b72b', 5874];
+
+          for await (const id of values) {
+            const { status } = await apiCall.get(route, id);
+
+            expect(status).toBe(400);
+          }
+        });
+
+        it('200 - Should send back the entity', async () => {
+          const baseTache = await addTacheToDB({
+            nestApp: nestApp,
+          });
+
+          const response = await apiCall.get(route, baseTache.id);
+
+          expect(response.status).toBe(200);
+        });
+      });
+    });
+
+    describe('DELETE', () => {
+      beforeEach(async () => {
+        nestApp = await initializeTestApp();
+
+        apiCall = new ApiCall(nestApp);
+      });
+
+      afterEach(async () => {
+        await closeTestAppConnexion(nestApp);
+      });
+
+      describe('(/:id)', () => {
+        it('200 - Should delete the entity', async () => {
+          const baseEntity = await addTacheToDB({ nestApp: nestApp });
+
+          const response = await apiCall.delete(route, baseEntity.id);
+
+          expect(response.status).toEqual(200);
+        });
+      });
+    });
   });
 });

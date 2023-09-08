@@ -46,8 +46,15 @@ export class TacheController {
   }
 
   @Get(':id')
-  findById(@Param() tache: ITache) {
-    return this.tachesService.findById(tache.id);
+  async findById(@Param() tache: ITache) {
+    try {
+      return await this.tachesService.findById(tache.id);
+    } catch (error) {
+      throw new BadRequestException({
+        message: 'Une erreur est survenue',
+        type: 'error',
+      });
+    }
   }
 
   @Delete(':id')

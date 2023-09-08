@@ -1,27 +1,33 @@
-import { faker } from "@faker-js/faker";
-import { INestApplication } from "@nestjs/common";
-import { IGroupeResponse } from "src/modules/groupes/entity/groupes.interface";
-import { CreateTacheDto } from "src/modules/taches/dto/taches-create.dto";
-import { EditTacheDto } from "src/modules/taches/dto/taches-edit.dto";
-import { Tache } from "src/modules/taches/entity/taches";
-import { ITacheResponse } from "src/modules/taches/entity/taches.interface";
-import { Repository } from "typeorm";
-import { addGroupeToDB } from "./groupeServiceMock";
-import { Label } from "src/modules/labels/entity/labels";
-import { ILabelResponse } from "src/modules/labels/entity/labels.interface";
+import { faker } from '@faker-js/faker';
+import { INestApplication } from '@nestjs/common';
+import { IGroupeResponse } from 'src/modules/groupes/entity/groupes.interface';
+import { CreateTacheDto } from 'src/modules/taches/dto/taches-create.dto';
+import { EditTacheDto } from 'src/modules/taches/dto/taches-edit.dto';
+import { Tache } from 'src/modules/taches/entity/taches';
+import { ITacheResponse } from 'src/modules/taches/entity/taches.interface';
+import { Repository } from 'typeorm';
+import { addGroupeToDB } from './groupeServiceMock';
+import { Label } from 'src/modules/labels/entity/labels';
+import { ILabelResponse } from 'src/modules/labels/entity/labels.interface';
 
 /** Génère des fausses données destinés à la création */
-export const createTacheMock = ({ groupeId }: { groupeId: string }): CreateTacheDto => ({
+export const createTacheMock = ({
+  groupeId,
+}: {
+  groupeId: string;
+}): CreateTacheDto => ({
   groupeId,
   libelle: faker.company.name(),
-  detail: faker.lorem.paragraphs()
+  detail: faker.lorem.paragraphs(),
 });
 
 /** Génère des fausses données destinés à la mise à jour */
-export const updateTacheMock = (data?: { groupeId?: string }): EditTacheDto => ({
+export const updateTacheMock = (data?: {
+  groupeId?: string;
+}): EditTacheDto => ({
   groupeId: data.groupeId,
   libelle: faker.company.name(),
-  detail: faker.lorem.paragraphs()
+  detail: faker.lorem.paragraphs(),
 });
 
 /** Insert dans la base de données avec de fausses données */
@@ -48,7 +54,6 @@ export async function addTacheToDB({
 
   return await repository.save(TacheCreator);
 }
-
 
 /** Insert plusieurs éléments dans la base de données avec de fausses données */
 export async function addManyTacheToDB({
@@ -77,7 +82,10 @@ export async function getTacheFromDB({
   nestApp: INestApplication;
   id: string;
 }): Promise<ITacheResponse> {
-  const repository = nestApp.get<Repository<Tache>>("TacheRepository");
+  const repository = nestApp.get<Repository<Tache>>('TacheRepository');
 
-  return await repository.findOne({ where: { id }, relations: { groupe: true } });
+  return await repository.findOne({
+    where: { id },
+    relations: { groupe: true },
+  });
 }
