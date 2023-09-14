@@ -29,7 +29,7 @@ export class AuthController {
     private authService: AuthService,
     private jwtService: JwtService,
     private userService: UsersService,
-  ) {}
+  ) { }
 
   /////////   CONNEXION D'UN USER ////////////
 
@@ -45,14 +45,14 @@ export class AuthController {
 
       if (!user) {
         throw new BadRequestException({
-          message: 'Les informations sont invalides test 1',
+          message: 'Les informations sont invalides',
           type: 'error',
         });
       }
 
       if (!(await bcrypt.compare(password, user.password))) {
         throw new BadRequestException({
-          message: 'Les informations sont invalides test 2',
+          message: 'Les informations sont invalides',
           type: 'error',
         });
       }
@@ -72,7 +72,7 @@ export class AuthController {
       };
     } catch (error) {
       response.status(400).json({
-        message: 'Les informations sont invalides test 3',
+        message: 'Les informations sont invalides',
         type: 'error',
       });
     }
