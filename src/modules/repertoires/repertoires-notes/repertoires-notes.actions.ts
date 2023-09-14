@@ -7,26 +7,14 @@ export class RepertoiresActions {
   constructor(
     private readonly repertoiresRepository: RepertoiresNotesRepository,
     private readonly logger: Logger,
-  ) {}
+  ) { }
 
-  //
-  // Update le repertoires ciblé avec repertoires et IrepertoiresEditor passé en paramettre
-  //
-  // updaterepertoiresValidation(repertoires: repertoires, updaterepertoiresDto: IrepertoiresEditor): repertoires {
-  // 	const data: IrepertoiresEditor = {
-  // 		...updaterepertoiresDto,
-  // 	};
-
-  // 	repertoires.edit(data);
-
-  // 	this.logger.debug(`Le repertoires a été mis à jour`);
-
-  // 	return repertoires;
-  // }
-
-  //
-  // On récupère le repertoires avec l'id passé en parametre
-  //
+  /**
+   * Récupère un répertoire de notes par son identifiant.
+   * @param id L'identifiant du répertoire à récupérer.
+   * @returns Le répertoire de notes correspondant à l'identifiant.
+   * @throws NotFoundException si le répertoire n'est pas trouvé.
+   */
   async getrepertoiresById(id: string): Promise<RepertoireNote> {
     const found = await this.repertoiresRepository.findByID(id);
 
@@ -42,14 +30,11 @@ export class RepertoiresActions {
     return found;
   }
 
-  // async removerepertoiresById(id: string): Promise<boolean> {
-  // 	const deleted = await this.repertoiresRepository.deleteByID(id);
-
-  // 	this.logger.debug(`Le repertoires a été supprimé`);
-
-  // 	return deleted;
-  // }
-
+  /**
+   * Sauvegarde un répertoire de notes dans la base de données.
+   * @param repertoiresEntity Le répertoire de notes à sauvegarder.
+   * @returns Le répertoire de notes sauvegardé.
+  */
   async saverepertoiresToDatabase(
     repertoiresEntity: RepertoireNote,
   ): Promise<RepertoireNote> {

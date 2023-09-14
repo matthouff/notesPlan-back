@@ -33,6 +33,15 @@ export class AuthController {
 
   /////////   CONNEXION D'UN USER ////////////
 
+  /**
+   * Tente de connecter un utilisateur en vérifiant les informations d'identification.
+   *
+   * @param email L'adresse e-mail de l'utilisateur.
+   * @param password Le mot de passe de l'utilisateur.
+   * @param response La réponse HTTP pour définir un cookie JWT en cas de connexion réussie.
+   * @returns Un objet avec un message de succès en cas de connexion réussie.
+   * @throws BadRequestException Si les informations d'identification sont invalides.
+   */
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(
@@ -80,6 +89,15 @@ export class AuthController {
 
   /////////   AJOUT D'UN NOUVEAU USER ////////////
 
+  /**
+   * Enregistre un nouvel utilisateur après avoir vérifié son email et son mot de passe.
+   *
+   * @param userDto Les données de l'utilisateur à enregistrer.
+   * @param response La réponse HTTP pour renvoyer une réponse en cas de succès.
+   * @returns Un objet avec les données de l'utilisateur enregistré.
+   * @throws BadRequestException Si les données de l'utilisateur sont invalides.
+   * @throws ConflictException Si un utilisateur avec le même email existe déjà.
+   */
   @HttpCode(HttpStatus.OK)
   @Post('register')
   async register(@Body() userDto: CreateUserDto, @Res() response: Response) {
@@ -115,6 +133,13 @@ export class AuthController {
 
   /////////   RÉCUPÉRATION DU USER ////////////
 
+  /**
+   * Récupère les informations de l'utilisateur actuellement connecté à l'aide d'un token JWT valide.
+   *
+   * @param request La requête HTTP contenant le cookie JWT.
+   * @returns Les informations de l'utilisateur (à l'exception du mot de passe) si l'utilisateur est authentifié.
+   * @throws UnauthorizedException Si l'utilisateur n'est pas authentifié ou si le token est invalide.
+   */
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Get('user')
@@ -129,6 +154,12 @@ export class AuthController {
 
   /////////   DÉCONNEXION DU USER ////////////
 
+  /**
+   * Déconnecte l'utilisateur en supprimant le cookie JWT.
+   *
+   * @param res La réponse HTTP pour supprimer le cookie.
+   * @returns Un objet avec un message de succès en cas de déconnexion réussie.
+   */
   @Post('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     // Suppression du cookie jwt en cours

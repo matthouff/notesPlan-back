@@ -10,6 +10,12 @@ export class GroupesRepository extends RepositoryStarter<Groupe> {
     super(datasource.getRepository(Groupe));
   }
 
+  /**
+   * Recherche tous les groupes associés à un répertoire par son ID.
+   *
+   * @param repertoireId L'ID du répertoire pour lequel rechercher les groupes.
+   * @returns Une liste de groupes associés au répertoire spécifié.
+   */
   async findByRepertoireId(repertoireId: string) {
     const data = await this.model.findBy({ repertoire: { id: repertoireId } });
     return data;

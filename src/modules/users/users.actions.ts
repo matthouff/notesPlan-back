@@ -10,23 +10,12 @@ export class UserActions {
     private readonly logger: Logger,
   ) { }
 
-  //
-  // Update le User ciblé avec User et IUserEditor passé en paramettre
-  //
-  // updateUserValidation(User: User, updateUserDto: IUserEditor): User {
-  // 	const data: IUserEditor = {
-  // 		...updateUserDto,
-  // 	};
-
-  // 	User.edit(data);
-
-  // 	this.logger.debug(`Le User a été mis à jour`);
-
-  // 	return User;
-  // }
-
-  // On récupère le User avec l'id passé en parametre
-
+  /**
+   * Récupère un utilisateur par son identifiant.
+   * @param id L'identifiant de l'utilisateur à récupérer.
+   * @returns L'utilisateur récupéré.
+   * @throws NotFoundException si aucun utilisateur n'est trouvé avec l'identifiant donné.
+   */
   async getUserById(id: string): Promise<User> {
     const found = await this.userRepository.findByID(id);
 
@@ -42,14 +31,11 @@ export class UserActions {
     return found;
   }
 
-  // async removeUserById(id: string): Promise<boolean> {
-  // 	const deleted = await this.UserRepository.deleteByID(id);
-
-  // 	this.logger.debug(`Le User a été supprimé`);
-
-  // 	return deleted;
-  // }
-
+  /**
+   * Sauvegarde un utilisateur dans la base de données.
+   * @param userEntity L'entité utilisateur à sauvegarder.
+   * @returns L'utilisateur sauvegardé.
+   */
   async saveUserToDatabase(userEntity: User): Promise<User> {
     const user = await this.userRepository.save(userEntity);
 

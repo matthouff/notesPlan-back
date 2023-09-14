@@ -16,13 +16,15 @@ import { CreateNoteDto } from './dto/notes-create.dto';
 // http://127.0.0.1:3000
 @Controller('notes')
 export class NoteController {
-  constructor(readonly notesService: NoteService) {}
+  constructor(readonly notesService: NoteService) { }
 
+  // Endpoint pour récupérer toutes les notes associées à un répertoire.
   @Get('/repertoire-notes/:id')
   findAllByRepertoireId(@Param('id') repertoireId: string) {
     return this.notesService.findAllByRepertoireId(repertoireId);
   }
 
+  // Endpoint pour créer une nouvelle note.
   @Post()
   async create(@Body() noteDto: CreateNoteDto) {
     if (!noteDto.libelle && noteDto.message) {
@@ -51,6 +53,7 @@ export class NoteController {
     }
   }
 
+  // Endpoint pour récupérer une note par son ID.
   @Get(':id')
   async findById(@Param() note: INote) {
     try {
@@ -60,6 +63,7 @@ export class NoteController {
     }
   }
 
+  // Endpoint pour supprimer une note par son ID.
   @Delete(':id')
   async delete(@Param() note: INote) {
     try {
@@ -77,6 +81,7 @@ export class NoteController {
     }
   }
 
+  // Endpoint pour mettre à jour une note par son ID.
   @Patch(':id')
   async update(@Body() noteDto: EditNoteDto, @Param() note: INote) {
     try {

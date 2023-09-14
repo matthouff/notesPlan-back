@@ -58,6 +58,7 @@ export class Groupe extends EntityStarter implements IGroupe {
     this.editMandatory({ ...data });
   }
 
+  // Factory method pour créer une instance de Groupe
   static factory(data: IGroupeCreator): Groupe {
     return new Groupe(data);
   }

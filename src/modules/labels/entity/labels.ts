@@ -37,6 +37,8 @@ export class Label extends EntityStarter implements ILabel {
     Object.assign(this, data);
   }
 
+  // Méthode qui ne renvoie rien (void)
+  // Méthode pour mettre à jour les propriétés obligatoires de l'entité
   editMandatory(data: ILabelEditorMandatory): void {
     const { libelle, repertoire } = data;
 
@@ -48,8 +50,8 @@ export class Label extends EntityStarter implements ILabel {
     }
   }
 
-  // fonction qui ne renvoie rien (void)
-  // Permet de vérifier si les nouvelles donées sont différentes
+  // Méthode qui ne renvoie rien (void)
+  // Méthode pour mettre à jour les propriétés optionnelles de l'entité
   editOptional(data: ILabelEditorOptional): void {
     const { couleur } = data;
     if (couleur && couleur !== this.couleur) {
@@ -57,12 +59,13 @@ export class Label extends EntityStarter implements ILabel {
     }
   }
 
-  // On met a jour les données de l'entité
+  // Méthode pour mettre à jour l'entité avec les nouvelles données
   edit(data: ILabelEditor): void {
     this.editMandatory({ ...data });
     this.editOptional({ ...data });
   }
 
+  // Méthode statique pour créer une instance de Label
   static factory(data: ILabelCreator): Label {
     return new Label(data);
   }

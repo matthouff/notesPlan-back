@@ -10,6 +10,11 @@ export class TacheRepository extends RepositoryStarter<Tache> {
     super(datasource.getRepository(Tache));
   }
 
+  /**
+   * Recherche et renvoie toutes les tâches associées à un groupe spécifique.
+   * @param groupeId L'identifiant du groupe pour lequel rechercher les tâches.
+   * @returns Une liste des tâches associées au groupe.
+   */
   async findByGroupeId(groupeId: string) {
     const data = await this.model.findBy({ groupe: { id: groupeId } });
     return data;

@@ -15,12 +15,14 @@ export class GroupeService {
     readonly repertoiresActions: RepertoiresGroupeActions,
     readonly tacheRepository: TacheRepository,
     readonly labelRepository: LabelRepository,
-  ) {}
+  ) { }
 
+  // Récupère tous les groupes
   async findAll(): Promise<IGroupe[]> {
     return await this.groupesRepository.getAll();
   }
 
+  // Récupère tous les groupes d'un répertoire par son ID
   async findAllByRepertoireGroupeId(repertoireId: string) {
     repertoireId;
 
@@ -28,7 +30,7 @@ export class GroupeService {
       repertoireId,
     );
 
-    // Fetch tasks for each group using TacheRepository
+    // On attribut aux groupes les tâches associés à ce dernier en tableau d'objet tâche
     const groupesWithTaches = await Promise.all(
       groupes.map(async (groupe) => {
         const taches = await this.tacheRepository.findByGroupeId(groupe.id);
@@ -61,6 +63,7 @@ export class GroupeService {
     return groupesWithTaches;
   }
 
+  // Crée un nouveau groupe
   async create(data: CreateGroupeDto) {
     const repertoire = await this.repertoiresActions.getrepertoiresById(
       data.repertoireId,
@@ -69,14 +72,17 @@ export class GroupeService {
     return await this.groupesRepository.save(repertoireGroupe);
   }
 
+  // Récupère un groupe par son ID
   async findById(id: string): Promise<Groupe> {
     return await this.groupesRepository.findByID(id);
   }
 
+  // Supprime un groupe par son ID
   async delete(id: string) {
     return await this.groupesRepository.deleteByID(id);
   }
 
+  // Met à jour un groupe par son ID
   async update(editgroupesDto: RepertoireGroupe, id: string) {
     let groupes = await this.groupesRepository.findByID(id);
 

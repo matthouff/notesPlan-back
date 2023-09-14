@@ -6,6 +6,12 @@ import { RepertoiresGroupesRepository } from "./repertoires-groupes.repository";
 export class RepertoiresGroupeActions {
 	constructor(private readonly repertoiresRepository: RepertoiresGroupesRepository, private readonly logger: Logger) { }
 
+	/**
+	 * Récupère un répertoire de groupe par son identifiant.
+	 * @param id L'identifiant du répertoire à récupérer.
+	 * @returns Le répertoire de groupe trouvé.
+	 * @throws NotFoundException si le répertoire n'est pas trouvé.
+	 */
 	async getrepertoiresById(id: string): Promise<RepertoireGroupe> {
 		const found = await this.repertoiresRepository.findByID(id);
 
@@ -19,14 +25,11 @@ export class RepertoiresGroupeActions {
 		return found;
 	}
 
-	// async removerepertoiresById(id: string): Promise<boolean> {
-	// 	const deleted = await this.repertoiresRepository.deleteByID(id);
-
-	// 	this.logger.debug(`Le repertoires a été supprimé`);
-
-	// 	return deleted;
-	// }
-
+	/**
+	 * Sauvegarde un répertoire de groupe dans la base de données.
+	 * @param repertoiresEntity L'entité du répertoire de groupe à sauvegarder.
+	 * @returns Le répertoire de groupe sauvegardé.
+	 */
 	async saverepertoiresToDatabase(repertoiresEntity: RepertoireGroupe): Promise<RepertoireGroupe> {
 		const repertoires = await this.repertoiresRepository.save(repertoiresEntity);
 

@@ -17,8 +17,9 @@ import { CreateLabelDto } from './dto/labels-create.dto';
 // http://127.0.0.1:3000
 @Controller('labels')
 export class LabelController {
-  constructor(readonly labelsService: LabelService) {}
+  constructor(readonly labelsService: LabelService) { }
 
+  // Endpoint pour récupérer tous les labels d'un répertoire spécifique
   @Get('/repertoire/:repertoireId')
   findAllLabelByRepertoireId(
     @Param('repertoireId') repertoireId: string,
@@ -26,6 +27,7 @@ export class LabelController {
     return this.labelsService.findAllLabelByRepertoireId(repertoireId);
   }
 
+  // Endpoint pour créer un nouveau label
   @Post()
   async create(@Body() repertoireDto: CreateLabelDto) {
     if (!repertoireDto.couleur) {
@@ -49,6 +51,7 @@ export class LabelController {
     }
   }
 
+  // Endpoint pour récupérer un label par son ID
   @Get(':id')
   async findById(@Param() repertoire: ILabel) {
     try {
@@ -61,16 +64,19 @@ export class LabelController {
     }
   }
 
+  // Endpoint pour récupérer tous les labels liés à une tâche spécifique
   @Get('/tache/:id')
   findAllByTacheId(@Param('id') tacheId: string): Promise<ILabel[]> {
     return this.labelsService.findAllByTacheId(tacheId);
   }
 
+  // Endpoint pour supprimer un label par son ID
   @Delete(':id')
   delete(@Param() repertoire: ILabel) {
     return this.labelsService.delete(repertoire.id);
   }
 
+  // Endpoint pour supprimer un label d'une tâche spécifique
   @Delete(':labelId/tache/:tacheId')
   async removeLabelFromTache(
     @Param('tacheId') tacheId: string,

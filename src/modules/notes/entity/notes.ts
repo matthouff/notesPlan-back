@@ -28,12 +28,8 @@ export class Note extends EntityStarter implements INote {
     Object.assign(this, data);
   }
 
-  static factory(data: INoteCreator): Note {
-    return new Note(data);
-  }
-
-  // fonction qui ne renvoie rien (void)
-  // Permet de vérifier si les nouvelles donées sont différentes
+  // Méthode qui ne renvoie rien (void)
+  // Méthode pour mettre à jour les propriétés optionnelles de l'entité
   editOptional(data: INoteEditorOptional): void {
     const { message } = data;
 
@@ -42,6 +38,8 @@ export class Note extends EntityStarter implements INote {
     }
   }
 
+  // Méthode qui ne renvoie rien (void)
+  // Méthode pour mettre à jour les propriétés obligatoires de l'entité
   editMandatory(data: INoteEditorMandatory): void {
     const { libelle } = data;
 
@@ -50,9 +48,14 @@ export class Note extends EntityStarter implements INote {
     }
   }
 
-  // On met a jour les données de l'entité
+  // Méthode pour mettre à jour l'entité avec les nouvelles données
   edit(data: INoteEditor): void {
     this.editOptional({ ...data });
     this.editMandatory({ ...data });
+  }
+
+  // Méthode statique pour créer une instance de Label
+  static factory(data: INoteCreator): Note {
+    return new Note(data);
   }
 }

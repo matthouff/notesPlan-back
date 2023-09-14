@@ -14,6 +14,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * Méthode de validation du token JWT.
+   *
+   * @param payload Le payload (contenu) du token JWT.
+   * @returns L'utilisateur associé au token s'il existe.
+   * @throws UnauthorizedException Si l'utilisateur associé au token n'est pas trouvé.
+   */
   async validate(payload: string) {
     const user = await this.usersService.findById(payload);
     if (!user) {

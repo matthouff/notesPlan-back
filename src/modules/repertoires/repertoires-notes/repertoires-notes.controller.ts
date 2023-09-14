@@ -23,17 +23,23 @@ export class RepertoiresNotesController {
   constructor(
     readonly repertoiresService: RepertoiresNotesService,
     readonly authActions: AuthActions,
-  ) {}
+  ) { }
 
+  /**
+   * Récupère tous les répertoires de notes d'un utilisateur.
+   */
   @Get()
   async findAllByUserId(@Req() request: Request) {
     const token = request.cookies['jwt'];
     try {
       const user = await this.authActions.getUser(token);
       return await this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) {}
+    } catch (error) { }
   }
 
+  /**
+   * Crée un nouveau répertoire de notes pour un utilisateur.
+   */
   @Post()
   async create(
     @Body() repertoireDto: CreateRepertoireDto,
@@ -59,6 +65,9 @@ export class RepertoiresNotesController {
     }
   }
 
+  /**
+   * Récupère un répertoire de notes par son identifiant.
+   */
   @Get(':id')
   async findById(@Param() repertoire: IRepertoire) {
     try {
@@ -68,6 +77,9 @@ export class RepertoiresNotesController {
     }
   }
 
+  /**
+   * Supprime un répertoire de notes par son identifiant.
+   */
   @Delete(':id')
   async delete(@Param() repertoire: IRepertoire) {
     try {
@@ -85,6 +97,9 @@ export class RepertoiresNotesController {
     }
   }
 
+  /**
+   * Met à jour un répertoire de notes par son identifiant.
+   */
   @Patch(':id')
   async update(
     @Body() repertoireDto: EditRepertoireDto,

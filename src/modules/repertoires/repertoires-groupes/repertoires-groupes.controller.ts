@@ -23,17 +23,23 @@ export class RepertoiresGroupesController {
   constructor(
     readonly repertoiresService: RepertoiresGroupesService,
     readonly authActions: AuthActions,
-  ) {}
+  ) { }
 
+  /**
+   * Récupère tous les répertoires de groupes associés à l'utilisateur authentifié.
+   */
   @Get()
   async findAllByUserId(@Req() request: Request) {
     const token = request.cookies['jwt'];
     try {
       const user = await this.authActions.getUser(token);
       return await this.repertoiresService.findAllByUserId(user.id);
-    } catch (error) {}
+    } catch (error) { }
   }
 
+  /**
+   * Crée un nouveau répertoire de groupe pour l'utilisateur authentifié.
+   */
   @Post()
   async create(
     @Body() repertoireDto: CreateRepertoireDto,
@@ -59,6 +65,9 @@ export class RepertoiresGroupesController {
     }
   }
 
+  /**
+   * Récupère un répertoire de groupe par son identifiant.
+   */
   @Get(':id')
   async findById(@Param() repertoire: IRepertoire) {
     try {
@@ -68,6 +77,9 @@ export class RepertoiresGroupesController {
     }
   }
 
+  /**
+   * Supprime un répertoire de groupe par son identifiant.
+   */
   @Delete(':id')
   async delete(@Param() repertoire: IRepertoire) {
     try {
@@ -77,13 +89,16 @@ export class RepertoiresGroupesController {
         message: 'Le répertoire à bien été supprimé',
         type: 'success',
       };
-    } catch (error) {}
+    } catch (error) { }
     throw new BadRequestException({
       message: 'Une erreur est survenue',
       type: 'error',
     });
   }
 
+  /**
+   * Met à jour un répertoire de groupe par son identifiant.
+   */
   @Patch(':id')
   async update(
     @Body() repertoireDto: EditRepertoireDto,

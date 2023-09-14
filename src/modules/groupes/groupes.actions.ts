@@ -6,6 +6,13 @@ import { GroupesRepository } from "./groupes.repository";
 export class GroupeActions {
 	constructor(private readonly groupeRepository: GroupesRepository, private readonly logger: Logger) { }
 
+	/**
+	 * Récupère un groupe à partir de son identifiant (ID).
+	 *
+	 * @param id L'identifiant du groupe à récupérer.
+	 * @returns Le groupe récupéré.
+	 * @throws NotFoundException Si aucun groupe n'est trouvé avec l'identifiant spécifié.
+	 */
 	async getGroupeById(id: string): Promise<Groupe> {
 		const found = await this.groupeRepository.findByID(id);
 
@@ -19,6 +26,12 @@ export class GroupeActions {
 		return found;
 	}
 
+	/**
+	 * Sauvegarde un groupe dans la base de données.
+	 *
+	 * @param groupeEntity L'entité du groupe à sauvegarder.
+	 * @returns Le groupe sauvegardé dans la base de données.
+	 */
 	async saveGroupeToDatabase(groupeEntity: Groupe): Promise<Groupe> {
 		const groupe = await this.groupeRepository.save(groupeEntity);
 

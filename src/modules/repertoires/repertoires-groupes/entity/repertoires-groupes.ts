@@ -7,13 +7,17 @@ import { Label } from 'src/modules/labels/entity/labels';
 
 @Entity({ name: 'repertoires_groupes' })
 export class RepertoireGroupe extends Repertoire implements IRepertoire {
+
+  // L'utilisateur auquel appartient ce répertoire de groupes.
   @ManyToOne(() => User, (user) => user.repertoiresGroupes, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userid' })
   user: User;
 
+  // Les groupes associés à ce répertoire.
   @OneToMany(() => Groupe, (groupe) => groupe.repertoire, { cascade: true })
   repertoiresGroupes: Groupe[];
 
+  // Les labels associés à ce répertoire.
   @OneToMany(() => Label, (label) => label.repertoire, { cascade: true })
   label: Label[];
 
@@ -23,6 +27,11 @@ export class RepertoireGroupe extends Repertoire implements IRepertoire {
     Object.assign(this, data);
   }
 
+  /**
+   * Créer une nouvelle instance de RepertoireGroupe.
+   * @param data Les données pour créer le répertoire.
+   * @returns Une nouvelle instance de RepertoireGroupe.
+   */
   static factory(data: IRepertoireCreator): RepertoireGroupe {
     return new RepertoireGroupe(data);
   }

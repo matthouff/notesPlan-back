@@ -23,6 +23,7 @@ export class RepertoireNote extends Repertoire implements IRepertoire {
     Object.assign(this, data);
   }
 
+  // Méthode statique pour créer une instance de Label
   static factory(data: IRepertoireCreator): RepertoireNote {
     return new RepertoireNote(data);
   }

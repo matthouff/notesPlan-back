@@ -18,19 +18,22 @@ import { AuthGuard } from '../auth/auth.guard';
 // http://127.0.0.1:3000
 @Controller('groupes')
 export class GroupeController {
-  constructor(readonly groupesService: GroupeService) {}
+  constructor(readonly groupesService: GroupeService) { }
 
+  // Route pour récupérer tous les groupes
   @Get()
   findAll(): Promise<IGroupe[]> {
     return this.groupesService.findAll();
   }
 
+  // Route pour récupérer tous les groupes d'un répertoire par son ID
   @Get('repertoire_groupe/:repertoireId')
   @UseGuards(AuthGuard)
   findAllByRepertoireId(@Param('repertoireId') repertoireId: string) {
     return this.groupesService.findAllByRepertoireGroupeId(repertoireId);
   }
 
+  // Route pour créer un nouveau groupe
   @Post()
   async create(@Body() groupeDto: CreateGroupeDto) {
     try {
@@ -55,6 +58,7 @@ export class GroupeController {
     }
   }
 
+  // Route pour récupérer un groupe par son ID
   @Get(':id')
   async findById(@Param() repertoire: IGroupe) {
     try {
@@ -64,6 +68,7 @@ export class GroupeController {
     }
   }
 
+  // Route pour supprimer un groupe par son ID
   @Delete(':id')
   async delete(@Param() repertoire: IGroupe) {
     try {
@@ -78,6 +83,7 @@ export class GroupeController {
     }
   }
 
+  // Route pour mettre à jour un groupe par son ID
   @Patch(':id')
   async update(
     @Body() groupeDto: RepertoireGroupe,

@@ -22,10 +22,16 @@ export class Tache extends EntityStarter implements ITache {
   @Column({ type: 'varchar', nullable: true })
   date: string | null;
 
+  /**
+   * Le groupe auquel appartient la tâche.
+   */
   @ManyToOne(() => Groupe, (groupe) => groupe.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'groupeid' })
   groupe: Groupe;
 
+  /**
+   * Les étiquettes associées à la tâche (optionnelles).
+   */
   @ManyToMany(
     () => Label,
     label => label.tache, //optional
@@ -49,9 +55,11 @@ export class Tache extends EntityStarter implements ITache {
     Object.assign(this, data);
   }
 
-
-  // fonction qui ne renvoie rien (void)
-  // Permet de vérifier si les nouvelles données sont différentes
+  /**
+   * fonction qui ne renvoie rien (void)
+   * Modifie les propriétés obligatoires de la tâche.
+   * @param data Les données de modification obligatoires.
+   */
   editMandatory(data: ITacheEditorMandatory): void {
     const { libelle, groupe } = data;
 
@@ -63,6 +71,10 @@ export class Tache extends EntityStarter implements ITache {
     }
   }
 
+  /**
+   * Modifie les propriétés optionnelles de la tâche.
+   * @param data Les données de modification optionnelles.
+   */
   editOptionnal(data: ITacheEditorOptional): void {
     const { detail } = data;
 
@@ -71,12 +83,13 @@ export class Tache extends EntityStarter implements ITache {
     }
   }
 
-  // On met a jour les données de l'entité
+  // Méthode pour mettre à jour l'entité avec les nouvelles données
   edit(data: ITacheEditor): void {
     this.editOptionnal({ ...data });
     this.editMandatory({ ...data });
   }
 
+  // Méthode statique pour créer une instance de Label
   static factory(data: ITacheCreator): Tache {
     return new Tache(data);
   }
