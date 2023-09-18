@@ -30,6 +30,9 @@ export class NoteRepository extends RepositoryStarter<Note> {
     const data = await this.model.find({
       where: { repertoire: { id: id_repertoire } },
     });
+
+    data.sort((a, b) => b.createdat.getTime() - a.createdat.getTime())
+
     return data;
   }
 }
