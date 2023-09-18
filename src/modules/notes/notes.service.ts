@@ -14,14 +14,6 @@ export class NoteService {
   ) { }
 
   /**
-   * Récupère toutes les notes.
-   * @returns Une liste de toutes les notes.
-   */
-  async findAll(): Promise<INote[]> {
-    return await this.notesRepository.getAll();
-  }
-
-  /**
    * Récupère toutes les notes associées à un répertoire par son ID.
    * @param repertoireId L'ID du répertoire pour lequel rechercher les notes.
    * @returns Une liste de toutes les notes associées au répertoire.

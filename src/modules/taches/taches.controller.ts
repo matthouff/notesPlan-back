@@ -18,11 +18,6 @@ import { CreateTacheDto } from './dto/taches-create.dto';
 export class TacheController {
   constructor(readonly tachesService: TacheService) { }
 
-  // Récupère toutes les tâches
-  @Get()
-  findAll(): Promise<ITache[]> {
-    return this.tachesService.findAll();
-  }
 
   // Récupère toutes les tâches d'un groupe par son identifiant
   @Get('/groupe/:id')
