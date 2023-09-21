@@ -72,7 +72,7 @@ export class AuthController {
         httpOnly: true, // cookie devient inaxessible depuis JavaScript côté client
         sameSite: 'none',
         secure: true,
-        domain: '127.0.0.1',
+        domain: 'localhost',
       });
 
       return {
