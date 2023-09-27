@@ -16,7 +16,7 @@ import { CreateNoteDto } from './dto/notes-create.dto';
 // http://127.0.0.1:3000
 @Controller('notes')
 export class NoteController {
-  constructor(readonly notesService: NoteService) { }
+  constructor(readonly notesService: NoteService) {}
 
   // Endpoint pour récupérer toutes les notes associées à un répertoire.
   @Get('/repertoire-notes/:id')
@@ -30,7 +30,7 @@ export class NoteController {
     if (!noteDto.libelle && noteDto.message) {
       noteDto = {
         ...noteDto,
-        libelle: noteDto.message.substring(4, 30),
+        libelle: noteDto.message.substring(3, noteDto.message.length - 4),
       };
     }
 
