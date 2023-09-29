@@ -27,7 +27,11 @@ export class RepertoiresGroupesService {
    * @returns Une liste de répertoires de groupes associés à l'utilisateur.
    */
   async findAllByUserId(userId: string) {
-    return await this.repertoiresRepository.findByUserId(userId);
+    const repertoire = await this.repertoiresRepository.findByUserId(userId);
+
+    repertoire.sort((a, b) => new Date(b.createdat).getTime() - new Date(a.createdat).getTime())
+
+    return repertoire
   }
 
   /**
